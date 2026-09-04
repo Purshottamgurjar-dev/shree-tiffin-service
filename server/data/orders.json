@@ -1,0 +1,910 @@
+[
+  {
+    "_id": "6a9a789f8af61dff952fe2cb",
+    "orderNumber": "STS-2026-0001",
+    "user": "6a9a789f8af61dff952fe2c4",
+    "idempotencyKey": "idem_1788508319248_123",
+    "items": [
+      {
+        "_id": "6a9a789f8af61dff952fe2cc",
+        "meal": "6a9a78458af61dff952fe2c1",
+        "nameSnapshot": "Fresh Desi Ghee Phulka Pack (4 Pcs)",
+        "imageSnapshot": "/src/assets/hero-thali.jpg",
+        "priceSnapshot": 30,
+        "quantity": 2,
+        "itemTotal": 60
+      },
+      {
+        "_id": "6a9a789f8af61dff952fe2cd",
+        "meal": "6a9a78458af61dff952fe2c2",
+        "nameSnapshot": "Chilled Spiced Masala Chaas",
+        "imageSnapshot": "/src/assets/hero-thali.jpg",
+        "priceSnapshot": 25,
+        "quantity": 1,
+        "itemTotal": 25
+      }
+    ],
+    "totalItems": 3,
+    "subtotal": 85,
+    "total": 85,
+    "customerSnapshot": {
+      "name": "Order Test Customer A",
+      "email": "custa_1788508319248@test.com",
+      "phone": "9876543210"
+    },
+    "deliveryAddressSnapshot": {
+      "label": "Home",
+      "fullName": "Customer A",
+      "phone": "9876543210",
+      "addressLine1": "Flat 101, Shanti Niketan",
+      "addressLine2": "",
+      "landmark": "",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postalCode": "452001",
+      "country": "India",
+      "latitude": 22.7196,
+      "longitude": 75.8577,
+      "deliveryInstructions": "Please leave outside the door"
+    },
+    "orderStatus": "Delivered",
+    "statusHistory": [
+      {
+        "_id": "6a9a789f8af61dff952fe2ce",
+        "status": "Pending",
+        "changedAt": "2026-09-04T07:51:59.634Z",
+        "changedBy": "6a9a789f8af61dff952fe2c4",
+        "note": "Order placed by customer"
+      },
+      {
+        "_id": "6a9a789f8af61dff952fe2da",
+        "status": "Confirmed",
+        "changedAt": "2026-09-04T07:51:59.848Z",
+        "changedBy": "6a9a78458af61dff952fe2ba",
+        "note": "Kitchen accepted order"
+      },
+      {
+        "_id": "6a9a789f8af61dff952fe2db",
+        "status": "Preparing",
+        "changedAt": "2026-09-04T07:51:59.884Z",
+        "changedBy": "6a9a78458af61dff952fe2ba",
+        "note": "Food is on the stove"
+      },
+      {
+        "_id": "6a9a789f8af61dff952fe2dc",
+        "status": "Out for Delivery",
+        "changedAt": "2026-09-04T07:51:59.899Z",
+        "changedBy": "6a9a78458af61dff952fe2ba",
+        "note": "Rider dispatched"
+      },
+      {
+        "status": "Delivered",
+        "changedAt": "2026-09-04T07:51:59.916Z",
+        "changedBy": "6a9a78458af61dff952fe2ba",
+        "note": "Handed to customer"
+      }
+    ],
+    "paymentStatus": "Pending",
+    "paymentMethod": null,
+    "payment": null,
+    "cancelledAt": null,
+    "cancelledBy": null,
+    "cancellationReason": "",
+    "createdAt": "2026-09-04T07:51:59.634Z",
+    "updatedAt": "2026-09-04T07:51:59.916Z"
+  },
+  {
+    "_id": "6a9a789f8af61dff952fe2d0",
+    "orderNumber": "STS-2026-0002",
+    "user": "6a9a789f8af61dff952fe2c4",
+    "idempotencyKey": null,
+    "items": [
+      {
+        "_id": "6a9a789f8af61dff952fe2d1",
+        "meal": "6a9a78458af61dff952fe2c1",
+        "nameSnapshot": "Fresh Desi Ghee Phulka Pack (4 Pcs)",
+        "imageSnapshot": "/src/assets/hero-thali.jpg",
+        "priceSnapshot": 30,
+        "quantity": 1,
+        "itemTotal": 30
+      }
+    ],
+    "totalItems": 1,
+    "subtotal": 30,
+    "total": 30,
+    "customerSnapshot": {
+      "name": "Order Test Customer A",
+      "email": "custa_1788508319248@test.com",
+      "phone": "9876543210"
+    },
+    "deliveryAddressSnapshot": {
+      "label": "Home",
+      "fullName": "Customer A",
+      "phone": "9876543210",
+      "addressLine1": "Flat 101, Shanti Niketan",
+      "addressLine2": "",
+      "landmark": "",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postalCode": "452001",
+      "country": "India",
+      "latitude": 22.7196,
+      "longitude": 75.8577,
+      "deliveryInstructions": "Ring doorbell twice"
+    },
+    "orderStatus": "Cancelled",
+    "statusHistory": [
+      {
+        "_id": "6a9a789f8af61dff952fe2d2",
+        "status": "Pending",
+        "changedAt": "2026-09-04T07:51:59.732Z",
+        "changedBy": "6a9a789f8af61dff952fe2c4",
+        "note": "Order placed by customer"
+      },
+      {
+        "status": "Cancelled",
+        "changedAt": "2026-09-04T07:51:59.758Z",
+        "changedBy": "6a9a789f8af61dff952fe2c4",
+        "note": "Ordered by mistake"
+      }
+    ],
+    "paymentStatus": "Pending",
+    "paymentMethod": null,
+    "payment": null,
+    "cancelledAt": "2026-09-04T07:51:59.758Z",
+    "cancelledBy": "6a9a789f8af61dff952fe2c4",
+    "cancellationReason": "Ordered by mistake",
+    "createdAt": "2026-09-04T07:51:59.732Z",
+    "updatedAt": "2026-09-04T07:51:59.758Z"
+  },
+  {
+    "_id": "6a9a789f8af61dff952fe2df",
+    "orderNumber": "STS-2026-0003",
+    "user": "6a9a789f8af61dff952fe2c4",
+    "idempotencyKey": null,
+    "items": [
+      {
+        "_id": "6a9a789f8af61dff952fe2e0",
+        "meal": "6a9a78458af61dff952fe2c1",
+        "nameSnapshot": "Fresh Desi Ghee Phulka Pack (4 Pcs)",
+        "imageSnapshot": "/src/assets/hero-thali.jpg",
+        "priceSnapshot": 30,
+        "quantity": 1,
+        "itemTotal": 30
+      }
+    ],
+    "totalItems": 1,
+    "subtotal": 30,
+    "total": 30,
+    "customerSnapshot": {
+      "name": "Order Test Customer A",
+      "email": "custa_1788508319248@test.com",
+      "phone": "9876543210"
+    },
+    "deliveryAddressSnapshot": {
+      "label": "Home",
+      "fullName": "Customer A",
+      "phone": "9876543210",
+      "addressLine1": "Flat 101, Shanti Niketan",
+      "addressLine2": "",
+      "landmark": "",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postalCode": "452001",
+      "country": "India",
+      "latitude": 22.7196,
+      "longitude": 75.8577,
+      "deliveryInstructions": "Ring doorbell twice"
+    },
+    "orderStatus": "Cancelled",
+    "statusHistory": [
+      {
+        "_id": "6a9a789f8af61dff952fe2e1",
+        "status": "Pending",
+        "changedAt": "2026-09-04T07:51:59.968Z",
+        "changedBy": "6a9a789f8af61dff952fe2c4",
+        "note": "Order placed by customer"
+      },
+      {
+        "status": "Cancelled",
+        "changedAt": "2026-09-04T07:51:59.988Z",
+        "changedBy": "6a9a78458af61dff952fe2ba",
+        "note": "Kitchen out of fresh ingredients"
+      }
+    ],
+    "paymentStatus": "Pending",
+    "paymentMethod": null,
+    "payment": null,
+    "cancelledAt": "2026-09-04T07:51:59.988Z",
+    "cancelledBy": "6a9a78458af61dff952fe2ba",
+    "cancellationReason": "Kitchen out of fresh ingredients",
+    "createdAt": "2026-09-04T07:51:59.968Z",
+    "updatedAt": "2026-09-04T07:51:59.988Z"
+  },
+  {
+    "_id": "6a9a78a18af61dff952fe2e8",
+    "orderNumber": "STS-2026-0004",
+    "user": "6a9a78a18af61dff952fe2e3",
+    "idempotencyKey": null,
+    "items": [
+      {
+        "_id": "6a9a78a18af61dff952fe2e9",
+        "meal": "6a9a78458af61dff952fe2c1",
+        "nameSnapshot": "Fresh Desi Ghee Phulka Pack (4 Pcs)",
+        "imageSnapshot": "/src/assets/hero-thali.jpg",
+        "priceSnapshot": 30,
+        "quantity": 2,
+        "itemTotal": 60
+      }
+    ],
+    "totalItems": 2,
+    "subtotal": 60,
+    "total": 60,
+    "customerSnapshot": {
+      "name": "Payment Test Cust A",
+      "email": "pay_cust_a_1788508321059@test.com",
+      "phone": "9876543210"
+    },
+    "deliveryAddressSnapshot": {
+      "label": "Home",
+      "fullName": "Payment Cust A",
+      "phone": "9876543210",
+      "addressLine1": "404 Golden Arcade",
+      "addressLine2": "",
+      "landmark": "",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postalCode": "452001",
+      "country": "India",
+      "latitude": 22.7196,
+      "longitude": 75.8577,
+      "deliveryInstructions": ""
+    },
+    "orderStatus": "Pending",
+    "statusHistory": [
+      {
+        "_id": "6a9a78a18af61dff952fe2ea",
+        "status": "Pending",
+        "changedAt": "2026-09-04T07:52:01.434Z",
+        "changedBy": "6a9a78a18af61dff952fe2e3",
+        "note": "Order placed by customer"
+      }
+    ],
+    "paymentStatus": "Paid",
+    "paymentMethod": "COD",
+    "payment": "6a9a78a18af61dff952fe2ef",
+    "cancelledAt": null,
+    "cancelledBy": null,
+    "cancellationReason": "",
+    "createdAt": "2026-09-04T07:52:01.434Z",
+    "updatedAt": "2026-09-04T07:52:01.497Z"
+  },
+  {
+    "_id": "6a9a78a18af61dff952fe2ec",
+    "orderNumber": "STS-2026-0005",
+    "user": "6a9a78a18af61dff952fe2e3",
+    "idempotencyKey": null,
+    "items": [
+      {
+        "_id": "6a9a78a18af61dff952fe2ed",
+        "meal": "6a9a78458af61dff952fe2c1",
+        "nameSnapshot": "Fresh Desi Ghee Phulka Pack (4 Pcs)",
+        "imageSnapshot": "/src/assets/hero-thali.jpg",
+        "priceSnapshot": 30,
+        "quantity": 2,
+        "itemTotal": 60
+      }
+    ],
+    "totalItems": 2,
+    "subtotal": 60,
+    "total": 60,
+    "customerSnapshot": {
+      "name": "Payment Test Cust A",
+      "email": "pay_cust_a_1788508321059@test.com",
+      "phone": "9876543210"
+    },
+    "deliveryAddressSnapshot": {
+      "label": "Home",
+      "fullName": "Payment Cust A",
+      "phone": "9876543210",
+      "addressLine1": "404 Golden Arcade",
+      "addressLine2": "",
+      "landmark": "",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postalCode": "452001",
+      "country": "India",
+      "latitude": 22.7196,
+      "longitude": 75.8577,
+      "deliveryInstructions": ""
+    },
+    "orderStatus": "Pending",
+    "statusHistory": [
+      {
+        "_id": "6a9a78a18af61dff952fe2ee",
+        "status": "Pending",
+        "changedAt": "2026-09-04T07:52:01.455Z",
+        "changedBy": "6a9a78a18af61dff952fe2e3",
+        "note": "Order placed by customer"
+      }
+    ],
+    "paymentStatus": "Paid",
+    "paymentMethod": "ONLINE",
+    "payment": "6a9a78a28af61dff952fe2f0",
+    "cancelledAt": null,
+    "cancelledBy": null,
+    "cancellationReason": "",
+    "createdAt": "2026-09-04T07:52:01.455Z",
+    "updatedAt": "2026-09-04T07:52:02.468Z"
+  },
+  {
+    "_id": "6a9a78a28af61dff952fe2f2",
+    "orderNumber": "STS-2026-0006",
+    "user": "6a9a78a18af61dff952fe2e3",
+    "idempotencyKey": null,
+    "items": [
+      {
+        "_id": "6a9a78a28af61dff952fe2f3",
+        "meal": "6a9a78458af61dff952fe2c1",
+        "nameSnapshot": "Fresh Desi Ghee Phulka Pack (4 Pcs)",
+        "imageSnapshot": "/src/assets/hero-thali.jpg",
+        "priceSnapshot": 30,
+        "quantity": 2,
+        "itemTotal": 60
+      }
+    ],
+    "totalItems": 2,
+    "subtotal": 60,
+    "total": 60,
+    "customerSnapshot": {
+      "name": "Payment Test Cust A",
+      "email": "pay_cust_a_1788508321059@test.com",
+      "phone": "9876543210"
+    },
+    "deliveryAddressSnapshot": {
+      "label": "Home",
+      "fullName": "Payment Cust A",
+      "phone": "9876543210",
+      "addressLine1": "404 Golden Arcade",
+      "addressLine2": "",
+      "landmark": "",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postalCode": "452001",
+      "country": "India",
+      "latitude": 22.7196,
+      "longitude": 75.8577,
+      "deliveryInstructions": ""
+    },
+    "orderStatus": "Pending",
+    "statusHistory": [
+      {
+        "_id": "6a9a78a28af61dff952fe2f4",
+        "status": "Pending",
+        "changedAt": "2026-09-04T07:52:02.517Z",
+        "changedBy": "6a9a78a18af61dff952fe2e3",
+        "note": "Order placed by customer"
+      }
+    ],
+    "paymentStatus": "Pending",
+    "paymentMethod": "COD",
+    "payment": "6a9a78a38af61dff952fe2f5",
+    "cancelledAt": null,
+    "cancelledBy": null,
+    "cancellationReason": "",
+    "createdAt": "2026-09-04T07:52:02.517Z",
+    "updatedAt": "2026-09-04T07:52:03.039Z"
+  },
+  {
+    "_id": "6a9a78a38af61dff952fe2f7",
+    "orderNumber": "STS-2026-0007",
+    "user": "6a9a78a18af61dff952fe2e3",
+    "idempotencyKey": null,
+    "items": [
+      {
+        "_id": "6a9a78a38af61dff952fe2f8",
+        "meal": "6a9a78458af61dff952fe2c1",
+        "nameSnapshot": "Fresh Desi Ghee Phulka Pack (4 Pcs)",
+        "imageSnapshot": "/src/assets/hero-thali.jpg",
+        "priceSnapshot": 30,
+        "quantity": 2,
+        "itemTotal": 60
+      }
+    ],
+    "totalItems": 2,
+    "subtotal": 60,
+    "total": 60,
+    "customerSnapshot": {
+      "name": "Payment Test Cust A",
+      "email": "pay_cust_a_1788508321059@test.com",
+      "phone": "9876543210"
+    },
+    "deliveryAddressSnapshot": {
+      "label": "Home",
+      "fullName": "Payment Cust A",
+      "phone": "9876543210",
+      "addressLine1": "404 Golden Arcade",
+      "addressLine2": "",
+      "landmark": "",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postalCode": "452001",
+      "country": "India",
+      "latitude": 22.7196,
+      "longitude": 75.8577,
+      "deliveryInstructions": ""
+    },
+    "orderStatus": "Pending",
+    "statusHistory": [
+      {
+        "_id": "6a9a78a38af61dff952fe2f9",
+        "status": "Pending",
+        "changedAt": "2026-09-04T07:52:03.050Z",
+        "changedBy": "6a9a78a18af61dff952fe2e3",
+        "note": "Order placed by customer"
+      }
+    ],
+    "paymentStatus": "Paid",
+    "paymentMethod": "ONLINE",
+    "payment": "6a9a78a38af61dff952fe2fa",
+    "cancelledAt": null,
+    "cancelledBy": null,
+    "cancellationReason": "",
+    "createdAt": "2026-09-04T07:52:03.050Z",
+    "updatedAt": "2026-09-04T07:52:03.384Z"
+  },
+  {
+    "_id": "6a9a78d78af61dff952fe319",
+    "orderNumber": "STS-2026-0008",
+    "user": "6a9a78d68af61dff952fe312",
+    "idempotencyKey": "idem_1788508374490_123",
+    "items": [
+      {
+        "_id": "6a9a78d78af61dff952fe31a",
+        "meal": "6a9a78458af61dff952fe2c1",
+        "nameSnapshot": "Fresh Desi Ghee Phulka Pack (4 Pcs)",
+        "imageSnapshot": "/src/assets/hero-thali.jpg",
+        "priceSnapshot": 30,
+        "quantity": 2,
+        "itemTotal": 60
+      },
+      {
+        "_id": "6a9a78d78af61dff952fe31b",
+        "meal": "6a9a78458af61dff952fe2c2",
+        "nameSnapshot": "Chilled Spiced Masala Chaas",
+        "imageSnapshot": "/src/assets/hero-thali.jpg",
+        "priceSnapshot": 25,
+        "quantity": 1,
+        "itemTotal": 25
+      }
+    ],
+    "totalItems": 3,
+    "subtotal": 85,
+    "total": 85,
+    "customerSnapshot": {
+      "name": "Order Test Customer A",
+      "email": "custa_1788508374490@test.com",
+      "phone": "9876543210"
+    },
+    "deliveryAddressSnapshot": {
+      "label": "Home",
+      "fullName": "Customer A",
+      "phone": "9876543210",
+      "addressLine1": "Flat 101, Shanti Niketan",
+      "addressLine2": "",
+      "landmark": "",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postalCode": "452001",
+      "country": "India",
+      "latitude": 22.7196,
+      "longitude": 75.8577,
+      "deliveryInstructions": "Please leave outside the door"
+    },
+    "orderStatus": "Delivered",
+    "statusHistory": [
+      {
+        "_id": "6a9a78d78af61dff952fe31c",
+        "status": "Pending",
+        "changedAt": "2026-09-04T07:52:55.218Z",
+        "changedBy": "6a9a78d68af61dff952fe312",
+        "note": "Order placed by customer"
+      },
+      {
+        "_id": "6a9a78d78af61dff952fe337",
+        "status": "Confirmed",
+        "changedAt": "2026-09-04T07:52:55.414Z",
+        "changedBy": "6a9a78458af61dff952fe2ba",
+        "note": "Kitchen accepted order"
+      },
+      {
+        "_id": "6a9a78d78af61dff952fe338",
+        "status": "Preparing",
+        "changedAt": "2026-09-04T07:52:55.440Z",
+        "changedBy": "6a9a78458af61dff952fe2ba",
+        "note": "Food is on the stove"
+      },
+      {
+        "_id": "6a9a78d78af61dff952fe339",
+        "status": "Out for Delivery",
+        "changedAt": "2026-09-04T07:52:55.451Z",
+        "changedBy": "6a9a78458af61dff952fe2ba",
+        "note": "Rider dispatched"
+      },
+      {
+        "status": "Delivered",
+        "changedAt": "2026-09-04T07:52:55.467Z",
+        "changedBy": "6a9a78458af61dff952fe2ba",
+        "note": "Handed to customer"
+      }
+    ],
+    "paymentStatus": "Pending",
+    "paymentMethod": null,
+    "payment": null,
+    "cancelledAt": null,
+    "cancelledBy": null,
+    "cancellationReason": "",
+    "createdAt": "2026-09-04T07:52:55.218Z",
+    "updatedAt": "2026-09-04T07:52:55.467Z"
+  },
+  {
+    "_id": "6a9a78d78af61dff952fe31e",
+    "orderNumber": "STS-2026-0009",
+    "user": "6a9a78d68af61dff952fe312",
+    "idempotencyKey": null,
+    "items": [
+      {
+        "_id": "6a9a78d78af61dff952fe31f",
+        "meal": "6a9a78458af61dff952fe2c1",
+        "nameSnapshot": "Fresh Desi Ghee Phulka Pack (4 Pcs)",
+        "imageSnapshot": "/src/assets/hero-thali.jpg",
+        "priceSnapshot": 30,
+        "quantity": 1,
+        "itemTotal": 30
+      }
+    ],
+    "totalItems": 1,
+    "subtotal": 30,
+    "total": 30,
+    "customerSnapshot": {
+      "name": "Order Test Customer A",
+      "email": "custa_1788508374490@test.com",
+      "phone": "9876543210"
+    },
+    "deliveryAddressSnapshot": {
+      "label": "Home",
+      "fullName": "Customer A",
+      "phone": "9876543210",
+      "addressLine1": "Flat 101, Shanti Niketan",
+      "addressLine2": "",
+      "landmark": "",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postalCode": "452001",
+      "country": "India",
+      "latitude": 22.7196,
+      "longitude": 75.8577,
+      "deliveryInstructions": "Ring doorbell twice"
+    },
+    "orderStatus": "Cancelled",
+    "statusHistory": [
+      {
+        "_id": "6a9a78d78af61dff952fe320",
+        "status": "Pending",
+        "changedAt": "2026-09-04T07:52:55.308Z",
+        "changedBy": "6a9a78d68af61dff952fe312",
+        "note": "Order placed by customer"
+      },
+      {
+        "status": "Cancelled",
+        "changedAt": "2026-09-04T07:52:55.347Z",
+        "changedBy": "6a9a78d68af61dff952fe312",
+        "note": "Ordered by mistake"
+      }
+    ],
+    "paymentStatus": "Pending",
+    "paymentMethod": null,
+    "payment": null,
+    "cancelledAt": "2026-09-04T07:52:55.347Z",
+    "cancelledBy": "6a9a78d68af61dff952fe312",
+    "cancellationReason": "Ordered by mistake",
+    "createdAt": "2026-09-04T07:52:55.308Z",
+    "updatedAt": "2026-09-04T07:52:55.347Z"
+  },
+  {
+    "_id": "6a9a78d78af61dff952fe33c",
+    "orderNumber": "STS-2026-0010",
+    "user": "6a9a78d68af61dff952fe312",
+    "idempotencyKey": null,
+    "items": [
+      {
+        "_id": "6a9a78d78af61dff952fe33d",
+        "meal": "6a9a78458af61dff952fe2c1",
+        "nameSnapshot": "Fresh Desi Ghee Phulka Pack (4 Pcs)",
+        "imageSnapshot": "/src/assets/hero-thali.jpg",
+        "priceSnapshot": 30,
+        "quantity": 1,
+        "itemTotal": 30
+      }
+    ],
+    "totalItems": 1,
+    "subtotal": 30,
+    "total": 30,
+    "customerSnapshot": {
+      "name": "Order Test Customer A",
+      "email": "custa_1788508374490@test.com",
+      "phone": "9876543210"
+    },
+    "deliveryAddressSnapshot": {
+      "label": "Home",
+      "fullName": "Customer A",
+      "phone": "9876543210",
+      "addressLine1": "Flat 101, Shanti Niketan",
+      "addressLine2": "",
+      "landmark": "",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postalCode": "452001",
+      "country": "India",
+      "latitude": 22.7196,
+      "longitude": 75.8577,
+      "deliveryInstructions": "Ring doorbell twice"
+    },
+    "orderStatus": "Cancelled",
+    "statusHistory": [
+      {
+        "_id": "6a9a78d78af61dff952fe33e",
+        "status": "Pending",
+        "changedAt": "2026-09-04T07:52:55.515Z",
+        "changedBy": "6a9a78d68af61dff952fe312",
+        "note": "Order placed by customer"
+      },
+      {
+        "status": "Cancelled",
+        "changedAt": "2026-09-04T07:52:55.522Z",
+        "changedBy": "6a9a78458af61dff952fe2ba",
+        "note": "Kitchen out of fresh ingredients"
+      }
+    ],
+    "paymentStatus": "Pending",
+    "paymentMethod": null,
+    "payment": null,
+    "cancelledAt": "2026-09-04T07:52:55.522Z",
+    "cancelledBy": "6a9a78458af61dff952fe2ba",
+    "cancellationReason": "Kitchen out of fresh ingredients",
+    "createdAt": "2026-09-04T07:52:55.515Z",
+    "updatedAt": "2026-09-04T07:52:55.522Z"
+  },
+  {
+    "_id": "6a9a78d98af61dff952fe345",
+    "orderNumber": "STS-2026-0011",
+    "user": "6a9a78d98af61dff952fe340",
+    "idempotencyKey": null,
+    "items": [
+      {
+        "_id": "6a9a78d98af61dff952fe346",
+        "meal": "6a9a78458af61dff952fe2c1",
+        "nameSnapshot": "Fresh Desi Ghee Phulka Pack (4 Pcs)",
+        "imageSnapshot": "/src/assets/hero-thali.jpg",
+        "priceSnapshot": 30,
+        "quantity": 2,
+        "itemTotal": 60
+      }
+    ],
+    "totalItems": 2,
+    "subtotal": 60,
+    "total": 60,
+    "customerSnapshot": {
+      "name": "Payment Test Cust A",
+      "email": "pay_cust_a_1788508377258@test.com",
+      "phone": "9876543210"
+    },
+    "deliveryAddressSnapshot": {
+      "label": "Home",
+      "fullName": "Payment Cust A",
+      "phone": "9876543210",
+      "addressLine1": "404 Golden Arcade",
+      "addressLine2": "",
+      "landmark": "",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postalCode": "452001",
+      "country": "India",
+      "latitude": 22.7196,
+      "longitude": 75.8577,
+      "deliveryInstructions": ""
+    },
+    "orderStatus": "Pending",
+    "statusHistory": [
+      {
+        "_id": "6a9a78d98af61dff952fe347",
+        "status": "Pending",
+        "changedAt": "2026-09-04T07:52:57.981Z",
+        "changedBy": "6a9a78d98af61dff952fe340",
+        "note": "Order placed by customer"
+      }
+    ],
+    "paymentStatus": "Paid",
+    "paymentMethod": "COD",
+    "payment": "6a9a78da8af61dff952fe34c",
+    "cancelledAt": null,
+    "cancelledBy": null,
+    "cancellationReason": "",
+    "createdAt": "2026-09-04T07:52:57.981Z",
+    "updatedAt": "2026-09-04T07:52:58.068Z"
+  },
+  {
+    "_id": "6a9a78da8af61dff952fe349",
+    "orderNumber": "STS-2026-0012",
+    "user": "6a9a78d98af61dff952fe340",
+    "idempotencyKey": null,
+    "items": [
+      {
+        "_id": "6a9a78da8af61dff952fe34a",
+        "meal": "6a9a78458af61dff952fe2c1",
+        "nameSnapshot": "Fresh Desi Ghee Phulka Pack (4 Pcs)",
+        "imageSnapshot": "/src/assets/hero-thali.jpg",
+        "priceSnapshot": 30,
+        "quantity": 2,
+        "itemTotal": 60
+      }
+    ],
+    "totalItems": 2,
+    "subtotal": 60,
+    "total": 60,
+    "customerSnapshot": {
+      "name": "Payment Test Cust A",
+      "email": "pay_cust_a_1788508377258@test.com",
+      "phone": "9876543210"
+    },
+    "deliveryAddressSnapshot": {
+      "label": "Home",
+      "fullName": "Payment Cust A",
+      "phone": "9876543210",
+      "addressLine1": "404 Golden Arcade",
+      "addressLine2": "",
+      "landmark": "",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postalCode": "452001",
+      "country": "India",
+      "latitude": 22.7196,
+      "longitude": 75.8577,
+      "deliveryInstructions": ""
+    },
+    "orderStatus": "Pending",
+    "statusHistory": [
+      {
+        "_id": "6a9a78da8af61dff952fe34b",
+        "status": "Pending",
+        "changedAt": "2026-09-04T07:52:58.016Z",
+        "changedBy": "6a9a78d98af61dff952fe340",
+        "note": "Order placed by customer"
+      }
+    ],
+    "paymentStatus": "Paid",
+    "paymentMethod": "ONLINE",
+    "payment": "6a9a78db8af61dff952fe34d",
+    "cancelledAt": null,
+    "cancelledBy": null,
+    "cancellationReason": "",
+    "createdAt": "2026-09-04T07:52:58.016Z",
+    "updatedAt": "2026-09-04T07:52:59.102Z"
+  },
+  {
+    "_id": "6a9a78db8af61dff952fe34f",
+    "orderNumber": "STS-2026-0013",
+    "user": "6a9a78d98af61dff952fe340",
+    "idempotencyKey": null,
+    "items": [
+      {
+        "_id": "6a9a78db8af61dff952fe350",
+        "meal": "6a9a78458af61dff952fe2c1",
+        "nameSnapshot": "Fresh Desi Ghee Phulka Pack (4 Pcs)",
+        "imageSnapshot": "/src/assets/hero-thali.jpg",
+        "priceSnapshot": 30,
+        "quantity": 2,
+        "itemTotal": 60
+      }
+    ],
+    "totalItems": 2,
+    "subtotal": 60,
+    "total": 60,
+    "customerSnapshot": {
+      "name": "Payment Test Cust A",
+      "email": "pay_cust_a_1788508377258@test.com",
+      "phone": "9876543210"
+    },
+    "deliveryAddressSnapshot": {
+      "label": "Home",
+      "fullName": "Payment Cust A",
+      "phone": "9876543210",
+      "addressLine1": "404 Golden Arcade",
+      "addressLine2": "",
+      "landmark": "",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postalCode": "452001",
+      "country": "India",
+      "latitude": 22.7196,
+      "longitude": 75.8577,
+      "deliveryInstructions": ""
+    },
+    "orderStatus": "Pending",
+    "statusHistory": [
+      {
+        "_id": "6a9a78db8af61dff952fe351",
+        "status": "Pending",
+        "changedAt": "2026-09-04T07:52:59.149Z",
+        "changedBy": "6a9a78d98af61dff952fe340",
+        "note": "Order placed by customer"
+      }
+    ],
+    "paymentStatus": "Pending",
+    "paymentMethod": "COD",
+    "payment": "6a9a78db8af61dff952fe352",
+    "cancelledAt": null,
+    "cancelledBy": null,
+    "cancellationReason": "",
+    "createdAt": "2026-09-04T07:52:59.149Z",
+    "updatedAt": "2026-09-04T07:52:59.340Z"
+  },
+  {
+    "_id": "6a9a78db8af61dff952fe354",
+    "orderNumber": "STS-2026-0014",
+    "user": "6a9a78d98af61dff952fe340",
+    "idempotencyKey": null,
+    "items": [
+      {
+        "_id": "6a9a78db8af61dff952fe355",
+        "meal": "6a9a78458af61dff952fe2c1",
+        "nameSnapshot": "Fresh Desi Ghee Phulka Pack (4 Pcs)",
+        "imageSnapshot": "/src/assets/hero-thali.jpg",
+        "priceSnapshot": 30,
+        "quantity": 2,
+        "itemTotal": 60
+      }
+    ],
+    "totalItems": 2,
+    "subtotal": 60,
+    "total": 60,
+    "customerSnapshot": {
+      "name": "Payment Test Cust A",
+      "email": "pay_cust_a_1788508377258@test.com",
+      "phone": "9876543210"
+    },
+    "deliveryAddressSnapshot": {
+      "label": "Home",
+      "fullName": "Payment Cust A",
+      "phone": "9876543210",
+      "addressLine1": "404 Golden Arcade",
+      "addressLine2": "",
+      "landmark": "",
+      "city": "Indore",
+      "state": "Madhya Pradesh",
+      "postalCode": "452001",
+      "country": "India",
+      "latitude": 22.7196,
+      "longitude": 75.8577,
+      "deliveryInstructions": ""
+    },
+    "orderStatus": "Pending",
+    "statusHistory": [
+      {
+        "_id": "6a9a78db8af61dff952fe356",
+        "status": "Pending",
+        "changedAt": "2026-09-04T07:52:59.367Z",
+        "changedBy": "6a9a78d98af61dff952fe340",
+        "note": "Order placed by customer"
+      }
+    ],
+    "paymentStatus": "Paid",
+    "paymentMethod": "ONLINE",
+    "payment": "6a9a78db8af61dff952fe357",
+    "cancelledAt": null,
+    "cancelledBy": null,
+    "cancellationReason": "",
+    "createdAt": "2026-09-04T07:52:59.367Z",
+    "updatedAt": "2026-09-04T07:52:59.567Z"
+  }
+]

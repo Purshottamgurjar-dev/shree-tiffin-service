@@ -1,0 +1,27 @@
+{
+  "name": "shree-tiffin-service",
+  "version": "1.0.0",
+  "description": "Shree Tiffin Service - Ghar Jaisa Khana, Har Din. Full-stack MERN Application",
+  "private": true,
+  "scripts": {
+    "install-all": "npm install && npm install --prefix server && npm install --prefix client",
+    "server": "npm run dev --prefix server",
+    "client": "npm run dev --prefix client",
+    "dev": "concurrently -n \"SERVER,CLIENT\" -c \"cyan,magenta\" \"npm run server\" \"npm run client\"",
+    "build": "npm run build --prefix client"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  },
+  "keywords": [
+    "mern",
+    "tiffin-service",
+    "food-delivery",
+    "react",
+    "express",
+    "node",
+    "mongodb"
+  ],
+  "author": "Shree Tiffin Service Team",
+  "license": "ISC"
+}

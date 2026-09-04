@@ -1,0 +1,398 @@
+/* ==========================================================================
+   SHREE TIFFIN SERVICE - CORE DESIGN SYSTEM
+   "Ghar Jaisa Khana, Har Din."
+   ========================================================================== */
+
+:root {
+  /* Brand Warm Saffron / Terracotta Palette */
+  --primary-50: #fff4e6;
+  --primary-100: #ffe8cc;
+  --primary-200: #ffd8a8;
+  --primary-300: #ffc078;
+  --primary-400: #ffa94d;
+  --primary-500: #ff922b;
+  --primary-600: #fd7e14;
+  --primary-700: #f76707;
+  --primary-800: #e8590c;
+  --primary-900: #d9480f;
+  --primary-950: #7c2202;
+
+  /* Accent Golden Turmeric / Mustard */
+  --accent-gold-50: #fff9db;
+  --accent-gold-100: #fff3bf;
+  --accent-gold-300: #ffe066;
+  --accent-gold-500: #fab005;
+  --accent-gold-700: #e67700;
+
+  /* Fresh Pure Vegetarian Emerald */
+  --veg-50: #ebfbee;
+  --veg-100: #d3f9d8;
+  --veg-500: #40c057;
+  --veg-700: #2b8a3e;
+  --veg-800: #2f9e44;
+
+  /* Warm Culinary Neutrals */
+  --bg-cream: #faf7f2;
+  --bg-surface: #ffffff;
+  --bg-surface-elevated: #ffffff;
+  --bg-card: rgba(255, 255, 255, 0.92);
+  --bg-subtle: #f4ede4;
+  --border-light: #eddccb;
+  --border-subtle: #f0e6dc;
+
+  /* Text Colors */
+  --text-primary: #1c1917;
+  --text-secondary: #57534e;
+  --text-tertiary: #8c857f;
+  --text-inverse: #ffffff;
+
+  /* Status Colors */
+  --status-success: #12b886;
+  --status-warning: #f59f00;
+  --status-danger: #fa5252;
+  --status-info: #228be6;
+
+  /* Shadows */
+  --shadow-xs: 0 1px 2px rgba(44, 30, 16, 0.05);
+  --shadow-sm: 0 2px 6px rgba(44, 30, 16, 0.06);
+  --shadow-md: 0 8px 20px rgba(44, 30, 16, 0.08);
+  --shadow-lg: 0 16px 36px rgba(44, 30, 16, 0.12);
+  --shadow-warm: 0 12px 30px rgba(217, 72, 15, 0.16);
+
+  /* Typography */
+  --font-heading: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  /* Border Radius */
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --radius-full: 9999px;
+
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-smooth: 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Reset & Box Sizing */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--bg-cream);
+  color: var(--text-primary);
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(253, 126, 20, 0.04) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(250, 176, 5, 0.05) 0%, transparent 45%);
+}
+
+/* Typography Defaults */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  color: var(--text-primary);
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+p {
+  color: var(--text-secondary);
+}
+
+a {
+  color: var(--primary-700);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+a:hover {
+  color: var(--primary-900);
+}
+
+button {
+  font-family: var(--font-heading);
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+/* Container */
+.container {
+  width: 100%;
+  max-width: 1240px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+/* Glassmorphism & Cards */
+.card {
+  background: var(--bg-card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: var(--radius-full);
+  font-size: 15px;
+  font-weight: 600;
+  transition: all var(--transition-normal);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary-600) 0%, var(--primary-800) 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(217, 72, 15, 0.3);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, var(--primary-700) 0%, var(--primary-900) 100%);
+  box-shadow: 0 6px 20px rgba(217, 72, 15, 0.4);
+  transform: translateY(-1px);
+  color: #ffffff;
+}
+
+.btn-secondary {
+  background: #ffffff;
+  color: var(--text-primary);
+  border: 1.5px solid var(--border-light);
+  box-shadow: var(--shadow-xs);
+}
+
+.btn-secondary:hover {
+  background: var(--primary-50);
+  border-color: var(--primary-300);
+  color: var(--primary-800);
+}
+
+/* Badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+
+.badge-primary {
+  background-color: var(--primary-50);
+  color: var(--primary-800);
+  border: 1px solid var(--primary-200);
+}
+
+.badge-success {
+  background-color: var(--veg-50);
+  color: var(--veg-700);
+  border: 1px solid var(--veg-100);
+}
+
+.badge-warning {
+  background-color: var(--accent-gold-50);
+  color: var(--accent-gold-700);
+  border: 1px solid var(--accent-gold-100);
+}
+
+/* Pulse animation for live connectivity */
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--status-success);
+  box-shadow: 0 0 0 0 rgba(18, 184, 134, 0.7);
+  animation: pulse 1.8s infinite cubic-bezier(0.66, 0, 0, 1);
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(18, 184, 134, 0.7);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 8px rgba(18, 184, 134, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(18, 184, 134, 0);
+  }
+}
+
+/* Spin animation utility */
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN SYSTEM (MOBILE-FIRST OPTIMIZATION)
+   ========================================================================== */
+
+/* Responsive Navigation & Multi-Column Layouts on Tablet/Mobile <= 768px */
+@media (max-width: 768px) {
+  .desktop-nav {
+    display: none !important;
+  }
+  .mobile-nav-toggle {
+    display: inline-flex !important;
+  }
+  .mobile-bottom-nav {
+    display: flex !important;
+  }
+
+  /* Add bottom clearance on main content for mobile bottom navigation */
+  main {
+    padding-bottom: 74px !important;
+  }
+
+  /* Force multi-column split grids into clean single column stacking on mobile */
+  .cart-grid,
+  .checkout-grid,
+  .order-details-grid,
+  .delivery-grid,
+  .two-col-responsive {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+
+  /* Sticky sidebars must be un-stuck on mobile so they flow naturally */
+  .card[style*="sticky"],
+  div[style*="sticky"] {
+    position: static !important;
+    top: auto !important;
+  }
+}
+
+/* Touch targets and iOS auto-zoom prevention <= 640px */
+@media (max-width: 640px) {
+  .container {
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+  }
+
+  /* Fluid responsive headings */
+  h1 {
+    font-size: clamp(24px, 6.5vw, 36px) !important;
+    letter-spacing: -0.5px !important;
+  }
+  h2 {
+    font-size: clamp(20px, 5.5vw, 28px) !important;
+  }
+  h3 {
+    font-size: clamp(16px, 4.5vw, 22px) !important;
+  }
+
+  /* Compact card padding on mobile to maximize viewport real estate */
+  .card {
+    padding: 16px !important;
+    border-radius: var(--radius-md) !important;
+  }
+
+  /* Prevent iOS Safari 300ms zoom on input focus */
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="tel"],
+  input[type="number"],
+  select,
+  textarea {
+    font-size: 16px !important;
+    min-height: 44px !important;
+  }
+
+  /* Touch-friendly buttons */
+  .btn {
+    min-height: 44px !important;
+    touch-action: manipulation;
+  }
+
+  /* Horizontal scrollable tables and pill filters on mobile */
+  .table-responsive,
+  .filters-scrollable {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+
+  /* Hide excessive footer boilerplate on mobile */
+  footer .container {
+    flex-direction: column !important;
+    text-align: center !important;
+    gap: 10px !important;
+  }
+}
+
+/* Small smartphones (<= 380px) */
+@media (max-width: 380px) {
+  .container {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+  .card {
+    padding: 12px !important;
+  }
+  .btn {
+    padding: 10px 16px !important;
+    font-size: 13.5px !important;
+  }
+}
+
+/* Active touch feedback */
+.mobile-nav-item:active {
+  transform: scale(0.92);
+  transition: transform 0.1s ease;
+}
+
+/* Utility for responsive wrapping grids */
+.grid-responsive-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+  gap: 20px;
+}
