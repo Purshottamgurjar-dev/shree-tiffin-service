@@ -16,7 +16,7 @@ import {
 } from 'lucide-react';
 import mealService, { MEAL_CATEGORIES } from '../../services/mealService';
 import MealForm from '../../components/admin/MealForm';
-import { formatCurrency } from '../../utils';
+import { formatCurrency, getMealImage } from '../../utils';
 
 export default function AdminMeals() {
   const [meals, setMeals] = useState([]);
@@ -361,7 +361,7 @@ export default function AdminMeals() {
                     <td style={{ padding: '14px' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                         <img
-                          src={meal.image || '/src/assets/hero-thali.jpg'}
+                          src={getMealImage(meal.image)}
                           alt={meal.name}
                           style={{
                             width: '46px',

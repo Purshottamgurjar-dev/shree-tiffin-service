@@ -1,3 +1,16 @@
+import heroThali from '../assets/hero-thali.jpg';
+
+// Export Vite-bundled hero thali asset
+export { heroThali };
+
+// Safe meal image helper that resolves Vite-bundled asset and sanitizes legacy /src/assets paths
+export const getMealImage = (image) => {
+  if (!image || typeof image !== 'string' || image.includes('/src/assets/')) {
+    return heroThali;
+  }
+  return image;
+};
+
 // Currency formatting in INR ₹
 export const formatCurrency = (amount) => {
   return new Intl.NumberFormat('en-IN', {
@@ -31,3 +44,4 @@ export const formatTime = (dateString) => {
     minute: '2-digit',
   });
 };
+

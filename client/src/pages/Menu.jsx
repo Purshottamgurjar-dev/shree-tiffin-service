@@ -15,7 +15,7 @@ import {
 import mealService, { MEAL_CATEGORIES } from '../services/mealService';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
-import { formatCurrency } from '../utils';
+import { formatCurrency, getMealImage } from '../utils';
 
 export default function Menu() {
   const { isAuthenticated } = useAuth();
@@ -288,7 +288,7 @@ export default function Menu() {
                 {/* Meal Image */}
                 <div style={{ position: 'relative', height: '210px', overflow: 'hidden' }}>
                   <img
-                    src={meal.image || '/src/assets/hero-thali.jpg'}
+                    src={getMealImage(meal.image)}
                     alt={meal.name}
                     style={{
                       width: '100%',

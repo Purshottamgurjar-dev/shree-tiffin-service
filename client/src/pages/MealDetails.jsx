@@ -18,7 +18,7 @@ import {
 import mealService from '../services/mealService';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
-import { formatCurrency } from '../utils';
+import { formatCurrency, getMealImage } from '../utils';
 
 export default function MealDetails() {
   const { id } = useParams();
@@ -106,7 +106,7 @@ export default function MealDetails() {
           {/* Left Column: Image Banner */}
           <div style={{ position: 'relative', minHeight: '380px', maxHeight: '500px' }}>
             <img
-              src={meal.image || '/src/assets/hero-thali.jpg'}
+              src={getMealImage(meal.image)}
               alt={meal.name}
               style={{
                 width: '100%',

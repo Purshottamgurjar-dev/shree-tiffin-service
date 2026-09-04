@@ -16,7 +16,7 @@ import {
 } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
-import { formatCurrency } from '../utils';
+import { formatCurrency, getMealImage } from '../utils';
 
 export default function Cart() {
   const { 
@@ -229,7 +229,7 @@ export default function Cart() {
                     >
                       {/* Meal Thumbnail */}
                       <img
-                        src={meal.image || '/src/assets/hero-thali.jpg'}
+                        src={getMealImage(meal.image)}
                         alt={meal.name}
                         style={{
                           width: '84px',

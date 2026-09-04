@@ -15,6 +15,8 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
+import heroThali from '../assets/hero-thali.jpg';
+import { getMealImage } from '../utils';
 
 export default function Home() {
   const { isAuthenticated, user, isOwner } = useAuth();
@@ -126,7 +128,7 @@ export default function Home() {
             position: 'relative',
           }}>
             <img
-              src="/src/assets/hero-thali.jpg"
+              src={heroThali}
               alt="Shree Tiffin Service Special Deluxe Thali"
               style={{ width: '100%', height: '380px', objectFit: 'cover', display: 'block' }}
             />
@@ -185,7 +187,7 @@ export default function Home() {
                 <div key={meal._id} className="card" style={{ padding: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
                   <div style={{ position: 'relative', height: '190px' }}>
                     <img
-                      src={meal.image || '/src/assets/hero-thali.jpg'}
+                      src={getMealImage(meal.image)}
                       alt={meal.name}
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                     />

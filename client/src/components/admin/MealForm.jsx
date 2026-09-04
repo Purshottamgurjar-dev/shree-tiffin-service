@@ -10,7 +10,7 @@ export default function MealForm({ initialData = null, isOpen, onClose, onSave }
     description: '',
     price: '',
     category: 'Lunch',
-    image: '/src/assets/hero-thali.jpg',
+    image: '/assets/hero-thali.jpg',
     ingredients: [],
     isAvailable: true,
     isFeatured: false,
@@ -27,7 +27,7 @@ export default function MealForm({ initialData = null, isOpen, onClose, onSave }
         description: initialData.description || '',
         price: initialData.price !== undefined ? initialData.price : '',
         category: initialData.category || 'Lunch',
-        image: initialData.image || '/src/assets/hero-thali.jpg',
+        image: (initialData.image && !initialData.image.includes('/src/assets/')) ? initialData.image : '/assets/hero-thali.jpg',
         ingredients: Array.isArray(initialData.ingredients) ? [...initialData.ingredients] : [],
         isAvailable: initialData.isAvailable !== undefined ? initialData.isAvailable : true,
         isFeatured: initialData.isFeatured !== undefined ? initialData.isFeatured : false,
@@ -38,7 +38,7 @@ export default function MealForm({ initialData = null, isOpen, onClose, onSave }
         description: '',
         price: '',
         category: 'Lunch',
-        image: '/src/assets/hero-thali.jpg',
+        image: '/assets/hero-thali.jpg',
         ingredients: ['Fresh Spices', 'Whole Wheat', 'Pure Desi Ghee'],
         isAvailable: true,
         isFeatured: false,
@@ -308,7 +308,7 @@ export default function MealForm({ initialData = null, isOpen, onClose, onSave }
               name="image"
               value={formData.image}
               onChange={handleChange}
-              placeholder="/src/assets/hero-thali.jpg or https://..."
+              placeholder="/assets/hero-thali.jpg or https://..."
               style={{
                 width: '100%',
                 padding: '10px 14px',

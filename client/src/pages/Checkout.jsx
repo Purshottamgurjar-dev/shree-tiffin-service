@@ -25,7 +25,7 @@ import { createOrder } from '../services/orderService';
 import paymentService from '../services/paymentService';
 import settingsService from '../services/settingsService';
 import AddressSelector from '../components/address/AddressSelector';
-import { formatCurrency } from '../utils';
+import { formatCurrency, getMealImage } from '../utils';
 
 export default function Checkout() {
   const { user } = useAuth();
@@ -552,7 +552,7 @@ export default function Checkout() {
                   >
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0 }}>
                       <img
-                        src={meal.image || '/src/assets/hero-thali.jpg'}
+                        src={getMealImage(meal.image)}
                         alt={meal.name}
                         style={{
                           width: '42px',
