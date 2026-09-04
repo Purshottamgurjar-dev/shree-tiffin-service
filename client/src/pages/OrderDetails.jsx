@@ -41,7 +41,15 @@ export default function OrderDetails() {
   const [cancelError, setCancelError] = useState('');
   const [justPlaced, setJustPlaced] = useState(Boolean(location.state?.justPlaced));
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
-  const [paymentActionMessage, setPaymentActionMessage] = useState({ type: '', text: '' });
+  const [paymentActionMessage, setPaymentActionMessage] = useState(() => {
+    if (location.state?.failureReason) {
+      return { type: 'error', text: `Online payment failed: ${location.state.failureReason}. You can retry or switch to Cash on Delivery.` };
+    }
+    if (location.state?.message) {
+      return { type: 'warning', text: location.state.message };
+    }
+    return { type: '', text: '' };
+  });
 
   const fetchOrder = async () => {
     try {

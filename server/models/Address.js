@@ -101,8 +101,7 @@ const addressSchema = new mongoose.Schema(
   }
 );
 
-// Indexes
-addressSchema.index({ user: 1 });
+// Compound index for querying user's default address (user index is defined on field)
 addressSchema.index({ user: 1, isDefault: 1 });
 
 const MongooseAddress = mongoose.models.Address || mongoose.model('Address', addressSchema);

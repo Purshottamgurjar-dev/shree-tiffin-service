@@ -10,6 +10,7 @@ import {
   getAllPayments,
   getPaymentById,
   collectCodPayment,
+  getPaymentDiagnostic,
 } from '../controllers/paymentController.js';
 import { protect, authorize } from '../middleware/authMiddleware.js';
 import { paymentRateLimiter } from '../middleware/rateLimiter.js';
@@ -34,6 +35,7 @@ router.get('/my/:id', protect, getMyPaymentById);
 // ----------------------------------------------------
 // Owner / Admin Protected Routes
 // ----------------------------------------------------
+router.get('/diagnostic', protect, authorize('owner'), getPaymentDiagnostic);
 router.get('/', protect, authorize('owner'), getAllPayments);
 router.get('/:id', protect, authorize('owner'), getPaymentById);
 router.patch('/:id/cod-collect', protect, authorize('owner'), collectCodPayment);

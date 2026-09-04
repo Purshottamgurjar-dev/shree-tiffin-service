@@ -44,7 +44,8 @@ const TEST_FILES = [
   { name: 'Step 10: Notifications, Business Settings & System Hardening', file: 'test-step10-production-hardening.js' },
   { name: 'Step 11: Production Deployment, Environment Separation, Observability & Final QA', file: 'test-step11-production.js' },
   { name: 'Step 12: Production Deployment & Verification', file: 'test-step12-deployment.js' },
-  { name: 'Step 13: Production Payment UX + Mobile Responsiveness Hardening', file: 'test-step13-mobile-upi-hardening.js' }
+  { name: 'Step 13: Production Payment UX + Mobile Responsiveness Hardening', file: 'test-step13-mobile-upi-hardening.js' },
+  { name: 'Step 13A: Razorpay Credential + Real Test Gateway Verification', file: 'test-step13a-razorpay-verification.js' }
 ];
 
 // Helper to wait for server health and active database connection

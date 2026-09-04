@@ -171,6 +171,10 @@ const server = app.listen(PORT, () => {
   console.log(`🌐 Local URL: http://localhost:${PORT}`);
   console.log(`🩺 Health check: http://localhost:${PORT}/api/health`);
   console.log(`🚥 Readiness: http://localhost:${PORT}/api/ready`);
+  const rzpKeyId = (process.env.RAZORPAY_KEY_ID || '').trim();
+  const rzpConfigured = Boolean(rzpKeyId && !rzpKeyId.includes('placeholder') && process.env.RAZORPAY_KEY_SECRET);
+  const rzpPrefix = rzpKeyId.startsWith('rzp_test_') ? 'rzp_test_' : (rzpKeyId.startsWith('rzp_live_') ? 'rzp_live_' : 'none');
+  console.log(`💳 Razorpay Configured: ${rzpConfigured} (Prefix: ${rzpPrefix})`);
   console.log('====================================================');
 });
 

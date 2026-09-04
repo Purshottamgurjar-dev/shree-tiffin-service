@@ -221,9 +221,18 @@ export default function Checkout() {
         }
       } catch (onlineErr) {
         setIsPlacingOrder(false);
-        setOrderError(onlineErr.response?.data?.message || onlineErr.message || 'Failed to initiate online payment. Order saved as Pending.');
+        const errMsg = onlineErr.response?.data?.message || onlineErr.message || 'Failed to initiate online payment. Order saved as Pending.';
+        setOrderError(errMsg);
         await loadCart();
-        navigate(`/orders/${createdOrder._id}`);
+        navigate(`/orders/${createdOrder._id}`, {
+          state: {
+            justPlaced: true,
+            orderNumber: createdOrder.orderNumber,
+            paymentMethod: 'ONLINE',
+            paymentPending: true,
+            message: `${errMsg} You can complete your order using Cash on Delivery or retry online payment.`,
+          },
+        });
       }
     } catch (err) {
       setOrderError(err.message || 'Server error while placing order. Please try again.');

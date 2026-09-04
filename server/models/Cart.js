@@ -40,8 +40,6 @@ const cartSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       required: [true, 'User reference is required for cart'],
-      unique: true,
-      index: true,
     },
     items: {
       type: [cartItemSchema],

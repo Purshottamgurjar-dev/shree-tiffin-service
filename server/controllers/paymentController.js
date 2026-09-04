@@ -197,6 +197,14 @@ export const createOnlineOrder = async (req, res, next) => {
       },
     });
   } catch (error) {
+    if (error.code === 'ONLINE_PAYMENT_UNAVAILABLE') {
+      return res.status(error.statusCode || 503).json({
+        success: false,
+        code: 'ONLINE_PAYMENT_UNAVAILABLE',
+        message: error.message || 'Online payment is currently unavailable. Please select Cash on Delivery.',
+        orderId: req.body?.orderId,
+      });
+    }
     next(error);
   }
 };
@@ -219,6 +227,27 @@ export const verifyOnlinePayment = async (req, res, next) => {
       return res.status(400).json({
         success: false,
         message: 'Missing required payment verification parameters (orderId, razorpay_order_id, razorpay_payment_id, razorpay_signature)',
+      });
+    }
+
+    // Razorpay Order ID Format Check
+    if (!razorpay_order_id.startsWith('order_')) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid gateway order ID format. Razorpay order ID must begin with "order_".',
+      });
+    }
+
+    // Production Safety: Disallow fake or sandbox fallback IDs in production
+    if (
+      process.env.NODE_ENV === 'production' &&
+      (razorpay_order_id.startsWith('order_test_') ||
+        razorpay_order_id.startsWith('fake_') ||
+        razorpay_order_id.startsWith('sandbox_'))
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: 'Fake or mock order IDs cannot be processed in production.',
       });
     }
 
@@ -769,6 +798,42 @@ export const collectCodPayment = async (req, res, next) => {
       message: `Cash on Delivery payment of ₹${payment.amount} marked as collected successfully`,
       payment,
       order,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * @desc    Get payment configuration diagnostics & verify Razorpay gateway connectivity (Owner only)
+ * @route   GET /api/payments/diagnostic
+ * @access  Private (Owner only)
+ */
+export const getPaymentDiagnostic = async (req, res, next) => {
+  try {
+    const isConfigured = paymentService.isRazorpayConfigured();
+    const keyPrefix = paymentService.getSafeKeyPrefix();
+    const isProd = process.env.NODE_ENV === 'production';
+
+    // Run harmless ₹1 live test order if explicitly requested
+    let gatewayTestResult = null;
+    if (req.query.testOrder === 'true' || req.query.verify === 'true') {
+      gatewayTestResult = await paymentService.testRealGatewayOrderCreation();
+    }
+
+    res.status(200).json({
+      success: true,
+      environment: process.env.NODE_ENV || 'development',
+      isProduction: isProd,
+      razorpay: {
+        configured: isConfigured,
+        keyPrefix,
+        currency: 'INR',
+        mode: keyPrefix === 'rzp_live_' ? 'live' : (keyPrefix === 'rzp_test_' ? 'test' : 'unconfigured'),
+        secretConfigured: Boolean(process.env.RAZORPAY_KEY_SECRET),
+        webhookSecretConfigured: Boolean(process.env.RAZORPAY_WEBHOOK_SECRET),
+      },
+      gatewayTest: gatewayTestResult,
     });
   } catch (error) {
     next(error);
