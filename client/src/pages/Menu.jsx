@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   Search, 
@@ -10,53 +10,143 @@ import {
   ArrowRight, 
   ShoppingBag,
   RefreshCw,
-  ChefHat
+  ChefHat,
+  X,
+  SlidersHorizontal,
+  Flame,
+  ShieldCheck,
+  Clock,
+  HeartHandshake
 } from 'lucide-react';
 import mealService, { MEAL_CATEGORIES } from '../services/mealService';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import { formatCurrency, getMealImage } from '../utils';
 
+// Popular quick search suggestion chips
+const POPULAR_SUGGESTIONS = [
+  { label: 'Paneer Thali', query: 'Paneer', icon: '🧀' },
+  { label: 'Deluxe Lunch', query: 'Deluxe', icon: '🍱' },
+  { label: 'Daily Tiffin', query: 'Daily', icon: '🍲' },
+  { label: 'Shahi Feast', query: 'Shahi', icon: '👑' },
+  { label: 'Dinner Box', query: 'Dinner', icon: '🌙' },
+  { label: 'Indori Poha', query: 'Poha', icon: '🌾' },
+  { label: 'Desi Phulka', query: 'Phulka', icon: '🫓' },
+  { label: 'Masala Chaas', query: 'Chaas', icon: '🥛' },
+];
+
+// Rich Category Filter Tabs with emojis
+const CATEGORY_TABS = [
+  { key: 'All', label: 'All Dishes', icon: '🍱' },
+  { key: 'Daily Tiffin', label: 'Daily Tiffin', icon: '🍛' },
+  { key: 'Lunch', label: 'Lunch Meals', icon: '🥘' },
+  { key: 'Dinner', label: 'Dinner Boxes', icon: '🌙' },
+  { key: 'Special Thali', label: 'Special Thali', icon: '👑' },
+  { key: 'Breakfast', label: 'Breakfast', icon: '🥞' },
+  { key: 'Extra Items', label: 'Beverages & Extras', icon: '🥛' },
+  { key: 'Add-ons', label: 'Roti & Add-ons', icon: '🫓' },
+];
+
 export default function Menu() {
   const { isAuthenticated } = useAuth();
-  const { addToCart } = useCart();
+  const { items, totalItems, addToCart } = useCart();
+  
   const [meals, setMeals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [activeSuggestion, setActiveSuggestion] = useState('');
+  const [sortBy, setSortBy] = useState('rating');
+  const [categoryCounts, setCategoryCounts] = useState({});
   const [errorMsg, setErrorMsg] = useState('');
   const [addingMealId, setAddingMealId] = useState(null);
   const [feedbackMealId, setFeedbackMealId] = useState(null);
   const [guestNotice, setGuestNotice] = useState(false);
 
-  const fetchMeals = async (cat = selectedCategory, search = searchQuery) => {
+  const searchInputRef = useRef(null);
+
+  // Load all meals initially to compute category counts
+  useEffect(() => {
+    const loadCounts = async () => {
+      try {
+        const res = await mealService.getMeals({});
+        if (res.success && Array.isArray(res.data)) {
+          const counts = { All: res.data.length };
+          res.data.forEach((m) => {
+            if (m.category) {
+              counts[m.category] = (counts[m.category] || 0) + 1;
+            }
+          });
+          setCategoryCounts(counts);
+        }
+      } catch (e) {
+        // Non-critical
+      }
+    };
+    loadCounts();
+  }, []);
+
+  // Fetch meals based on current filters
+  const fetchMeals = async (cat = selectedCategory, search = searchQuery, sort = sortBy) => {
     setLoading(true);
     setErrorMsg('');
     try {
       const params = {};
       if (cat && cat !== 'All') params.category = cat;
       if (search && search.trim()) params.search = search.trim();
+      if (sort) params.sort = sort;
 
       const response = await mealService.getMeals(params);
       if (response.success) {
-        setMeals(response.data);
+        setMeals(response.data || []);
+      } else {
+        setMeals([]);
       }
     } catch (err) {
       setErrorMsg(err.message || 'Failed to load menu items.');
+      setMeals([]);
     } finally {
       setLoading(false);
     }
   };
 
+  // Live search debounce (300ms) for instant filtering
   useEffect(() => {
-    fetchMeals(selectedCategory, searchQuery);
-  }, [selectedCategory]);
+    const timer = setTimeout(() => {
+      fetchMeals(selectedCategory, searchQuery, sortBy);
+    }, 280);
 
-  const handleSearchSubmit = (e) => {
-    e.preventDefault();
-    fetchMeals(selectedCategory, searchQuery);
+    return () => clearTimeout(timer);
+  }, [searchQuery, selectedCategory, sortBy]);
+
+  // Clickable Suggestion Chip handler (toggleable & instant)
+  const handleSuggestionClick = (query) => {
+    if (activeSuggestion.toLowerCase() === query.toLowerCase()) {
+      // Deselect if already selected
+      setActiveSuggestion('');
+      setSearchQuery('');
+    } else {
+      setActiveSuggestion(query);
+      setSearchQuery(query);
+    }
   };
 
+  // Form submit handler
+  const handleSearchSubmit = (e) => {
+    if (e) e.preventDefault();
+    fetchMeals(selectedCategory, searchQuery, sortBy);
+  };
+
+  // Clear search query
+  const handleClearSearch = () => {
+    setSearchQuery('');
+    setActiveSuggestion('');
+    if (searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  };
+
+  // Add to cart handler
   const handleAddToCart = async (meal) => {
     if (!isAuthenticated) {
       setGuestNotice(true);
@@ -75,7 +165,7 @@ export default function Menu() {
   };
 
   return (
-    <div style={{ padding: '40px 0', minHeight: '85vh' }}>
+    <div style={{ padding: 'clamp(20px, 4vw, 40px) 0 80px', minHeight: '85vh' }}>
       <div className="container">
         
         {/* Guest Authentication Prompt Banner */}
@@ -92,22 +182,24 @@ export default function Menu() {
             justifyContent: 'space-between',
             flexWrap: 'wrap',
             gap: '12px',
+            boxShadow: 'var(--shadow-sm)',
           }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '14px', fontWeight: '600' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '14px', fontWeight: '700' }}>
               <ShoppingBag size={20} />
               <span>Please login or register to add wholesome tiffins to your cart.</span>
             </div>
-            <div style={{ display: 'flex', gap: '8px' }}>
-              <Link to="/login" className="btn btn-primary" style={{ padding: '6px 14px', fontSize: '13px' }}>
+            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+              <Link to="/login" className="btn btn-primary" style={{ padding: '7px 16px', fontSize: '13px' }}>
                 Login Now
               </Link>
-              <Link to="/register" className="btn btn-secondary" style={{ padding: '6px 14px', fontSize: '13px' }}>
+              <Link to="/register" className="btn btn-secondary" style={{ padding: '7px 14px', fontSize: '13px' }}>
                 Create Account
               </Link>
               <button
                 onClick={() => setGuestNotice(false)}
                 className="btn btn-secondary"
-                style={{ padding: '6px 10px', fontSize: '13px' }}
+                style={{ padding: '7px 10px', fontSize: '13px' }}
+                aria-label="Close notification"
               >
                 ✕
               </button>
@@ -116,92 +208,293 @@ export default function Menu() {
         )}
         
         {/* Menu Hero Header */}
-        <div style={{ textAlign: 'center', maxWidth: '780px', margin: '0 auto 36px auto' }}>
-          <div className="badge badge-primary" style={{ marginBottom: '14px' }}>
+        <div style={{ textAlign: 'center', maxWidth: '820px', margin: '0 auto 32px auto' }}>
+          <div className="badge badge-primary" style={{ marginBottom: '12px', display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '4px 14px' }}>
             <ChefHat size={14} />
-            <span>Pure Vegetarian & Homestyle Cooking</span>
+            <span>Ghar Jaisa Khana, Har Din</span>
           </div>
-          <h1 style={{ fontSize: '38px', fontWeight: '800', marginBottom: '12px', color: 'var(--text-primary)' }}>
-            Our Daily Homestyle Menu
+
+          <h1 style={{
+            fontSize: 'clamp(26px, 6vw, 42px)',
+            fontWeight: '800',
+            marginBottom: '10px',
+            color: 'var(--text-primary)',
+            letterSpacing: '-0.5px',
+            lineHeight: 1.2,
+          }}>
+            Fresh Homestyle Tiffin Menu
           </h1>
-          <p style={{ fontSize: '16px', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
-            Prepared fresh each morning using wholesome whole-wheat phulkas, desi ghee, farm-fresh vegetables, and traditional spices.
+
+          <p style={{
+            fontSize: 'clamp(14px, 3.5vw, 16px)',
+            color: 'var(--text-secondary)',
+            lineHeight: 1.6,
+            maxWidth: '660px',
+            margin: '0 auto 18px auto',
+          }}>
+            Cooked fresh each morning in pure desi cow ghee, whole-wheat soft phulkas, farm-fresh vegetables, and comforting homestyle spices.
           </p>
-        </div>
 
-        {/* Search & Category Filter Controls */}
-        <div className="card" style={{ padding: '20px 24px', marginBottom: '36px' }}>
-          {/* Search Bar */}
-          <form onSubmit={handleSearchSubmit} style={{ marginBottom: '18px' }}>
-            <div style={{ position: 'relative', maxWidth: '640px', margin: '0 auto', display: 'flex', gap: '10px' }}>
-              <div style={{ position: 'relative', flex: 1 }}>
-                <Search size={18} color="var(--text-tertiary)" style={{
-                  position: 'absolute',
-                  left: '14px',
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                }} />
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search meals by name (e.g. Paneer, Deluxe Thali, Dal)..."
-                  style={{
-                    width: '100%',
-                    padding: '12px 14px 12px 42px',
-                    borderRadius: 'var(--radius-full)',
-                    border: '1.5px solid var(--border-light)',
-                    fontSize: '14.5px',
-                    outline: 'none',
-                    backgroundColor: 'var(--bg-cream)',
-                  }}
-                />
-              </div>
-              <button
-                type="submit"
-                className="btn btn-primary"
-                style={{ padding: '10px 24px', borderRadius: 'var(--radius-full)' }}
-              >
-                Search
-              </button>
-            </div>
-          </form>
-
-          {/* Category Filter Pills */}
+          {/* Quick Value Pillars */}
           <div style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             flexWrap: 'wrap',
-            gap: '8px',
+            gap: '8px 18px',
+            fontSize: '12.5px',
+            fontWeight: '600',
+            color: 'var(--text-secondary)',
           }}>
-            {MEAL_CATEGORIES.map((cat) => {
-              const isActive = selectedCategory === cat;
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+              <div className="veg-indicator"><div className="veg-indicator-dot" /></div>
+              <span>100% Pure Vegetarian</span>
+            </span>
+            <span>•</span>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', color: 'var(--primary-800)' }}>
+              <Flame size={14} />
+              <span>Desi Cow Ghee Cooking</span>
+            </span>
+            <span>•</span>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+              <Clock size={14} color="var(--primary-700)" />
+              <span>Hot Doorstep Delivery</span>
+            </span>
+            <span>•</span>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', color: 'var(--veg-700)' }}>
+              <ShieldCheck size={14} />
+              <span>Hygienic Kitchen</span>
+            </span>
+          </div>
+        </div>
+
+        {/* Search & Suggestions Card */}
+        <div className="card" style={{
+          padding: 'clamp(16px, 4vw, 24px)',
+          marginBottom: '28px',
+          borderRadius: 'var(--radius-xl)',
+          boxShadow: 'var(--shadow-md)',
+          border: '1px solid var(--border-subtle)',
+        }}>
+          {/* Search Form */}
+          <form onSubmit={handleSearchSubmit}>
+            <div style={{
+              position: 'relative',
+              maxWidth: '680px',
+              margin: '0 auto',
+              display: 'flex',
+              gap: '10px',
+              alignItems: 'center',
+            }}>
+              <div style={{ position: 'relative', flex: 1 }}>
+                <Search
+                  size={19}
+                  color="var(--primary-700)"
+                  style={{
+                    position: 'absolute',
+                    left: '14px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    pointerEvents: 'none',
+                  }}
+                />
+                
+                <input
+                  ref={searchInputRef}
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    if (activeSuggestion && e.target.value.toLowerCase() !== activeSuggestion.toLowerCase()) {
+                      setActiveSuggestion('');
+                    }
+                  }}
+                  placeholder="Search meals (e.g. Paneer, Deluxe Thali, Dal, Poha)..."
+                  style={{
+                    width: '100%',
+                    padding: '12px 40px 12px 42px',
+                    borderRadius: 'var(--radius-full)',
+                    border: '1.5px solid var(--border-color)',
+                    fontSize: '14.5px',
+                    outline: 'none',
+                    backgroundColor: 'var(--bg-cream)',
+                    transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
+                  }}
+                  onFocus={(e) => (e.target.style.borderColor = 'var(--primary-600)')}
+                  onBlur={(e) => (e.target.style.borderColor = 'var(--border-color)')}
+                />
+
+                {/* Clear Button inside Input */}
+                {searchQuery && (
+                  <button
+                    type="button"
+                    onClick={handleClearSearch}
+                    style={{
+                      position: 'absolute',
+                      right: '12px',
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      background: 'none',
+                      border: 'none',
+                      color: 'var(--text-tertiary)',
+                      cursor: 'pointer',
+                      padding: '4px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      borderRadius: '50%',
+                    }}
+                    title="Clear search"
+                    aria-label="Clear search"
+                  >
+                    <X size={16} />
+                  </button>
+                )}
+              </div>
+
+              <button
+                type="submit"
+                className="btn btn-primary"
+                style={{
+                  padding: '11px 24px',
+                  borderRadius: 'var(--radius-full)',
+                  fontWeight: '700',
+                  fontSize: '14px',
+                  flexShrink: 0,
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                }}
+              >
+                <Search size={15} />
+                <span>Search</span>
+              </button>
+            </div>
+          </form>
+
+          {/* Clickable Quick Suggestions (Workable & Instant) */}
+          <div style={{
+            marginTop: '16px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexWrap: 'wrap',
+            gap: '8px',
+            paddingTop: '12px',
+            borderTop: '1px solid var(--border-subtle)',
+          }}>
+            <span style={{
+              fontSize: '12.5px',
+              fontWeight: '700',
+              color: 'var(--primary-800)',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '4px',
+              marginRight: '4px',
+            }}>
+              <Flame size={14} color="var(--primary-600)" />
+              <span>Suggested:</span>
+            </span>
+
+            {POPULAR_SUGGESTIONS.map((sug) => {
+              const isSelected = activeSuggestion.toLowerCase() === sug.query.toLowerCase() ||
+                (searchQuery.trim().toLowerCase() === sug.query.toLowerCase());
+
               return (
                 <button
-                  key={cat}
-                  onClick={() => setSelectedCategory(cat)}
-                  style={{
-                    padding: '7px 18px',
-                    borderRadius: 'var(--radius-full)',
-                    fontSize: '13.5px',
-                    fontWeight: '600',
-                    border: 'none',
-                    cursor: 'pointer',
-                    transition: 'all var(--transition-fast)',
-                    backgroundColor: isActive ? 'var(--primary-800)' : 'var(--bg-subtle)',
-                    color: isActive ? '#ffffff' : 'var(--text-primary)',
-                    boxShadow: isActive ? 'var(--shadow-warm)' : 'none',
-                  }}
+                  key={sug.label}
+                  type="button"
+                  onClick={() => handleSuggestionClick(sug.query)}
+                  className={`menu-suggestion-pill ${isSelected ? 'active' : ''}`}
+                  title={`Filter by ${sug.label}`}
                 >
-                  {cat}
+                  <span style={{ fontSize: '13px' }}>{sug.icon}</span>
+                  <span>{sug.label}</span>
+                  {isSelected && <X size={12} style={{ marginLeft: '2px' }} />}
                 </button>
               );
             })}
           </div>
         </div>
 
-        {/* Error Alert */}
+        {/* Category Filter Pills (Scrollable & Responsive) */}
+        <div style={{ marginBottom: '28px' }}>
+          <div className="category-scroll-container">
+            {CATEGORY_TABS.map((cat) => {
+              const isActive = selectedCategory === cat.key;
+              const count = categoryCounts[cat.key];
+
+              return (
+                <button
+                  key={cat.key}
+                  onClick={() => setSelectedCategory(cat.key)}
+                  className={`category-tab-btn ${isActive ? 'active' : ''}`}
+                >
+                  <span style={{ fontSize: '15px' }}>{cat.icon}</span>
+                  <span>{cat.label}</span>
+                  {count !== undefined && (
+                    <span className="category-tab-count">
+                      {count}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Results Metadata Bar & Sort Filter */}
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: '12px',
+          marginBottom: '24px',
+          padding: '0 4px',
+        }}>
+          <div style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>
+            Showing <strong style={{ color: 'var(--text-primary)' }}>{meals.length}</strong> {meals.length === 1 ? 'fresh meal' : 'fresh meals'}
+            {selectedCategory !== 'All' && (
+              <span> in <strong style={{ color: 'var(--primary-800)' }}>{selectedCategory}</strong></span>
+            )}
+            {searchQuery && (
+              <span> matching "<strong style={{ color: 'var(--primary-800)' }}>{searchQuery}</strong>"</span>
+            )}
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <SlidersHorizontal size={15} color="var(--text-tertiary)" />
+            <label htmlFor="menu-sort" style={{ fontSize: '13px', fontWeight: '600', color: 'var(--text-secondary)' }}>
+              Sort:
+            </label>
+            <select
+              id="menu-sort"
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              style={{
+                padding: '6px 14px',
+                borderRadius: 'var(--radius-full)',
+                border: '1px solid var(--border-color)',
+                backgroundColor: '#ffffff',
+                fontSize: '13px',
+                fontWeight: '600',
+                color: 'var(--text-primary)',
+                outline: 'none',
+                cursor: 'pointer',
+                boxShadow: 'var(--shadow-xs)',
+              }}
+            >
+              <option value="rating">Top Rated ⭐</option>
+              <option value="featured">Today's Specials ✨</option>
+              <option value="price_asc">Price: Low to High ₹</option>
+              <option value="price_desc">Price: High to Low ₹</option>
+              <option value="newest">Newest Additions</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Error Alert if any */}
         {errorMsg && (
           <div style={{
             backgroundColor: 'rgba(250, 82, 82, 0.1)',
@@ -216,244 +509,342 @@ export default function Menu() {
           </div>
         )}
 
-        {/* Loading State */}
+        {/* Loading Spinner */}
         {loading ? (
           <div style={{ textAlign: 'center', padding: '64px 0', color: 'var(--text-secondary)' }}>
             <RefreshCw size={36} className="animate-spin" style={{ margin: '0 auto 16px auto', color: 'var(--primary-700)' }} />
-            <div style={{ fontSize: '16px', fontWeight: '600' }}>Fetching freshly prepared meals...</div>
+            <div style={{ fontSize: '16px', fontWeight: '700' }}>Fetching delicious homestyle tiffins...</div>
           </div>
         ) : meals.length === 0 ? (
-          /* Empty State */
-          <div className="card" style={{ textAlign: 'center', padding: '60px 20px', maxWidth: '540px', margin: '0 auto' }}>
-            <Utensils size={44} color="var(--text-tertiary)" style={{ margin: '0 auto 14px auto' }} />
-            <h3 style={{ fontSize: '20px', fontWeight: '800', marginBottom: '8px' }}>No meals found</h3>
-            <p style={{ fontSize: '14px', color: 'var(--text-secondary)', marginBottom: '20px' }}>
-              We couldn't find any dishes matching "{searchQuery}" in category "{selectedCategory}".
+          /* Empty Search Results State */
+          <div className="card" style={{ textAlign: 'center', padding: '56px 20px', maxWidth: '520px', margin: '0 auto' }}>
+            <div style={{
+              width: '64px',
+              height: '64px',
+              borderRadius: '20px',
+              backgroundColor: 'var(--primary-50)',
+              color: 'var(--primary-800)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              margin: '0 auto 16px auto',
+            }}>
+              <Utensils size={32} />
+            </div>
+            <h3 style={{ fontSize: '20px', fontWeight: '800', marginBottom: '8px', color: 'var(--text-primary)' }}>
+              No dishes found
+            </h3>
+            <p style={{ fontSize: '14px', color: 'var(--text-secondary)', lineHeight: 1.5, marginBottom: '22px' }}>
+              We couldn't find any meals matching <strong>"{searchQuery}"</strong> in <strong>{selectedCategory}</strong>.
             </p>
             <button
               onClick={() => {
                 setSelectedCategory('All');
                 setSearchQuery('');
-                fetchMeals('All', '');
+                setActiveSuggestion('');
+                fetchMeals('All', '', 'rating');
               }}
-              className="btn btn-secondary"
-              style={{ padding: '10px 22px' }}
+              className="btn btn-primary"
+              style={{ padding: '10px 24px', borderRadius: 'var(--radius-full)' }}
             >
-              Reset Filters
+              <span>Reset Filters & Show All Meals</span>
             </button>
           </div>
         ) : (
           /* Meal Cards Grid */
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 280px), 1fr))',
-            gap: '28px',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 290px), 1fr))',
+            gap: '24px',
           }}>
-            {meals.map((meal) => (
-              <div
-                key={meal._id}
-                className="card"
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  padding: 0,
-                  overflow: 'hidden',
-                  position: 'relative',
-                  border: meal.isFeatured ? '2px solid var(--accent-gold-300)' : '1px solid var(--border-subtle)',
-                }}
-              >
-                {/* Featured Ribbon */}
-                {meal.isFeatured && (
-                  <div style={{
-                    position: 'absolute',
-                    top: '14px',
-                    left: '14px',
-                    zIndex: 2,
-                    backgroundColor: 'var(--primary-800)',
-                    color: '#ffffff',
-                    padding: '4px 12px',
-                    borderRadius: 'var(--radius-full)',
-                    fontSize: '11px',
-                    fontWeight: '700',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '4px',
-                    boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
-                  }}>
-                    <Sparkles size={12} />
-                    <span>TODAY'S SPECIAL</span>
-                  </div>
-                )}
+            {meals.map((meal) => {
+              const cartItem = items.find((i) => i.meal?._id === meal._id || i.meal === meal._id);
+              const inCartQty = cartItem ? cartItem.quantity : 0;
 
-                {/* Meal Image */}
-                <div style={{ position: 'relative', height: '210px', overflow: 'hidden' }}>
-                  <img
-                    src={getMealImage(meal.image)}
-                    alt={meal.name}
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'cover',
-                      transition: 'transform var(--transition-smooth)',
-                    }}
-                  />
-                  <div style={{
-                    position: 'absolute',
-                    bottom: '10px',
-                    right: '12px',
-                    backgroundColor: 'rgba(0,0,0,0.75)',
-                    color: '#ffffff',
-                    padding: '3px 8px',
-                    borderRadius: 'var(--radius-sm)',
-                    fontSize: '11px',
-                    fontWeight: '700',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '4px',
-                  }}>
-                    <Star size={12} color="#fab005" fill="#fab005" />
-                    <span>{meal.rating || '4.8'}</span>
-                  </div>
-                </div>
+              return (
+                <div
+                  key={meal._id}
+                  className="card menu-meal-card"
+                  style={{
+                    border: meal.isFeatured ? '2px solid var(--accent-gold-400)' : '1px solid var(--border-subtle)',
+                  }}
+                >
+                  {/* Today's Special / Featured Ribbon */}
+                  {meal.isFeatured && (
+                    <div style={{
+                      position: 'absolute',
+                      top: '12px',
+                      left: '12px',
+                      zIndex: 3,
+                      backgroundColor: 'var(--primary-800)',
+                      color: '#ffffff',
+                      padding: '4px 12px',
+                      borderRadius: 'var(--radius-full)',
+                      fontSize: '11px',
+                      fontWeight: '800',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '4px',
+                      boxShadow: '0 3px 10px rgba(0,0,0,0.25)',
+                      letterSpacing: '0.4px',
+                    }}>
+                      <Sparkles size={12} color="#fab005" />
+                      <span>TODAY'S SPECIAL</span>
+                    </div>
+                  )}
 
-                {/* Card Content */}
-                <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', flex: 1 }}>
-                  {/* Category & Availability */}
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-                    <span className="badge badge-primary" style={{ fontSize: '11px' }}>
-                      {meal.category}
-                    </span>
-                    <span style={{
-                      fontSize: '12px',
-                      fontWeight: '600',
-                      color: meal.isAvailable ? 'var(--veg-700)' : 'var(--status-danger)',
+                  {/* Meal Thumbnail Banner with Zoom Effect */}
+                  <div style={{ position: 'relative', height: '210px', overflow: 'hidden', backgroundColor: 'var(--bg-subtle)' }}>
+                    <img
+                      src={getMealImage(meal.image)}
+                      alt={meal.name}
+                      className="menu-meal-img"
+                    />
+
+                    {/* Pure Veg Badge on Image */}
+                    <div style={{
+                      position: 'absolute',
+                      top: '12px',
+                      right: '12px',
+                      zIndex: 2,
+                      backgroundColor: 'rgba(255, 255, 255, 0.92)',
+                      padding: '4px 6px',
+                      borderRadius: '6px',
+                      boxShadow: '0 2px 6px rgba(0,0,0,0.15)',
                       display: 'flex',
                       alignItems: 'center',
                       gap: '4px',
                     }}>
-                      {meal.isAvailable ? (
-                        <>
-                          <CheckCircle2 size={13} />
-                          <span>In Stock</span>
-                        </>
-                      ) : (
-                        <>
-                          <XCircle size={13} />
-                          <span>Sold Out</span>
-                        </>
-                      )}
-                    </span>
+                      <div className="veg-indicator"><div className="veg-indicator-dot" /></div>
+                      <span style={{ fontSize: '10.5px', fontWeight: '800', color: '#16a34a' }}>VEG</span>
+                    </div>
+
+                    {/* Star Rating Badge */}
+                    <div style={{
+                      position: 'absolute',
+                      bottom: '10px',
+                      right: '12px',
+                      backgroundColor: 'rgba(0, 0, 0, 0.78)',
+                      backdropFilter: 'blur(4px)',
+                      color: '#ffffff',
+                      padding: '3px 8px',
+                      borderRadius: 'var(--radius-sm)',
+                      fontSize: '11.5px',
+                      fontWeight: '800',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '4px',
+                    }}>
+                      <Star size={12} color="#fab005" fill="#fab005" />
+                      <span>{meal.rating || '4.8'}</span>
+                    </div>
                   </div>
 
-                  {/* Meal Title */}
-                  <h3 style={{ fontSize: '18px', fontWeight: '800', marginBottom: '8px', color: 'var(--text-primary)' }}>
-                    {meal.name}
-                  </h3>
+                  {/* Card Body */}
+                  <div style={{ padding: '18px', display: 'flex', flexDirection: 'column', flex: 1 }}>
+                    {/* Category & Availability Line */}
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+                      <span className="badge badge-primary" style={{ fontSize: '11px', padding: '2px 8px' }}>
+                        {meal.category}
+                      </span>
 
-                  {/* Description */}
-                  <p style={{
-                    fontSize: '13px',
-                    color: 'var(--text-secondary)',
-                    lineHeight: 1.5,
-                    marginBottom: '16px',
-                    display: '-webkit-box',
-                    WebkitLineClamp: 3,
-                    WebkitBoxOrient: 'vertical',
-                    overflow: 'hidden',
-                    flex: 1,
-                  }}>
-                    {meal.description}
-                  </p>
-
-                  {/* Ingredients Preview */}
-                  {meal.ingredients && meal.ingredients.length > 0 && (
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', marginBottom: '18px' }}>
-                      {meal.ingredients.slice(0, 3).map((ing, idx) => (
-                        <span
-                          key={idx}
-                          style={{
-                            fontSize: '11px',
-                            backgroundColor: 'var(--bg-subtle)',
-                            color: 'var(--text-secondary)',
-                            padding: '2px 8px',
-                            borderRadius: 'var(--radius-xs)',
-                          }}
-                        >
-                          {ing}
-                        </span>
-                      ))}
-                      {meal.ingredients.length > 3 && (
-                        <span style={{ fontSize: '11px', color: 'var(--text-tertiary)', alignSelf: 'center' }}>
-                          +{meal.ingredients.length - 3} more
-                        </span>
-                      )}
-                    </div>
-                  )}
-
-                  {/* Price & Action Buttons */}
-                  <div style={{
-                    borderTop: '1px solid var(--border-subtle)',
-                    paddingTop: '14px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                  }}>
-                    <div>
-                      <div style={{ fontSize: '11px', color: 'var(--text-tertiary)' }}>Price</div>
-                      <div style={{ fontSize: '20px', fontWeight: '800', color: 'var(--primary-900)' }}>
-                        {formatCurrency(meal.price)}
-                      </div>
-                    </div>
-
-                    <div style={{ display: 'flex', gap: '8px' }}>
-                      <Link
-                        to={`/menu/${meal.slug || meal._id}`}
-                        className="btn btn-secondary"
-                        style={{ padding: '8px 14px', fontSize: '13px' }}
-                      >
-                        <span>Details</span>
-                      </Link>
-
-                      <button
-                        disabled={!meal.isAvailable || addingMealId === meal._id}
-                        onClick={() => handleAddToCart(meal)}
-                        className="btn btn-primary"
-                        style={{
-                          padding: '8px 14px',
-                          fontSize: '13px',
-                          opacity: meal.isAvailable ? 1 : 0.5,
-                          cursor: meal.isAvailable ? 'pointer' : 'not-allowed',
-                          backgroundColor: feedbackMealId === meal._id ? 'var(--veg-700)' : undefined,
-                          borderColor: feedbackMealId === meal._id ? 'var(--veg-700)' : undefined,
-                        }}
-                        title={meal.isAvailable ? 'Add to Tiffin Order' : 'Item is sold out'}
-                      >
-                        {addingMealId === meal._id ? (
+                      <span style={{
+                        fontSize: '12px',
+                        fontWeight: '700',
+                        color: meal.isAvailable ? 'var(--veg-700)' : 'var(--status-danger)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '4px',
+                      }}>
+                        {meal.isAvailable ? (
                           <>
-                            <RefreshCw size={14} className="animate-spin" />
-                            <span>Adding...</span>
-                          </>
-                        ) : feedbackMealId === meal._id ? (
-                          <>
-                            <CheckCircle2 size={14} />
-                            <span>Added!</span>
+                            <CheckCircle2 size={13} />
+                            <span>Fresh Today</span>
                           </>
                         ) : (
                           <>
-                            <ShoppingBag size={14} />
-                            <span>Add to Cart</span>
+                            <XCircle size={13} />
+                            <span>Sold Out</span>
                           </>
                         )}
-                      </button>
+                      </span>
+                    </div>
+
+                    {/* Meal Name */}
+                    <h3 style={{
+                      fontSize: '17px',
+                      fontWeight: '800',
+                      marginBottom: '6px',
+                      color: 'var(--text-primary)',
+                      lineHeight: 1.35,
+                    }}>
+                      {meal.name}
+                    </h3>
+
+                    {/* Appetizing Description */}
+                    <p style={{
+                      fontSize: '13px',
+                      color: 'var(--text-secondary)',
+                      lineHeight: 1.5,
+                      marginBottom: '14px',
+                      display: '-webkit-box',
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: 'vertical',
+                      overflow: 'hidden',
+                      flex: 1,
+                    }}>
+                      {meal.description}
+                    </p>
+
+                    {/* Ingredients Pills */}
+                    {meal.ingredients && meal.ingredients.length > 0 && (
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', marginBottom: '16px' }}>
+                        {meal.ingredients.slice(0, 3).map((ing, idx) => (
+                          <span
+                            key={idx}
+                            style={{
+                              fontSize: '11px',
+                              backgroundColor: 'var(--bg-subtle)',
+                              color: 'var(--text-secondary)',
+                              padding: '2px 8px',
+                              borderRadius: 'var(--radius-xs)',
+                              fontWeight: '500',
+                            }}
+                          >
+                            {ing}
+                          </span>
+                        ))}
+                        {meal.ingredients.length > 3 && (
+                          <span style={{ fontSize: '11px', color: 'var(--text-tertiary)', alignSelf: 'center' }}>
+                            +{meal.ingredients.length - 3}
+                          </span>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Card Footer: Price & Action Buttons */}
+                    <div style={{
+                      borderTop: '1px solid var(--border-subtle)',
+                      paddingTop: '12px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      gap: '8px',
+                      marginTop: 'auto',
+                    }}>
+                      <div>
+                        <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', fontWeight: '600' }}>Price</div>
+                        <div style={{ fontSize: '20px', fontWeight: '800', color: 'var(--primary-900)' }}>
+                          {formatCurrency(meal.price)}
+                        </div>
+                      </div>
+
+                      <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+                        <Link
+                          to={`/menu/${meal.slug || meal._id}`}
+                          className="btn btn-secondary"
+                          style={{ padding: '7px 12px', fontSize: '12.5px', borderRadius: 'var(--radius-sm)' }}
+                        >
+                          <span>Details</span>
+                        </Link>
+
+                        <button
+                          disabled={!meal.isAvailable || addingMealId === meal._id}
+                          onClick={() => handleAddToCart(meal)}
+                          className="btn btn-primary"
+                          style={{
+                            padding: '7px 14px',
+                            fontSize: '12.5px',
+                            borderRadius: 'var(--radius-sm)',
+                            opacity: meal.isAvailable ? 1 : 0.5,
+                            cursor: meal.isAvailable ? 'pointer' : 'not-allowed',
+                            backgroundColor: feedbackMealId === meal._id
+                              ? 'var(--veg-700)'
+                              : inCartQty > 0
+                              ? 'var(--primary-900)'
+                              : undefined,
+                            borderColor: feedbackMealId === meal._id
+                              ? 'var(--veg-700)'
+                              : inCartQty > 0
+                              ? 'var(--primary-900)'
+                              : undefined,
+                            boxShadow: 'var(--shadow-xs)',
+                            touchAction: 'manipulation',
+                          }}
+                          title={meal.isAvailable ? 'Add to Tiffin Order' : 'Item is sold out'}
+                        >
+                          {addingMealId === meal._id ? (
+                            <>
+                              <RefreshCw size={13} className="animate-spin" />
+                              <span>Adding...</span>
+                            </>
+                          ) : feedbackMealId === meal._id ? (
+                            <>
+                              <CheckCircle2 size={13} />
+                              <span>Added!</span>
+                            </>
+                          ) : inCartQty > 0 ? (
+                            <>
+                              <CheckCircle2 size={13} />
+                              <span>In Cart ({inCartQty})</span>
+                            </>
+                          ) : (
+                            <>
+                              <ShoppingBag size={13} />
+                              <span>Add</span>
+                            </>
+                          )}
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
 
       </div>
+
+      {/* Floating View Cart Pill for Mobile when cart has items */}
+      {totalItems > 0 && (
+        <div style={{
+          position: 'fixed',
+          bottom: '76px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          zIndex: 990,
+          width: 'calc(100% - 32px)',
+          maxWidth: '440px',
+        }}>
+          <Link
+            to="/cart"
+            className="btn btn-primary"
+            style={{
+              width: '100%',
+              padding: '12px 20px',
+              borderRadius: 'var(--radius-full)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              boxShadow: '0 8px 24px rgba(194, 65, 12, 0.4)',
+              textDecoration: 'none',
+              touchAction: 'manipulation',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <ShoppingBag size={18} />
+              <span style={{ fontWeight: '700', fontSize: '14px' }}>
+                {totalItems} {totalItems === 1 ? 'tiffin' : 'tiffins'} added
+              </span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: '800', fontSize: '14.5px' }}>
+              <span>View Cart</span>
+              <ArrowRight size={16} />
+            </div>
+          </Link>
+        </div>
+      )}
     </div>
   );
 }
