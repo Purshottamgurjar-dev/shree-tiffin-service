@@ -16,7 +16,9 @@ import {
   Flame,
   ShieldCheck,
   Clock,
-  HeartHandshake
+  HeartHandshake,
+  Plus,
+  Minus
 } from 'lucide-react';
 import mealService, { MEAL_CATEGORIES } from '../services/mealService';
 import { useAuth } from '../context/AuthContext';
@@ -49,7 +51,7 @@ const CATEGORY_TABS = [
 
 export default function Menu() {
   const { isAuthenticated } = useAuth();
-  const { items, totalItems, addToCart } = useCart();
+  const { items, totalItems, addToCart, updateQuantity, removeFromCart } = useCart();
   
   const [meals, setMeals] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -165,7 +167,7 @@ export default function Menu() {
   };
 
   return (
-    <div style={{ padding: 'clamp(20px, 4vw, 40px) 0 80px', minHeight: '85vh' }}>
+    <div className="page-bottom-nav-pad" style={{ padding: 'clamp(20px, 4vw, 40px) 0 80px', minHeight: '85vh' }}>
       <div className="container">
         
         {/* Guest Authentication Prompt Banner */}
@@ -509,11 +511,27 @@ export default function Menu() {
           </div>
         )}
 
-        {/* Loading Spinner */}
+        {/* Loading Skeletons */}
         {loading ? (
-          <div style={{ textAlign: 'center', padding: '64px 0', color: 'var(--text-secondary)' }}>
-            <RefreshCw size={36} className="animate-spin" style={{ margin: '0 auto 16px auto', color: 'var(--primary-700)' }} />
-            <div style={{ fontSize: '16px', fontWeight: '700' }}>Fetching delicious homestyle tiffins...</div>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 290px), 1fr))',
+            gap: '24px',
+          }}>
+            {[1, 2, 3, 4, 5, 6].map((n) => (
+              <div key={n} className="card" style={{ padding: 0, overflow: 'hidden', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-xl)' }}>
+                <div className="skeleton-box" style={{ height: '200px', width: '100%' }} />
+                <div style={{ padding: '18px' }}>
+                  <div className="skeleton-box" style={{ height: '20px', width: '65%', marginBottom: '12px' }} />
+                  <div className="skeleton-box" style={{ height: '14px', width: '90%', marginBottom: '8px' }} />
+                  <div className="skeleton-box" style={{ height: '14px', width: '75%', marginBottom: '18px' }} />
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div className="skeleton-box" style={{ height: '24px', width: '70px' }} />
+                    <div className="skeleton-box" style={{ height: '34px', width: '90px', borderRadius: '20px' }} />
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         ) : meals.length === 0 ? (
           /* Empty Search Results State */
@@ -560,13 +578,14 @@ export default function Menu() {
             {meals.map((meal) => {
               const cartItem = items.find((i) => i.meal?._id === meal._id || i.meal === meal._id);
               const inCartQty = cartItem ? cartItem.quantity : 0;
+              const isAdding = addingMealId === meal._id;
 
               return (
                 <div
                   key={meal._id}
-                  className="card menu-meal-card"
+                  className="food-card"
                   style={{
-                    border: meal.isFeatured ? '2px solid var(--accent-gold-400)' : '1px solid var(--border-subtle)',
+                    border: meal.isFeatured ? '2px solid var(--accent-gold-400)' : '1px solid rgba(234, 88, 12, 0.1)',
                   }}
                 >
                   {/* Today's Special / Featured Ribbon */}
@@ -594,11 +613,11 @@ export default function Menu() {
                   )}
 
                   {/* Meal Thumbnail Banner with Zoom Effect */}
-                  <div style={{ position: 'relative', height: '210px', overflow: 'hidden', backgroundColor: 'var(--bg-subtle)' }}>
+                  <div className="food-card-img-wrapper">
                     <img
                       src={getMealImage(meal.image)}
                       alt={meal.name}
-                      className="menu-meal-img"
+                      className="food-card-img"
                     />
 
                     {/* Pure Veg Badge on Image */}
@@ -607,7 +626,7 @@ export default function Menu() {
                       top: '12px',
                       right: '12px',
                       zIndex: 2,
-                      backgroundColor: 'rgba(255, 255, 255, 0.92)',
+                      backgroundColor: 'rgba(255, 255, 255, 0.95)',
                       padding: '4px 6px',
                       borderRadius: '6px',
                       boxShadow: '0 2px 6px rgba(0,0,0,0.15)',
@@ -615,7 +634,7 @@ export default function Menu() {
                       alignItems: 'center',
                       gap: '4px',
                     }}>
-                      <div className="veg-indicator"><div className="veg-indicator-dot" /></div>
+                      <span className="veg-indicator" title="100% Pure Vegetarian" />
                       <span style={{ fontSize: '10.5px', fontWeight: '800', color: '#16a34a' }}>VEG</span>
                     </div>
 
@@ -634,6 +653,7 @@ export default function Menu() {
                       display: 'flex',
                       alignItems: 'center',
                       gap: '4px',
+                      zIndex: 2
                     }}>
                       <Star size={12} color="#fab005" fill="#fab005" />
                       <span>{meal.rating || '4.8'}</span>
@@ -748,53 +768,64 @@ export default function Menu() {
                           <span>Details</span>
                         </Link>
 
-                        <button
-                          disabled={!meal.isAvailable || addingMealId === meal._id}
-                          onClick={() => handleAddToCart(meal)}
-                          className="btn btn-primary"
-                          style={{
-                            padding: '7px 14px',
-                            fontSize: '12.5px',
-                            borderRadius: 'var(--radius-sm)',
-                            opacity: meal.isAvailable ? 1 : 0.5,
-                            cursor: meal.isAvailable ? 'pointer' : 'not-allowed',
-                            backgroundColor: feedbackMealId === meal._id
-                              ? 'var(--veg-700)'
-                              : inCartQty > 0
-                              ? 'var(--primary-900)'
-                              : undefined,
-                            borderColor: feedbackMealId === meal._id
-                              ? 'var(--veg-700)'
-                              : inCartQty > 0
-                              ? 'var(--primary-900)'
-                              : undefined,
-                            boxShadow: 'var(--shadow-xs)',
-                            touchAction: 'manipulation',
-                          }}
-                          title={meal.isAvailable ? 'Add to Tiffin Order' : 'Item is sold out'}
-                        >
-                          {addingMealId === meal._id ? (
-                            <>
-                              <RefreshCw size={13} className="animate-spin" />
-                              <span>Adding...</span>
-                            </>
-                          ) : feedbackMealId === meal._id ? (
-                            <>
-                              <CheckCircle2 size={13} />
-                              <span>Added!</span>
-                            </>
-                          ) : inCartQty > 0 ? (
-                            <>
-                              <CheckCircle2 size={13} />
-                              <span>In Cart ({inCartQty})</span>
-                            </>
-                          ) : (
-                            <>
-                              <ShoppingBag size={13} />
-                              <span>Add</span>
-                            </>
-                          )}
-                        </button>
+                        {inCartQty > 0 ? (
+                          <div className="qty-stepper" title="Update Quantity in Cart">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                if (inCartQty === 1) {
+                                  removeFromCart(meal._id);
+                                } else {
+                                  updateQuantity(meal._id, inCartQty - 1);
+                                }
+                              }}
+                              aria-label="Decrease quantity"
+                            >
+                              <Minus size={13} />
+                            </button>
+                            <span>{inCartQty}</span>
+                            <button
+                              type="button"
+                              onClick={() => updateQuantity(meal._id, inCartQty + 1)}
+                              aria-label="Increase quantity"
+                            >
+                              <Plus size={13} />
+                            </button>
+                          </div>
+                        ) : (
+                          <button
+                            disabled={!meal.isAvailable || isAdding}
+                            onClick={() => handleAddToCart(meal)}
+                            className="btn btn-primary"
+                            style={{
+                              padding: '7px 14px',
+                              fontSize: '12.5px',
+                              borderRadius: 'var(--radius-sm)',
+                              opacity: meal.isAvailable ? 1 : 0.5,
+                              cursor: meal.isAvailable ? 'pointer' : 'not-allowed',
+                              boxShadow: 'var(--shadow-xs)',
+                              touchAction: 'manipulation',
+                            }}
+                            title={meal.isAvailable ? 'Add to Tiffin Order' : 'Item is sold out'}
+                          >
+                            {isAdding ? (
+                              <>
+                                <RefreshCw size={13} className="animate-spin" />
+                                <span>Adding...</span>
+                              </>
+                            ) : feedbackMealId === meal._id ? (
+                              <>
+                                <CheckCircle2 size={13} />
+                                <span>Added!</span>
+                              </>
+                            ) : (
+                              <>
+                                <ShoppingBag size={13} />
+                                <span>Add</span>
+                              </>
+                            )}
+                          </button>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -808,42 +839,22 @@ export default function Menu() {
 
       {/* Floating View Cart Pill for Mobile when cart has items */}
       {totalItems > 0 && (
-        <div style={{
-          position: 'fixed',
-          bottom: '76px',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          zIndex: 990,
-          width: 'calc(100% - 32px)',
-          maxWidth: '440px',
-        }}>
-          <Link
-            to="/cart"
-            className="btn btn-primary"
-            style={{
-              width: '100%',
-              padding: '12px 20px',
-              borderRadius: 'var(--radius-full)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              boxShadow: '0 8px 24px rgba(194, 65, 12, 0.4)',
-              textDecoration: 'none',
-              touchAction: 'manipulation',
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <ShoppingBag size={18} />
-              <span style={{ fontWeight: '700', fontSize: '14px' }}>
-                {totalItems} {totalItems === 1 ? 'tiffin' : 'tiffins'} added
-              </span>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: '800', fontSize: '14.5px' }}>
-              <span>View Cart</span>
-              <ArrowRight size={16} />
-            </div>
-          </Link>
-        </div>
+        <Link
+          to="/cart"
+          className="floating-mobile-cart-bar"
+          title="Open your cart"
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <ShoppingBag size={18} />
+            <span style={{ fontWeight: '700', fontSize: '14px' }}>
+              {totalItems} {totalItems === 1 ? 'tiffin' : 'tiffins'} added
+            </span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: '800', fontSize: '14.5px' }}>
+            <span>View Cart</span>
+            <ArrowRight size={16} />
+          </div>
+        </Link>
       )}
     </div>
   );

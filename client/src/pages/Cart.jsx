@@ -80,7 +80,7 @@ export default function Cart() {
   }
 
   return (
-    <div className="cart-page-wrapper" style={{ padding: 'clamp(20px, 4vw, 36px) 0 60px', minHeight: '85vh' }}>
+    <div className="cart-page-wrapper page-bottom-nav-pad" style={{ padding: 'clamp(20px, 4vw, 36px) 0 60px', minHeight: '85vh' }}>
       <div className="container">
         
         {/* Page Header */}
@@ -237,6 +237,7 @@ export default function Cart() {
                         {/* Meal Details */}
                         <div className="cart-item-info">
                           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px', flexWrap: 'wrap' }}>
+                            <span className="veg-indicator" title="100% Pure Vegetarian" />
                             <span className="badge badge-primary" style={{ fontSize: '10.5px', padding: '1px 8px' }}>
                               {meal.category || 'Daily Tiffin'}
                             </span>

@@ -51,6 +51,7 @@ export default function MobileBottomNav() {
           padding: '6px 2px',
           flex: 1,
           minWidth: 0,
+          minHeight: '44px',
         })}
       >
         <Home size={20} />
@@ -74,6 +75,7 @@ export default function MobileBottomNav() {
           padding: '6px 2px',
           flex: 1,
           minWidth: 0,
+          minHeight: '44px',
         })}
       >
         <Utensils size={20} />
@@ -97,6 +99,7 @@ export default function MobileBottomNav() {
           padding: '6px 2px',
           flex: 1,
           minWidth: 0,
+          minHeight: '44px',
           position: 'relative',
         })}
       >
@@ -144,6 +147,7 @@ export default function MobileBottomNav() {
           padding: '6px 2px',
           flex: 1,
           minWidth: 0,
+          minHeight: '44px',
         })}
       >
         <ClipboardList size={20} />
@@ -167,6 +171,7 @@ export default function MobileBottomNav() {
           padding: '6px 2px',
           flex: 1,
           minWidth: 0,
+          minHeight: '44px',
         })}
       >
         {isOwner ? <ShieldCheck size={20} /> : <User size={20} />}

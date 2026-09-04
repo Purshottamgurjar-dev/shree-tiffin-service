@@ -277,7 +277,7 @@ export default function Checkout() {
   }
 
   return (
-    <div style={{ padding: '40px 0', minHeight: '85vh' }}>
+    <div className="page-bottom-nav-pad" style={{ padding: '40px 0', minHeight: '85vh' }}>
       <div className="container">
         
         {/* Checkout Header */}
@@ -603,8 +603,12 @@ export default function Checkout() {
                           whiteSpace: 'nowrap',
                           overflow: 'hidden',
                           textOverflow: 'ellipsis',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '5px'
                         }}>
-                          {meal.name}
+                          <span className="veg-indicator" title="100% Pure Vegetarian" />
+                          <span>{meal.name}</span>
                         </div>
                         <div style={{ fontSize: '12px', color: 'var(--text-tertiary)' }}>
                           Qty: {item.quantity} × {formatCurrency(meal.price)}

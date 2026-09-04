@@ -109,8 +109,32 @@ export default function Navbar({ serverStatus = 'online' }) {
               fontSize: '12px',
               color: 'var(--text-secondary)',
               fontWeight: '500',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              flexWrap: 'wrap',
             }}>
-              Ghar Jaisa Khana, Har Din.
+              <span>Ghar Jaisa Khana, Har Din.</span>
+              <span style={{
+                fontSize: '10px',
+                padding: '1px 7px',
+                borderRadius: '12px',
+                backgroundColor: storeStatus.isAcceptingOrders ? '#ecfdf5' : '#fff1f2',
+                color: storeStatus.isAcceptingOrders ? '#047857' : '#be123c',
+                border: storeStatus.isAcceptingOrders ? '1px solid #a7f3d0' : '1px solid #fecdd3',
+                fontWeight: '700',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '4px',
+              }}>
+                <span style={{
+                  width: '5px',
+                  height: '5px',
+                  borderRadius: '50%',
+                  backgroundColor: storeStatus.isAcceptingOrders ? '#10b981' : '#f43f5e',
+                }}></span>
+                {storeStatus.isAcceptingOrders ? 'Delivering Hot' : 'Pre-orders'}
+              </span>
             </div>
           </div>
         </Link>

@@ -276,7 +276,7 @@ export default function OrderDetails() {
   const address = order.deliveryAddressSnapshot || {};
 
   return (
-    <div style={{ padding: '36px 0 80px', minHeight: '85vh', backgroundColor: 'var(--bg-subtle)' }}>
+    <div className="page-bottom-nav-pad" style={{ padding: '36px 0 80px', minHeight: '85vh', backgroundColor: 'var(--bg-subtle)' }}>
       <div className="container" style={{ maxWidth: '1080px' }}>
         {/* Navigation Breadcrumb */}
         <div style={{ marginBottom: '20px' }}>
@@ -421,34 +421,21 @@ export default function OrderDetails() {
                     }}
                   >
                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                      {item.imageSnapshot ? (
-                        <img
-                          src={item.imageSnapshot}
-                          alt={item.nameSnapshot}
-                          style={{
-                            width: '48px',
-                            height: '48px',
-                            borderRadius: '8px',
-                            objectFit: 'cover',
-                          }}
-                        />
-                      ) : (
-                        <div style={{
+                      <img
+                        src={getMealImage(item.imageSnapshot)}
+                        alt={item.nameSnapshot}
+                        style={{
                           width: '48px',
                           height: '48px',
                           borderRadius: '8px',
-                          backgroundColor: 'var(--primary-50)',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          fontSize: '20px',
-                        }}>
-                          🍲
-                        </div>
-                      )}
+                          objectFit: 'cover',
+                          flexShrink: 0
+                        }}
+                      />
                       <div>
-                        <div style={{ fontSize: '14.5px', fontWeight: '700', color: 'var(--text-primary)' }}>
-                          {item.nameSnapshot}
+                        <div style={{ fontSize: '14.5px', fontWeight: '700', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <span className="veg-indicator" title="100% Pure Vegetarian" />
+                          <span>{item.nameSnapshot}</span>
                         </div>
                         <div style={{ fontSize: '12.5px', color: 'var(--text-tertiary)' }}>
                           {formatCurrency(item.priceSnapshot)} × {item.quantity}

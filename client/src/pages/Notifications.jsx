@@ -124,7 +124,7 @@ export default function Notifications() {
   };
 
   return (
-    <div style={{ backgroundColor: 'var(--bg-cream)', minHeight: 'calc(100vh - 76px)', padding: '36px 0 60px' }}>
+    <div className="page-bottom-nav-pad" style={{ backgroundColor: 'var(--bg-cream)', minHeight: 'calc(100vh - 76px)', padding: '36px 0 60px' }}>
       <div className="container" style={{ maxWidth: '820px' }}>
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px' }}>

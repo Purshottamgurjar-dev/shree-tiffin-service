@@ -79,7 +79,7 @@ export default function MealDetails() {
   }
 
   return (
-    <div className="container" style={{ padding: '40px 20px', minHeight: '85vh' }}>
+    <div className="container page-bottom-nav-pad" style={{ padding: '40px 20px', minHeight: '85vh' }}>
       {/* Back Link */}
       <Link
         to="/menu"
@@ -98,13 +98,13 @@ export default function MealDetails() {
       </Link>
 
       {/* Main Meal Detail Card */}
-      <div className="card" style={{ padding: '0', overflow: 'hidden', maxWidth: '1040px', margin: '0 auto' }}>
+      <div className="card" style={{ padding: '0', overflow: 'hidden', maxWidth: '1040px', margin: '0 auto', borderRadius: 'var(--radius-xl)', border: '1px solid rgba(234, 88, 12, 0.12)' }}>
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 340px), 1fr))',
         }}>
           {/* Left Column: Image Banner */}
-          <div style={{ position: 'relative', minHeight: '380px', maxHeight: '500px' }}>
+          <div style={{ position: 'relative', minHeight: '380px', maxHeight: '520px', backgroundColor: '#fdf6ec' }}>
             <img
               src={getMealImage(meal.image)}
               alt={meal.name}
@@ -115,11 +115,30 @@ export default function MealDetails() {
                 display: 'block',
               }}
             />
+            
+            {/* Pure Veg Badge on Image */}
+            <div style={{
+              position: 'absolute',
+              top: '16px',
+              right: '16px',
+              zIndex: 2,
+              backgroundColor: 'rgba(255, 255, 255, 0.96)',
+              padding: '6px 10px',
+              borderRadius: '8px',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+            }}>
+              <span className="veg-indicator" title="100% Pure Vegetarian" />
+              <span style={{ fontSize: '11px', fontWeight: '800', color: '#16a34a', letterSpacing: '0.5px' }}>PURE VEG</span>
+            </div>
+
             {meal.isFeatured && (
               <div style={{
                 position: 'absolute',
-                top: '18px',
-                left: '18px',
+                top: '16px',
+                left: '16px',
                 backgroundColor: 'var(--primary-800)',
                 color: '#ffffff',
                 padding: '6px 14px',
@@ -130,8 +149,9 @@ export default function MealDetails() {
                 alignItems: 'center',
                 gap: '6px',
                 boxShadow: 'var(--shadow-md)',
+                zIndex: 2,
               }}>
-                <Sparkles size={14} />
+                <Sparkles size={14} color="#fab005" />
                 <span>TODAY'S SPECIAL</span>
               </div>
             )}

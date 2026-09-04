@@ -159,7 +159,7 @@ export default function Profile() {
     : 'September 2026';
 
   return (
-    <div style={{ padding: 'clamp(20px, 4vw, 40px) 0 80px', minHeight: '85vh' }}>
+    <div className="page-bottom-nav-pad" style={{ padding: 'clamp(20px, 4vw, 40px) 0 80px', minHeight: '85vh' }}>
       <div className="container" style={{ maxWidth: '1060px' }}>
         
         {/* ================================================================= */}

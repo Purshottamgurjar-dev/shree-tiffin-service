@@ -105,7 +105,7 @@ export default function MyOrders() {
   }
 
   return (
-    <div style={{ padding: '40px 0 80px', minHeight: '80vh', backgroundColor: 'var(--bg-subtle)' }}>
+    <div className="page-bottom-nav-pad" style={{ padding: '40px 0 80px', minHeight: '80vh', backgroundColor: 'var(--bg-subtle)' }}>
       <div className="container" style={{ maxWidth: '960px' }}>
         {/* Page Header */}
         <div style={{
@@ -302,6 +302,7 @@ export default function MyOrders() {
                             fontSize: '13px',
                           }}
                         >
+                          <span className="veg-indicator" title="100% Pure Vegetarian" />
                           <span style={{ fontWeight: '700', color: 'var(--primary-700)' }}>
                             {item.quantity}×
                           </span>

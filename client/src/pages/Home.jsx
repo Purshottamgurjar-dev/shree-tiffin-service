@@ -243,7 +243,7 @@ export default function Home() {
   };
 
   return (
-    <div style={{ backgroundColor: 'var(--bg-primary)', paddingBottom: '60px' }}>
+    <div className="page-bottom-nav-pad" style={{ backgroundColor: 'var(--bg-primary)', paddingBottom: '60px' }}>
       
       {/* 1. Festive Announcement Top Ribbon */}
       <div style={{
@@ -676,6 +676,80 @@ export default function Home() {
 
         </div>
 
+        {/* Quick Food Categories Bar */}
+        <div style={{ marginBottom: '56px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '18px', flexWrap: 'wrap', gap: '8px' }}>
+            <div>
+              <h2 style={{ fontSize: 'clamp(20px, 3.5vw, 26px)', fontWeight: '900', color: 'var(--text-primary)' }}>
+                What are you craving today?
+              </h2>
+              <p style={{ fontSize: '13.5px', color: 'var(--text-secondary)' }}>
+                Freshly cooked homestyle dishes prepared in 100% Shuddh Desi Cow Ghee
+              </p>
+            </div>
+            <Link to="/menu" style={{ fontSize: '13.5px', fontWeight: '700', color: 'var(--primary-700)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <span>View All Menu</span>
+              <ArrowRight size={14} />
+            </Link>
+          </div>
+
+          <div style={{
+            display: 'flex',
+            gap: '14px',
+            overflowX: 'auto',
+            paddingBottom: '10px',
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none',
+            WebkitOverflowScrolling: 'touch',
+          }}>
+            {[
+              { label: 'Daily Tiffin', emoji: '🍛', count: 'From ₹110', cat: 'Daily Tiffin' },
+              { label: 'Special Thali', emoji: '👑', count: 'From ₹160', cat: 'Special Thali' },
+              { label: 'Lunch Meals', emoji: '🥘', count: 'From ₹120', cat: 'Lunch' },
+              { label: 'Dinner Boxes', emoji: '🌙', count: 'From ₹110', cat: 'Dinner' },
+              { label: 'Breakfast', emoji: '🥞', count: 'From ₹60', cat: 'Breakfast' },
+              { label: 'Beverages & Extras', emoji: '🥛', count: 'From ₹25', cat: 'Extra Items' },
+            ].map((c, i) => (
+              <Link
+                key={i}
+                to={`/menu?category=${encodeURIComponent(c.cat)}`}
+                style={{
+                  minWidth: '150px',
+                  backgroundColor: '#ffffff',
+                  border: '1.5px solid var(--border-subtle)',
+                  borderRadius: '18px',
+                  padding: '16px 14px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  textDecoration: 'none',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.03)',
+                  transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+                  flexShrink: 0,
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-4px)';
+                  e.currentTarget.style.borderColor = 'var(--primary-300)';
+                  e.currentTarget.style.boxShadow = '0 10px 24px rgba(194, 65, 12, 0.12)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.borderColor = 'var(--border-subtle)';
+                  e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.03)';
+                }}
+              >
+                <span style={{ fontSize: '32px', marginBottom: '8px' }}>{c.emoji}</span>
+                <span style={{ fontSize: '14px', fontWeight: '800', color: 'var(--text-primary)', textAlign: 'center' }}>
+                  {c.label}
+                </span>
+                <span style={{ fontSize: '11.5px', fontWeight: '600', color: 'var(--primary-700)', marginTop: '2px' }}>
+                  {c.count}
+                </span>
+              </Link>
+            ))}
+          </div>
+        </div>
+
         {/* 4. How It Works - 3-Step Culinary Journey */}
         <div style={{
           backgroundColor: '#fffbf7',
@@ -791,22 +865,14 @@ export default function Home() {
               return (
                 <div 
                   key={meal._id} 
-                  className="card" 
-                  style={{ 
-                    padding: 0, 
-                    overflow: 'hidden', 
-                    display: 'flex', 
-                    flexDirection: 'column',
-                    transition: 'all 0.25s ease',
-                    border: '1px solid var(--border-color)'
-                  }}
+                  className="food-card" 
                 >
                   {/* Meal Image */}
-                  <div style={{ position: 'relative', height: '200px', backgroundColor: '#fed7aa' }}>
+                  <div className="food-card-img-wrapper">
                     <img
                       src={getMealImage(meal.image)}
                       alt={meal.name}
-                      style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                      className="food-card-img"
                     />
                     
                     {/* Category badge */}
@@ -821,33 +887,25 @@ export default function Home() {
                       fontSize: '11.5px',
                       fontWeight: '700',
                       backdropFilter: 'blur(4px)',
-                      letterSpacing: '0.3px'
+                      letterSpacing: '0.3px',
+                      zIndex: 2
                     }}>
                       {meal.category || 'Special'}
                     </span>
 
-                    {/* Pure Veg Green Dot Box */}
-                    <span style={{
-                      position: 'absolute',
-                      top: '12px',
-                      right: '12px',
-                      backgroundColor: '#ffffff',
-                      border: '1.5px solid #16a34a',
-                      borderRadius: '4px',
-                      width: '20px',
-                      height: '20px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      boxShadow: '0 2px 6px rgba(0,0,0,0.15)'
-                    }}>
-                      <span style={{
-                        width: '8px',
-                        height: '8px',
-                        borderRadius: '50%',
-                        backgroundColor: '#16a34a'
-                      }} />
-                    </span>
+                    {/* FSSAI Pure Veg Green Indicator */}
+                    <span 
+                      className="veg-indicator" 
+                      title="100% Pure Vegetarian"
+                      style={{
+                        position: 'absolute',
+                        top: '12px',
+                        right: '12px',
+                        zIndex: 2,
+                        backgroundColor: '#ffffff',
+                        boxShadow: '0 2px 6px rgba(0,0,0,0.18)'
+                      }} 
+                    />
 
                     {/* Rating Pill */}
                     <div style={{
@@ -863,7 +921,8 @@ export default function Home() {
                       fontSize: '12px',
                       fontWeight: '800',
                       color: '#b45309',
-                      boxShadow: '0 2px 6px rgba(0,0,0,0.1)'
+                      boxShadow: '0 2px 6px rgba(0,0,0,0.1)',
+                      zIndex: 2
                     }}>
                       <Star size={13} fill="#b45309" />
                       <span>{meal.rating || '4.9'}</span>
