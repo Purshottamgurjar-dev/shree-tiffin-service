@@ -43,7 +43,8 @@ const TEST_FILES = [
   { name: 'Step 9: Owner Analytics & Business Reporting', file: 'test-step9-analytics.js' },
   { name: 'Step 10: Notifications, Business Settings & System Hardening', file: 'test-step10-production-hardening.js' },
   { name: 'Step 11: Production Deployment, Environment Separation, Observability & Final QA', file: 'test-step11-production.js' },
-  { name: 'Step 12: Production Deployment & Verification', file: 'test-step12-deployment.js' }
+  { name: 'Step 12: Production Deployment & Verification', file: 'test-step12-deployment.js' },
+  { name: 'Step 13: Production Payment UX + Mobile Responsiveness Hardening', file: 'test-step13-mobile-upi-hardening.js' }
 ];
 
 // Helper to wait for server health and active database connection

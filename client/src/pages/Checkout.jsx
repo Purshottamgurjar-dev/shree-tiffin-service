@@ -132,56 +132,25 @@ export default function Checkout() {
         const gatewayRes = await paymentService.createOnlineOrder(createdOrder._id);
         const pInfo = gatewayRes.payment;
 
-        // Try to load external Razorpay checkout script
-        const isLoaded = await paymentService.loadRazorpayScript();
+        // Try to load external Razorpay checkout script with timeout safeguard
+        const isLoaded = await paymentService.loadRazorpayScript(9000);
 
         if (isLoaded && window.Razorpay) {
           const cleanPhone = (user?.phone || selectedAddress?.phone || '').replace(/\D/g, '').slice(-10);
           const razorpayKey = pInfo.keyId || import.meta.env.VITE_RAZORPAY_KEY_ID || '';
 
-          const options = {
-            key: razorpayKey,
-            amount: pInfo.amount,
+          const options = paymentService.buildRazorpayOptions({
+            keyId: razorpayKey,
+            amountInPaise: pInfo.amount,
             currency: pInfo.currency || 'INR',
-            name: 'Shree Tiffin Service',
-            description: `Homestyle Tiffin Order ${createdOrder.orderNumber}`,
-            order_id: pInfo.gatewayOrderId,
-            prefill: {
-              name: user?.name || selectedAddress?.fullName || '',
-              email: user?.email || '',
-              contact: cleanPhone,
-            },
-            notes: {
-              orderId: createdOrder._id,
-              orderNumber: createdOrder.orderNumber,
-              deliveryAddress: `${selectedAddress?.addressLine1 || ''}, ${selectedAddress?.city || ''}`,
-            },
-            theme: {
-              color: '#c2410c',
-              backdrop_color: 'rgba(0, 0, 0, 0.65)',
-            },
-            modal: {
-              confirm_close: true,
-              escape: false,
-              handleback: true,
-              ondismiss: async () => {
-                await paymentService.recordPaymentFailure({
-                  orderId: createdOrder._id,
-                  gatewayOrderId: pInfo.gatewayOrderId,
-                  reason: 'User closed checkout popup without completing payment',
-                });
-                await loadCart();
-                navigate(`/orders/${createdOrder._id}`, {
-                  state: { justPlaced: true, paymentPending: true },
-                });
-              },
-            },
-            retry: {
-              enabled: true,
-              max_count: 3,
-            },
-            send_sms_hash: true,
-            handler: async (response) => {
+            gatewayOrderId: pInfo.gatewayOrderId,
+            orderId: createdOrder._id,
+            orderNumber: createdOrder.orderNumber,
+            customerName: user?.name || selectedAddress?.fullName || '',
+            customerEmail: user?.email || '',
+            customerPhone: cleanPhone,
+            deliveryAddress: `${selectedAddress?.addressLine1 || ''}, ${selectedAddress?.city || ''}`,
+            onSuccess: async (response) => {
               try {
                 // Mandatory Server-Side Cryptographic Verification
                 await paymentService.verifyOnlinePayment({
@@ -195,35 +164,64 @@ export default function Checkout() {
                   state: { justPlaced: true, orderNumber: createdOrder.orderNumber, paidOnline: true },
                 });
               } catch (verErr) {
-                setOrderError(verErr.message || 'Payment verification failed.');
+                setOrderError(verErr.response?.data?.message || verErr.message || 'Payment verification failed on server.');
                 await loadCart();
                 navigate(`/orders/${createdOrder._id}`);
+              } finally {
+                setIsPlacingOrder(false);
               }
             },
-          };
+            onDismiss: async () => {
+              setIsPlacingOrder(false);
+              setOrderError('Payment cancelled. Your order has not been charged.');
+              try {
+                await paymentService.recordPaymentFailure({
+                  orderId: createdOrder._id,
+                  gatewayOrderId: pInfo.gatewayOrderId,
+                  reason: 'Customer cancelled or dismissed Razorpay payment popup',
+                });
+              } catch (e) {
+                // non-critical
+              }
+              await loadCart();
+              navigate(`/orders/${createdOrder._id}`, {
+                state: { justPlaced: true, paymentPending: true, message: 'Payment cancelled. Your order has not been charged. You can retry or choose Cash on Delivery.' },
+              });
+            },
+          });
 
           const rzpInstance = new window.Razorpay(options);
           rzpInstance.on('payment.failed', async (response) => {
-            await paymentService.recordPaymentFailure({
-              orderId: createdOrder._id,
-              gatewayOrderId: pInfo.gatewayOrderId,
-              reason: response.error?.description || 'Payment failed',
-            });
+            setIsPlacingOrder(false);
+            const failureReason = response.error?.description || 'Online payment could not be completed';
+            setOrderError(`Online payment failed: ${failureReason}. You can retry or choose Cash on Delivery.`);
+            try {
+              await paymentService.recordPaymentFailure({
+                orderId: createdOrder._id,
+                gatewayOrderId: pInfo.gatewayOrderId,
+                reason: failureReason,
+              });
+            } catch (e) {
+              // non-critical
+            }
             await loadCart();
             navigate(`/orders/${createdOrder._id}`, {
-              state: { justPlaced: true, paymentFailed: true },
+              state: { justPlaced: true, paymentFailed: true, failureReason },
             });
           });
           rzpInstance.open();
         } else {
           // In environments where Razorpay CDN script cannot load
+          setIsPlacingOrder(false);
+          setOrderError('Unable to connect to the online payment gateway. Please check your internet connection or choose Cash on Delivery.');
           await loadCart();
           navigate(`/orders/${createdOrder._id}`, {
-            state: { justPlaced: true, orderNumber: createdOrder.orderNumber, paymentMethod: 'ONLINE' },
+            state: { justPlaced: true, orderNumber: createdOrder.orderNumber, paymentMethod: 'ONLINE', paymentPending: true },
           });
         }
       } catch (onlineErr) {
-        setOrderError(onlineErr.message || 'Failed to initiate online payment. Order saved as Pending.');
+        setIsPlacingOrder(false);
+        setOrderError(onlineErr.response?.data?.message || onlineErr.message || 'Failed to initiate online payment. Order saved as Pending.');
         await loadCart();
         navigate(`/orders/${createdOrder._id}`);
       }
@@ -285,7 +283,7 @@ export default function Checkout() {
           <div>
             <div className="badge badge-primary" style={{ marginBottom: '8px' }}>
               <ChefHat size={13} />
-              <span>Step 5: Delivery & Location System</span>
+              <span>Pure Vegetarian & Fast Delivery</span>
             </div>
             <h1 style={{ fontSize: '30px', fontWeight: '800', color: 'var(--text-primary)' }}>
               Checkout & Delivery Details
@@ -473,12 +471,32 @@ export default function Checkout() {
                         Instant Kitchen Dispatch
                       </span>
                     </div>
-                    <p style={{ fontSize: '13px', color: 'var(--text-secondary)', margin: '0 0 8px 0', lineHeight: 1.4 }}>
-                      Pay with UPI (PhonePe, Google Pay, Paytm, BHIM), Debit/Credit Cards, or Netbanking.
+                    <p style={{ fontSize: '13px', color: 'var(--text-secondary)', margin: '0 0 10px 0', lineHeight: 1.45 }}>
+                      Pay instantly with UPI (PhonePe, Google Pay, Paytm, BHIM), Debit/Credit Cards, or Netbanking.
                     </p>
+                    
+                    {/* Visual Supported UPI & Payment Instruments Badges */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap', marginBottom: '10px' }}>
+                      <span style={{ padding: '3px 8px', borderRadius: '6px', backgroundColor: '#eff6ff', color: '#1d4ed8', fontSize: '11px', fontWeight: '700', border: '1px solid #bfdbfe' }}>
+                        PhonePe
+                      </span>
+                      <span style={{ padding: '3px 8px', borderRadius: '6px', backgroundColor: '#f0fdf4', color: '#15803d', fontSize: '11px', fontWeight: '700', border: '1px solid #bbf7d0' }}>
+                        Google Pay
+                      </span>
+                      <span style={{ padding: '3px 8px', borderRadius: '6px', backgroundColor: '#faf5ff', color: '#7e22ce', fontSize: '11px', fontWeight: '700', border: '1px solid #e9d5ff' }}>
+                        Paytm
+                      </span>
+                      <span style={{ padding: '3px 8px', borderRadius: '6px', backgroundColor: '#fff7ed', color: '#c2410c', fontSize: '11px', fontWeight: '700', border: '1px solid #fed7aa' }}>
+                        BHIM / UPI
+                      </span>
+                      <span style={{ padding: '3px 8px', borderRadius: '6px', backgroundColor: '#f8fafc', color: '#475569', fontSize: '11px', fontWeight: '600', border: '1px solid #e2e8f0' }}>
+                        Cards & Netbanking
+                      </span>
+                    </div>
+
                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11.5px', color: 'var(--text-tertiary)' }}>
                       <Lock size={12} />
-                      <span>256-bit Encrypted • Safe & Instant Verification</span>
+                      <span>256-bit Encrypted • Direct app opening on mobile via Razorpay</span>
                     </div>
                   </div>
                 </div>

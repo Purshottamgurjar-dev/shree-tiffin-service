@@ -96,53 +96,18 @@ export default function OrderDetails() {
       const cleanPhone = (order.deliveryAddressSnapshot?.phone || '').replace(/\D/g, '').slice(-10);
       const razorpayKey = pInfo.keyId || import.meta.env.VITE_RAZORPAY_KEY_ID || '';
 
-      const options = {
-        key: razorpayKey,
-        amount: pInfo.amount,
+      const options = paymentService.buildRazorpayOptions({
+        keyId: razorpayKey,
+        amountInPaise: pInfo.amount,
         currency: pInfo.currency || 'INR',
-        name: 'Shree Tiffin Service',
-        description: `Order ${order.orderNumber} - Ghar Jaisa Khana`,
-        order_id: pInfo.gatewayOrderId,
-        prefill: {
-          name: order.deliveryAddressSnapshot?.fullName || '',
-          contact: cleanPhone,
-        },
-        notes: {
-          orderId: order._id,
-          orderNumber: order.orderNumber,
-        },
-        theme: {
-          color: '#c2410c',
-          backdrop_color: 'rgba(0, 0, 0, 0.65)',
-        },
-        retry: {
-          enabled: true,
-          max_count: 3,
-        },
-        send_sms_hash: true,
-        modal: {
-          confirm_close: true,
-          escape: false,
-          handleback: true,
-          ondismiss: async function () {
-            setIsProcessingPayment(false);
-            setPaymentActionMessage({
-              type: 'warning',
-              text: 'Payment cancelled or dismissed. You can retry or switch to Cash on Delivery.',
-            });
-            try {
-              await paymentService.recordPaymentFailure({
-                orderId: order._id,
-                gatewayOrderId: pInfo.gatewayOrderId,
-                reason: 'Customer closed payment modal',
-              });
-              fetchOrder();
-            } catch (e) {
-              // non-critical
-            }
-          },
-        },
-        handler: async function (response) {
+        gatewayOrderId: pInfo.gatewayOrderId,
+        orderId: order._id,
+        orderNumber: order.orderNumber,
+        customerName: order.deliveryAddressSnapshot?.fullName || '',
+        customerEmail: '',
+        customerPhone: cleanPhone,
+        deliveryAddress: `${order.deliveryAddressSnapshot?.addressLine1 || ''}, ${order.deliveryAddressSnapshot?.city || ''}`,
+        onSuccess: async function (response) {
           try {
             const verifyRes = await paymentService.verifyOnlinePayment({
               orderId: order._id,
@@ -174,7 +139,24 @@ export default function OrderDetails() {
             setIsProcessingPayment(false);
           }
         },
-      };
+        onDismiss: async function () {
+          setIsProcessingPayment(false);
+          setPaymentActionMessage({
+            type: 'warning',
+            text: 'Payment cancelled. Your order has not been charged. You can retry or switch to Cash on Delivery.',
+          });
+          try {
+            await paymentService.recordPaymentFailure({
+              orderId: order._id,
+              gatewayOrderId: pInfo.gatewayOrderId,
+              reason: 'Customer closed payment modal',
+            });
+            fetchOrder();
+          } catch (e) {
+            // non-critical
+          }
+        },
+      });
 
       const rzp = new window.Razorpay(options);
       rzp.on('payment.failed', async function (response) {

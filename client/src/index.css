@@ -1101,6 +1101,33 @@ button {
   }
 }
 
+/* Accessibility: Respect Reduced Motion Preference */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Ultra-compact screen hardening (320px - 360px) */
+@media (max-width: 360px) {
+  body {
+    overflow-x: hidden;
+  }
+  .container {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+  .home-stat-box {
+    padding: 12px 14px !important;
+  }
+}
+
+
 
 
 
