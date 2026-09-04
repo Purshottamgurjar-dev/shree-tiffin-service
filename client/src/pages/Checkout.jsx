@@ -136,22 +136,34 @@ export default function Checkout() {
         const isLoaded = await paymentService.loadRazorpayScript();
 
         if (isLoaded && window.Razorpay) {
+          const cleanPhone = (user?.phone || selectedAddress?.phone || '').replace(/\D/g, '').slice(-10);
+          const razorpayKey = pInfo.keyId || import.meta.env.VITE_RAZORPAY_KEY_ID || '';
+
           const options = {
-            key: pInfo.keyId,
+            key: razorpayKey,
             amount: pInfo.amount,
-            currency: pInfo.currency,
+            currency: pInfo.currency || 'INR',
             name: 'Shree Tiffin Service',
             description: `Homestyle Tiffin Order ${createdOrder.orderNumber}`,
             order_id: pInfo.gatewayOrderId,
             prefill: {
-              name: user?.name || '',
+              name: user?.name || selectedAddress?.fullName || '',
               email: user?.email || '',
-              contact: user?.phone || '',
+              contact: cleanPhone,
+            },
+            notes: {
+              orderId: createdOrder._id,
+              orderNumber: createdOrder.orderNumber,
+              deliveryAddress: `${selectedAddress?.addressLine1 || ''}, ${selectedAddress?.city || ''}`,
             },
             theme: {
               color: '#c2410c',
+              backdrop_color: 'rgba(0, 0, 0, 0.65)',
             },
             modal: {
+              confirm_close: true,
+              escape: false,
+              handleback: true,
               ondismiss: async () => {
                 await paymentService.recordPaymentFailure({
                   orderId: createdOrder._id,
@@ -164,6 +176,11 @@ export default function Checkout() {
                 });
               },
             },
+            retry: {
+              enabled: true,
+              max_count: 3,
+            },
+            send_sms_hash: true,
             handler: async (response) => {
               try {
                 // Mandatory Server-Side Cryptographic Verification
@@ -432,16 +449,11 @@ export default function Checkout() {
                 {/* Option 1: Online Payment (Razorpay) */}
                 <div
                   onClick={() => setPaymentMethod('ONLINE')}
+                  className="payment-option-card"
                   style={{
-                    padding: '16px 18px',
-                    borderRadius: 'var(--radius-md)',
                     border: paymentMethod === 'ONLINE' ? '2px solid var(--primary-600)' : '1px solid var(--border-color)',
                     backgroundColor: paymentMethod === 'ONLINE' ? 'rgba(234, 88, 12, 0.04)' : 'var(--bg-card)',
-                    cursor: 'pointer',
-                    transition: 'all 0.15s ease',
-                    display: 'flex',
-                    alignItems: 'flex-start',
-                    gap: '14px',
+                    boxShadow: paymentMethod === 'ONLINE' ? '0 2px 10px rgba(234, 88, 12, 0.1)' : 'none',
                   }}
                 >
                   <input
@@ -450,23 +462,23 @@ export default function Checkout() {
                     value="ONLINE"
                     checked={paymentMethod === 'ONLINE'}
                     onChange={() => setPaymentMethod('ONLINE')}
-                    style={{ marginTop: '4px', accentColor: 'var(--primary-600)', cursor: 'pointer' }}
+                    style={{ marginTop: '3px', accentColor: 'var(--primary-600)', width: '18px', height: '18px', cursor: 'pointer' }}
                   />
-                  <div style={{ flex: 1 }}>
+                  <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px', flexWrap: 'wrap', gap: '6px' }}>
                       <span style={{ fontSize: '15px', fontWeight: '800', color: 'var(--text-primary)' }}>
                         Online Payment (Razorpay)
                       </span>
                       <span className="badge badge-success" style={{ fontSize: '11px', padding: '2px 8px' }}>
-                        Instant Dispatch
+                        Instant Kitchen Dispatch
                       </span>
                     </div>
                     <p style={{ fontSize: '13px', color: 'var(--text-secondary)', margin: '0 0 8px 0', lineHeight: 1.4 }}>
-                      Pay securely using UPI (Google Pay, PhonePe, Paytm), Credit/Debit Cards, or Netbanking.
+                      Pay with UPI (PhonePe, Google Pay, Paytm, BHIM), Debit/Credit Cards, or Netbanking.
                     </p>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11.5px', color: 'var(--text-tertiary)' }}>
                       <Lock size={12} />
-                      <span>256-bit Encrypted • 100% Safe & Instant</span>
+                      <span>256-bit Encrypted • Safe & Instant Verification</span>
                     </div>
                   </div>
                 </div>
@@ -474,16 +486,11 @@ export default function Checkout() {
                 {/* Option 2: Cash on Delivery (COD) */}
                 <div
                   onClick={() => setPaymentMethod('COD')}
+                  className="payment-option-card"
                   style={{
-                    padding: '16px 18px',
-                    borderRadius: 'var(--radius-md)',
                     border: paymentMethod === 'COD' ? '2px solid #b45309' : '1px solid var(--border-color)',
                     backgroundColor: paymentMethod === 'COD' ? 'rgba(245, 158, 11, 0.04)' : 'var(--bg-card)',
-                    cursor: 'pointer',
-                    transition: 'all 0.15s ease',
-                    display: 'flex',
-                    alignItems: 'flex-start',
-                    gap: '14px',
+                    boxShadow: paymentMethod === 'COD' ? '0 2px 10px rgba(180, 83, 9, 0.1)' : 'none',
                   }}
                 >
                   <input
@@ -492,9 +499,9 @@ export default function Checkout() {
                     value="COD"
                     checked={paymentMethod === 'COD'}
                     onChange={() => setPaymentMethod('COD')}
-                    style={{ marginTop: '4px', accentColor: '#b45309', cursor: 'pointer' }}
+                    style={{ marginTop: '3px', accentColor: '#b45309', width: '18px', height: '18px', cursor: 'pointer' }}
                   />
-                  <div style={{ flex: 1 }}>
+                  <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px', flexWrap: 'wrap', gap: '6px' }}>
                       <span style={{ fontSize: '15px', fontWeight: '800', color: 'var(--text-primary)' }}>
                         Cash on Delivery (COD)

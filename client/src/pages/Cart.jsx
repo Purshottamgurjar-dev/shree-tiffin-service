@@ -215,159 +215,168 @@ export default function Cart() {
                   return (
                     <div
                       key={item._id || meal._id}
-                      className="card"
+                      className="card cart-item-card"
                       style={{
-                        padding: '18px 20px',
-                        display: 'flex',
-                        gap: '18px',
-                        alignItems: 'center',
-                        position: 'relative',
                         border: isMealUnavailable ? '1.5px solid var(--status-danger)' : '1px solid var(--border-subtle)',
                         opacity: isItemRemoving ? 0.4 : 1,
-                        transition: 'all 0.2s ease',
                       }}
                     >
-                      {/* Meal Thumbnail */}
-                      <img
-                        src={getMealImage(meal.image)}
-                        alt={meal.name}
-                        style={{
-                          width: '84px',
-                          height: '84px',
-                          borderRadius: 'var(--radius-md)',
-                          objectFit: 'cover',
-                          flexShrink: 0,
-                        }}
-                      />
+                      {/* Top Row / Desktop Left Side */}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flex: 1, minWidth: 0 }}>
+                        {/* Meal Thumbnail */}
+                        <img
+                          src={getMealImage(meal.image)}
+                          alt={meal.name}
+                          style={{
+                            width: '72px',
+                            height: '72px',
+                            borderRadius: 'var(--radius-md)',
+                            objectFit: 'cover',
+                            flexShrink: 0,
+                          }}
+                        />
 
-                      {/* Meal Details */}
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-                          <span className="badge badge-primary" style={{ fontSize: '10.5px', padding: '1px 8px' }}>
-                            {meal.category || 'Daily Tiffin'}
-                          </span>
-                          {isMealUnavailable && (
-                            <span className="badge" style={{ backgroundColor: 'var(--status-danger)', color: '#ffffff', fontSize: '10.5px', padding: '1px 8px' }}>
-                              Currently Unavailable
+                        {/* Meal Details */}
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px', flexWrap: 'wrap' }}>
+                            <span className="badge badge-primary" style={{ fontSize: '10.5px', padding: '1px 8px' }}>
+                              {meal.category || 'Daily Tiffin'}
                             </span>
-                          )}
-                        </div>
+                            {isMealUnavailable && (
+                              <span className="badge" style={{ backgroundColor: 'var(--status-danger)', color: '#ffffff', fontSize: '10.5px', padding: '1px 8px' }}>
+                                Unavailable
+                              </span>
+                            )}
+                          </div>
 
-                        <h3 style={{
-                          fontSize: '16.5px',
-                          fontWeight: '800',
-                          color: 'var(--text-primary)',
-                          marginBottom: '4px',
-                          whiteSpace: 'nowrap',
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
-                        }}>
-                          {meal.name}
-                        </h3>
+                          <h3 style={{
+                            fontSize: '15.5px',
+                            fontWeight: '800',
+                            color: 'var(--text-primary)',
+                            marginBottom: '4px',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                          }}>
+                            {meal.name}
+                          </h3>
 
-                        <div style={{ fontSize: '13.5px', color: 'var(--text-tertiary)', fontWeight: '600' }}>
-                          {formatCurrency(meal.price)} per tiffin
+                          <div style={{ fontSize: '13px', color: 'var(--text-tertiary)', fontWeight: '600' }}>
+                            {formatCurrency(meal.price)} per tiffin
+                          </div>
                         </div>
                       </div>
 
-                      {/* Quantity Controls */}
+                      {/* Controls & Price Row / Desktop Right Side */}
                       <div style={{
                         display: 'flex',
                         alignItems: 'center',
-                        gap: '6px',
-                        backgroundColor: 'var(--bg-subtle)',
-                        padding: '4px',
-                        borderRadius: 'var(--radius-md)',
-                        border: '1px solid var(--border-subtle)',
+                        justifyContent: 'space-between',
+                        gap: '12px',
                       }}>
-                        <button
-                          disabled={item.quantity <= 1 || isItemUpdating || actionLoading !== null}
-                          onClick={() => updateQuantity(meal._id, item.quantity - 1)}
-                          style={{
-                            width: '28px',
-                            height: '28px',
-                            borderRadius: 'var(--radius-sm)',
-                            border: 'none',
-                            backgroundColor: '#ffffff',
-                            color: item.quantity <= 1 ? 'var(--text-tertiary)' : 'var(--text-primary)',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            cursor: item.quantity <= 1 ? 'not-allowed' : 'pointer',
-                            boxShadow: 'var(--shadow-sm)',
-                          }}
-                          aria-label="Decrease quantity"
-                        >
-                          <Minus size={14} />
-                        </button>
-
-                        <span style={{
-                          minWidth: '28px',
-                          textAlign: 'center',
-                          fontSize: '14px',
-                          fontWeight: '800',
-                          color: 'var(--text-primary)',
+                        {/* Quantity Controls */}
+                        <div style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                          backgroundColor: 'var(--bg-subtle)',
+                          padding: '4px',
+                          borderRadius: 'var(--radius-md)',
+                          border: '1px solid var(--border-subtle)',
                         }}>
-                          {isItemUpdating ? (
-                            <RefreshCw size={13} className="animate-spin" style={{ margin: '0 auto' }} />
-                          ) : (
-                            item.quantity
-                          )}
-                        </span>
+                          <button
+                            disabled={item.quantity <= 1 || isItemUpdating || actionLoading !== null}
+                            onClick={() => updateQuantity(meal._id, item.quantity - 1)}
+                            style={{
+                              width: '32px',
+                              height: '32px',
+                              borderRadius: 'var(--radius-sm)',
+                              border: 'none',
+                              backgroundColor: '#ffffff',
+                              color: item.quantity <= 1 ? 'var(--text-tertiary)' : 'var(--text-primary)',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              cursor: item.quantity <= 1 ? 'not-allowed' : 'pointer',
+                              boxShadow: 'var(--shadow-sm)',
+                              touchAction: 'manipulation',
+                            }}
+                            aria-label="Decrease quantity"
+                          >
+                            <Minus size={15} />
+                          </button>
 
-                        <button
-                          disabled={isItemUpdating || actionLoading !== null}
-                          onClick={() => updateQuantity(meal._id, item.quantity + 1)}
-                          style={{
-                            width: '28px',
-                            height: '28px',
-                            borderRadius: 'var(--radius-sm)',
-                            border: 'none',
-                            backgroundColor: '#ffffff',
+                          <span style={{
+                            minWidth: '28px',
+                            textAlign: 'center',
+                            fontSize: '14px',
+                            fontWeight: '800',
                             color: 'var(--text-primary)',
+                          }}>
+                            {isItemUpdating ? (
+                              <RefreshCw size={13} className="animate-spin" style={{ margin: '0 auto' }} />
+                            ) : (
+                              item.quantity
+                            )}
+                          </span>
+
+                          <button
+                            disabled={isItemUpdating || actionLoading !== null}
+                            onClick={() => updateQuantity(meal._id, item.quantity + 1)}
+                            style={{
+                              width: '32px',
+                              height: '32px',
+                              borderRadius: 'var(--radius-sm)',
+                              border: 'none',
+                              backgroundColor: '#ffffff',
+                              color: 'var(--text-primary)',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              cursor: 'pointer',
+                              boxShadow: 'var(--shadow-sm)',
+                              touchAction: 'manipulation',
+                            }}
+                            aria-label="Increase quantity"
+                          >
+                            <Plus size={15} />
+                          </button>
+                        </div>
+
+                        {/* Line Item Total */}
+                        <div style={{
+                          fontSize: '17px',
+                          fontWeight: '800',
+                          color: 'var(--primary-900)',
+                          textAlign: 'right',
+                        }}>
+                          {formatCurrency(item.itemTotal || meal.price * item.quantity)}
+                        </div>
+
+                        {/* Remove Button */}
+                        <button
+                          onClick={() => removeFromCart(meal._id)}
+                          disabled={isItemRemoving || actionLoading !== null}
+                          style={{
+                            backgroundColor: 'transparent',
+                            border: 'none',
+                            color: 'var(--text-tertiary)',
+                            padding: '8px',
+                            borderRadius: 'var(--radius-sm)',
+                            cursor: 'pointer',
+                            transition: 'color 0.15s ease',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            cursor: 'pointer',
-                            boxShadow: 'var(--shadow-sm)',
                           }}
-                          aria-label="Increase quantity"
+                          onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--status-danger)')}
+                          onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-tertiary)')}
+                          title="Remove meal from cart"
+                          aria-label={`Remove ${meal.name}`}
                         >
-                          <Plus size={14} />
+                          <Trash2 size={18} />
                         </button>
                       </div>
-
-                      {/* Line Item Total */}
-                      <div style={{
-                        minWidth: '85px',
-                        textAlign: 'right',
-                        fontSize: '17px',
-                        fontWeight: '800',
-                        color: 'var(--primary-900)',
-                      }}>
-                        {formatCurrency(item.itemTotal || meal.price * item.quantity)}
-                      </div>
-
-                      {/* Remove Button */}
-                      <button
-                        onClick={() => removeFromCart(meal._id)}
-                        disabled={isItemRemoving || actionLoading !== null}
-                        style={{
-                          backgroundColor: 'transparent',
-                          border: 'none',
-                          color: 'var(--text-tertiary)',
-                          padding: '6px',
-                          borderRadius: 'var(--radius-sm)',
-                          cursor: 'pointer',
-                          transition: 'color 0.15s ease',
-                        }}
-                        onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--status-danger)')}
-                        onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-tertiary)')}
-                        title="Remove meal from cart"
-                        aria-label={`Remove ${meal.name}`}
-                      >
-                        <Trash2 size={18} />
-                      </button>
                     </div>
                   );
                 })}

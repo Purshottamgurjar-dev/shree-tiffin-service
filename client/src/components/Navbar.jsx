@@ -86,8 +86,8 @@ export default function Navbar({ serverStatus = 'online' }) {
         height: '76px',
       }}>
         {/* Brand Logo & Name */}
-        <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '14px', textDecoration: 'none' }}>
-          <div style={{
+        <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 'clamp(8px, 2.5vw, 14px)', textDecoration: 'none', minWidth: 0 }}>
+          <div className="brand-logo-box" style={{
             width: '44px',
             height: '44px',
             borderRadius: '12px',
@@ -97,21 +97,15 @@ export default function Navbar({ serverStatus = 'online' }) {
             justifyContent: 'center',
             color: '#ffffff',
             boxShadow: 'var(--shadow-warm)',
+            flexShrink: 0,
           }}>
             <Utensils size={22} />
           </div>
-          <div>
-            <div style={{
-              fontFamily: 'var(--font-heading)',
-              fontSize: '20px',
-              fontWeight: '800',
-              color: 'var(--primary-900)',
-              letterSpacing: '-0.5px',
-              lineHeight: 1.1,
-            }}>
+          <div style={{ minWidth: 0 }}>
+            <div className="brand-title-text">
               SHREE TIFFIN SERVICE
             </div>
-            <div style={{
+            <div className="brand-tagline-text" style={{
               fontSize: '12px',
               color: 'var(--text-secondary)',
               fontWeight: '500',
@@ -482,9 +476,14 @@ export default function Navbar({ serverStatus = 'online' }) {
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           style={{
             display: 'none',
-            padding: '8px',
+            padding: '10px',
             borderRadius: '8px',
             backgroundColor: 'var(--bg-subtle)',
+            minWidth: '44px',
+            minHeight: '44px',
+            alignItems: 'center',
+            justifyContent: 'center',
+            touchAction: 'manipulation',
           }}
           className="mobile-nav-toggle"
           aria-label="Toggle navigation menu"

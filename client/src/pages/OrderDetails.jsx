@@ -74,7 +74,7 @@ export default function OrderDetails() {
       const isLoaded = await paymentService.loadRazorpayScript();
       const prepRes = await paymentService.createOnlineOrder(order._id);
 
-      if (!prepRes.success) {
+      if (!prepRes.success || !prepRes.payment) {
         setPaymentActionMessage({
           type: 'error',
           text: prepRes.message || 'Unable to initialize online payment.',
@@ -83,94 +83,114 @@ export default function OrderDetails() {
         return;
       }
 
-      if (prepRes.requiresRazorpayCheckout && prepRes.gatewayOrder) {
-        if (!isLoaded || !window.Razorpay) {
-          setPaymentActionMessage({
-            type: 'error',
-            text: 'Payment gateway script failed to load. Please check your internet connection.',
-          });
-          setIsProcessingPayment(false);
-          return;
-        }
+      const pInfo = prepRes.payment;
+      if (!isLoaded || !window.Razorpay) {
+        setPaymentActionMessage({
+          type: 'error',
+          text: 'Payment gateway script failed to load. Please check your internet connection.',
+        });
+        setIsProcessingPayment(false);
+        return;
+      }
 
-        const options = {
-          key: prepRes.razorpayKeyId,
-          amount: prepRes.gatewayOrder.amount,
-          currency: prepRes.gatewayOrder.currency || 'INR',
-          name: 'Shree Tiffin Service',
-          description: `Order ${order.orderNumber} - Ghar Jaisa Khana`,
-          order_id: prepRes.gatewayOrder.id,
-          prefill: {
-            name: order.deliveryAddressSnapshot?.fullName || '',
-            contact: order.deliveryAddressSnapshot?.phone || '',
-          },
-          theme: {
-            color: '#c2410c',
-          },
-          handler: async function (response) {
+      const cleanPhone = (order.deliveryAddressSnapshot?.phone || '').replace(/\D/g, '').slice(-10);
+      const razorpayKey = pInfo.keyId || import.meta.env.VITE_RAZORPAY_KEY_ID || '';
+
+      const options = {
+        key: razorpayKey,
+        amount: pInfo.amount,
+        currency: pInfo.currency || 'INR',
+        name: 'Shree Tiffin Service',
+        description: `Order ${order.orderNumber} - Ghar Jaisa Khana`,
+        order_id: pInfo.gatewayOrderId,
+        prefill: {
+          name: order.deliveryAddressSnapshot?.fullName || '',
+          contact: cleanPhone,
+        },
+        notes: {
+          orderId: order._id,
+          orderNumber: order.orderNumber,
+        },
+        theme: {
+          color: '#c2410c',
+          backdrop_color: 'rgba(0, 0, 0, 0.65)',
+        },
+        retry: {
+          enabled: true,
+          max_count: 3,
+        },
+        send_sms_hash: true,
+        modal: {
+          confirm_close: true,
+          escape: false,
+          handleback: true,
+          ondismiss: async function () {
+            setIsProcessingPayment(false);
+            setPaymentActionMessage({
+              type: 'warning',
+              text: 'Payment cancelled or dismissed. You can retry or switch to Cash on Delivery.',
+            });
             try {
-              const verifyRes = await paymentService.verifyOnlinePayment({
+              await paymentService.recordPaymentFailure({
                 orderId: order._id,
-                razorpay_order_id: response.razorpay_order_id,
-                razorpay_payment_id: response.razorpay_payment_id,
-                razorpay_signature: response.razorpay_signature,
-              });
-
-              if (verifyRes.success) {
-                setPaymentActionMessage({
-                  type: 'success',
-                  text: 'Online payment completed and verified successfully! Your order is being freshly prepared.',
-                });
-                fetchOrder();
-              } else {
-                setPaymentActionMessage({
-                  type: 'error',
-                  text: verifyRes.message || 'Payment verification failed.',
-                });
-                fetchOrder();
-              }
-            } catch (err) {
-              setPaymentActionMessage({
-                type: 'error',
-                text: err.response?.data?.message || 'Server verification error.',
+                gatewayOrderId: pInfo.gatewayOrderId,
+                reason: 'Customer closed payment modal',
               });
               fetchOrder();
-            } finally {
-              setIsProcessingPayment(false);
+            } catch (e) {
+              // non-critical
             }
           },
-          modal: {
-            ondismiss: async function () {
-              setIsProcessingPayment(false);
-              setPaymentActionMessage({
-                type: 'warning',
-                text: 'Payment cancelled or dismissed. You can retry or switch to Cash on Delivery.',
-              });
-              try {
-                await paymentService.recordPaymentFailure({
-                  orderId: order._id,
-                  gatewayOrderId: prepRes.gatewayOrder?.id,
-                  reason: 'Customer closed payment modal',
-                });
-                fetchOrder();
-              } catch (e) {
-                // non-critical
-              }
-            },
-          },
-        };
+        },
+        handler: async function (response) {
+          try {
+            const verifyRes = await paymentService.verifyOnlinePayment({
+              orderId: order._id,
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+            });
 
-        const rzp = new window.Razorpay(options);
-        rzp.open();
-      } else {
-        // Direct / deterministic mode (e.g. sandbox test verification)
-        setPaymentActionMessage({
-          type: 'success',
-          text: prepRes.message || 'Payment processed successfully.',
+            if (verifyRes.success) {
+              setPaymentActionMessage({
+                type: 'success',
+                text: 'Online payment completed and verified successfully! Your order is being freshly prepared.',
+              });
+              fetchOrder();
+            } else {
+              setPaymentActionMessage({
+                type: 'error',
+                text: verifyRes.message || 'Payment verification failed.',
+              });
+              fetchOrder();
+            }
+          } catch (err) {
+            setPaymentActionMessage({
+              type: 'error',
+              text: err.response?.data?.message || err.message || 'Server verification error.',
+            });
+            fetchOrder();
+          } finally {
+            setIsProcessingPayment(false);
+          }
+        },
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.on('payment.failed', async function (response) {
+        await paymentService.recordPaymentFailure({
+          orderId: order._id,
+          gatewayOrderId: pInfo.gatewayOrderId,
+          reason: response.error?.description || 'Payment failed',
         });
-        fetchOrder();
+        setPaymentActionMessage({
+          type: 'error',
+          text: response.error?.description || 'Payment failed. Please retry or switch to Cash on Delivery.',
+        });
         setIsProcessingPayment(false);
-      }
+        fetchOrder();
+      });
+      rzp.open();
     } catch (err) {
       setPaymentActionMessage({
         type: 'error',
@@ -743,7 +763,7 @@ export default function OrderDetails() {
           zIndex: 1000,
           padding: '16px',
         }}>
-          <div className="card" style={{ maxWidth: '440px', width: '100%', padding: '24px' }}>
+          <div className="card modal-dialog-card" style={{ maxWidth: '440px', width: '100%', padding: 'clamp(16px, 4vw, 24px)' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--status-danger)', marginBottom: '12px' }}>
               <XCircle size={22} />
               <h3 style={{ fontSize: '18px', fontWeight: '800', margin: 0 }}>

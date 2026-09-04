@@ -48,8 +48,9 @@ export default function MobileBottomNav() {
           textDecoration: 'none',
           fontSize: '11px',
           fontWeight: isActive ? '700' : '500',
-          padding: '6px 12px',
-          minWidth: '56px',
+          padding: '6px 2px',
+          flex: 1,
+          minWidth: 0,
         })}
       >
         <Home size={20} />
@@ -70,8 +71,9 @@ export default function MobileBottomNav() {
           textDecoration: 'none',
           fontSize: '11px',
           fontWeight: isActive ? '700' : '500',
-          padding: '6px 12px',
-          minWidth: '56px',
+          padding: '6px 2px',
+          flex: 1,
+          minWidth: 0,
         })}
       >
         <Utensils size={20} />
@@ -92,8 +94,9 @@ export default function MobileBottomNav() {
           textDecoration: 'none',
           fontSize: '11px',
           fontWeight: isActive ? '700' : '500',
-          padding: '6px 12px',
-          minWidth: '56px',
+          padding: '6px 2px',
+          flex: 1,
+          minWidth: 0,
           position: 'relative',
         })}
       >
@@ -138,8 +141,9 @@ export default function MobileBottomNav() {
           textDecoration: 'none',
           fontSize: '11px',
           fontWeight: isActive ? '700' : '500',
-          padding: '6px 12px',
-          minWidth: '56px',
+          padding: '6px 2px',
+          flex: 1,
+          minWidth: 0,
         })}
       >
         <ClipboardList size={20} />
@@ -160,8 +164,9 @@ export default function MobileBottomNav() {
           textDecoration: 'none',
           fontSize: '11px',
           fontWeight: isActive ? '700' : '500',
-          padding: '6px 12px',
-          minWidth: '56px',
+          padding: '6px 2px',
+          flex: 1,
+          minWidth: 0,
         })}
       >
         {isOwner ? <ShieldCheck size={20} /> : <User size={20} />}

@@ -61,7 +61,7 @@ export default function OrderTimeline({ order }) {
       backgroundColor: 'var(--bg-card)',
       border: '1px solid var(--border-color)',
       borderRadius: 'var(--radius-lg)',
-      padding: '24px',
+      padding: 'clamp(16px, 4vw, 24px)',
       marginBottom: '24px',
       boxShadow: 'var(--shadow-sm)',
     }}>
@@ -69,12 +69,15 @@ export default function OrderTimeline({ order }) {
         Live Order Tracker
       </h3>
 
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: `repeat(${WORKFLOW_STEPS.length}, 1fr)`,
-        position: 'relative',
-        gap: '12px',
-      }}>
+      <div
+        className="timeline-container-grid"
+        style={{
+          display: 'grid',
+          gridTemplateColumns: `repeat(${WORKFLOW_STEPS.length}, 1fr)`,
+          position: 'relative',
+          gap: '12px',
+        }}
+      >
         {WORKFLOW_STEPS.map((step, idx) => {
           const StepIcon = step.icon;
           const isCompleted = currentStatusIndex > idx;
@@ -102,6 +105,7 @@ export default function OrderTimeline({ order }) {
           return (
             <div
               key={step.key}
+              className="timeline-step-row"
               style={{
                 display: 'flex',
                 flexDirection: 'column',
@@ -114,8 +118,9 @@ export default function OrderTimeline({ order }) {
               {/* Step Circle */}
               <div
                 style={{
-                  width: '46px',
-                  height: '46px',
+                  width: '44px',
+                  height: '44px',
+                  minWidth: '44px',
                   borderRadius: '50%',
                   backgroundColor: circleBg,
                   border: `2px solid ${borderColor}`,
@@ -126,39 +131,44 @@ export default function OrderTimeline({ order }) {
                   marginBottom: '10px',
                   boxShadow: isCurrent ? '0 0 0 4px var(--primary-100)' : 'none',
                   transition: 'all 0.3s ease',
+                  flexShrink: 0,
                 }}
               >
                 {isCompleted ? <CheckCircle2 size={22} /> : <StepIcon size={20} />}
               </div>
 
-              {/* Title & Desc */}
-              <div style={{
-                fontSize: '13px',
-                fontWeight: isCurrent || isCompleted ? '700' : '500',
-                color: isCurrent ? 'var(--primary-900)' : isCompleted ? 'var(--text-primary)' : 'var(--text-tertiary)',
-                marginBottom: '4px',
-              }}>
-                {step.label}
-              </div>
-
-              <div style={{ fontSize: '11px', color: 'var(--text-tertiary)', lineHeight: 1.3 }}>
-                {step.desc}
-              </div>
-
-              {/* Timestamp if reached */}
-              {historyEntry && (
+              {/* Step Info Content */}
+              <div className="timeline-step-content">
+                {/* Title & Desc */}
                 <div style={{
-                  fontSize: '10.5px',
-                  color: 'var(--primary-700)',
-                  fontWeight: '600',
-                  marginTop: '6px',
-                  backgroundColor: 'var(--bg-subtle)',
-                  padding: '2px 6px',
-                  borderRadius: '4px',
+                  fontSize: '13px',
+                  fontWeight: isCurrent || isCompleted ? '700' : '500',
+                  color: isCurrent ? 'var(--primary-900)' : isCompleted ? 'var(--text-primary)' : 'var(--text-tertiary)',
+                  marginBottom: '3px',
                 }}>
-                  {new Date(historyEntry.changedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  {step.label}
                 </div>
-              )}
+
+                <div style={{ fontSize: '11.5px', color: 'var(--text-tertiary)', lineHeight: 1.3 }}>
+                  {step.desc}
+                </div>
+
+                {/* Timestamp if reached */}
+                {historyEntry && (
+                  <div style={{
+                    fontSize: '10.5px',
+                    color: 'var(--primary-700)',
+                    fontWeight: '600',
+                    marginTop: '4px',
+                    display: 'inline-block',
+                    backgroundColor: 'var(--bg-subtle)',
+                    padding: '2px 6px',
+                    borderRadius: '4px',
+                  }}>
+                    {new Date(historyEntry.changedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  </div>
+                )}
+              </div>
             </div>
           );
         })}

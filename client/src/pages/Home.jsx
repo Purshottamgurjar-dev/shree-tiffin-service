@@ -73,7 +73,7 @@ export default function Home() {
             <span>Pure Vegetarian & Homestyle Delicacies</span>
           </div>
           <h1 style={{
-            fontSize: '46px',
+            fontSize: 'clamp(28px, 6.5vw, 46px)',
             fontWeight: '800',
             letterSpacing: '-1px',
             marginBottom: '16px',
@@ -81,7 +81,7 @@ export default function Home() {
           }}>
             Ghar Jaisa Khana, <span style={{ color: 'var(--primary-800)' }}>Har Din.</span>
           </h1>
-          <p style={{ fontSize: '18px', color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: '28px' }}>
+          <p style={{ fontSize: 'clamp(15px, 3.5vw, 18px)', color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: '28px' }}>
             Wholesome, freshly prepared home-style meals made with natural ingredients, delivered hot and on-time to your doorstep.
           </p>
 
@@ -124,13 +124,13 @@ export default function Home() {
             overflow: 'hidden',
             boxShadow: 'var(--shadow-lg)',
             border: '4px solid #ffffff',
-            maxHeight: '380px',
+            height: 'clamp(220px, 45vw, 380px)',
             position: 'relative',
           }}>
             <img
               src={heroThali}
               alt="Shree Tiffin Service Special Deluxe Thali"
-              style={{ width: '100%', height: '380px', objectFit: 'cover', display: 'block' }}
+              style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
             />
             <div style={{
               position: 'absolute',

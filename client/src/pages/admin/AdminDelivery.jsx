@@ -360,7 +360,7 @@ export default function AdminDelivery() {
         {/* Layout: Split Grid (Interactive Leaflet Map + Deliveries List) */}
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'minmax(320px, 1.2fr) minmax(300px, 1fr)',
+          gridTemplateColumns: 'minmax(0, 1.2fr) minmax(0, 1fr)',
           gap: '24px',
           alignItems: 'start',
         }} className="delivery-grid">
@@ -396,7 +396,7 @@ export default function AdminDelivery() {
               ref={mapContainerRef}
               style={{
                 width: '100%',
-                height: '540px',
+                height: 'clamp(280px, 45vh, 540px)',
                 borderRadius: 'var(--radius-md)',
                 overflow: 'hidden',
                 border: '1px solid var(--border-color)',

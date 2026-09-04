@@ -125,13 +125,13 @@ export default function MealForm({ initialData = null, isOpen, onClose, onSave }
       zIndex: 1000,
       padding: '20px',
     }}>
-      <div className="card" style={{
+      <div className="card modal-dialog-card" style={{
         width: '100%',
         maxWidth: '560px',
         maxHeight: '90vh',
         overflowY: 'auto',
         backgroundColor: '#ffffff',
-        padding: '32px',
+        padding: 'clamp(16px, 4vw, 32px)',
       }}>
         {/* Modal Header */}
         <div style={{
@@ -246,7 +246,7 @@ export default function MealForm({ initialData = null, isOpen, onClose, onSave }
           </div>
 
           {/* Price & Category in 2 columns */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '14px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 180px), 1fr))', gap: '14px', marginBottom: '14px' }}>
             <div>
               <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', marginBottom: '6px' }}>
                 Price (₹) *

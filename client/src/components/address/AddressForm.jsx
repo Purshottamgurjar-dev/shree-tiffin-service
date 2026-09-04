@@ -173,12 +173,12 @@ export default function AddressForm({
       zIndex: 1000,
       padding: '16px',
     }}>
-      <div className="card" style={{
+      <div className="card modal-dialog-card" style={{
         width: '100%',
         maxWidth: '680px',
         maxHeight: '90vh',
         overflowY: 'auto',
-        padding: '28px',
+        padding: 'clamp(16px, 4vw, 28px)',
         position: 'relative',
         boxShadow: 'var(--shadow-lg)',
       }}>
@@ -275,7 +275,7 @@ export default function AddressForm({
           {/* Recipient Full Name & Phone */}
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 200px), 1fr))',
             gap: '14px',
             marginBottom: '14px',
           }}>
@@ -329,7 +329,7 @@ export default function AddressForm({
           {/* Address Line 2 & Landmark */}
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 200px), 1fr))',
             gap: '14px',
             marginBottom: '14px',
           }}>
@@ -365,7 +365,7 @@ export default function AddressForm({
           {/* City, State & PIN Code */}
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 140px), 1fr))',
             gap: '14px',
             marginBottom: '18px',
           }}>
