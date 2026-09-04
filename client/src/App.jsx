@@ -87,7 +87,7 @@ export default function App() {
           <footer style={{
             backgroundColor: '#ffffff',
             borderTop: '1px solid var(--border-subtle)',
-            padding: '24px 0',
+            padding: '24px 0 clamp(72px, 10vw, 32px) 0',
             marginTop: 'auto',
           }}>
             <div className="container" style={{
@@ -102,8 +102,8 @@ export default function App() {
               <div>
                 <strong>Shree Tiffin Service</strong> — Ghar Jaisa Khana, Har Din.
               </div>
-              <div>
-                Step 7 Real Payment System Active • COD & Razorpay Online • HMAC Verification
+              <div style={{ color: 'var(--text-tertiary)', fontSize: '13px' }}>
+                100% Pure Vegetarian • Cooked with Desi Cow Ghee • Indore, Madhya Pradesh
               </div>
             </div>
           </footer>
