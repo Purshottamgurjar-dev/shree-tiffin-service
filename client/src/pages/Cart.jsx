@@ -42,9 +42,9 @@ export default function Cart() {
 
   if (!isAuthenticated) {
     return (
-      <div style={{ padding: '60px 0', minHeight: '80vh' }}>
-        <div className="container" style={{ maxWidth: '600px', textAlign: 'center' }}>
-          <div className="card" style={{ padding: '48px 32px' }}>
+      <div style={{ padding: '40px 0 80px', minHeight: '80vh' }}>
+        <div className="container" style={{ maxWidth: '560px', textAlign: 'center' }}>
+          <div className="card" style={{ padding: 'clamp(32px, 6vw, 48px) clamp(16px, 4vw, 32px)' }}>
             <div style={{
               width: '64px',
               height: '64px',
@@ -54,23 +54,23 @@ export default function Cart() {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              margin: '0 auto 20px auto',
+              margin: '0 auto 18px auto',
             }}>
-              <ShoppingBag size={32} />
+              <ShoppingBag size={30} />
             </div>
-            <h2 style={{ fontSize: '26px', fontWeight: '800', marginBottom: '12px' }}>
+            <h2 style={{ fontSize: 'clamp(22px, 5.5vw, 26px)', fontWeight: '800', marginBottom: '10px' }}>
               Your Homestyle Food Cart
             </h2>
-            <p style={{ fontSize: '15px', color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: '28px' }}>
+            <p style={{ fontSize: '14px', color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: '24px' }}>
               Please login or create an account to view and manage your saved tiffin orders. Your cart will sync across all your devices.
             </p>
-            <div style={{ display: 'flex', gap: '14px', justifyContent: 'center', flexWrap: 'wrap' }}>
-              <Link to="/login" className="btn btn-primary" style={{ padding: '12px 28px' }}>
+            <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
+              <Link to="/login" className="btn btn-primary" style={{ padding: '11px 24px', fontSize: '14px' }}>
                 <span>Login to Account</span>
-                <ArrowRight size={16} />
+                <ArrowRight size={15} />
               </Link>
-              <Link to="/register" className="btn btn-secondary" style={{ padding: '12px 24px' }}>
-                <span>Register as New Customer</span>
+              <Link to="/register" className="btn btn-secondary" style={{ padding: '11px 20px', fontSize: '14px' }}>
+                <span>Register as New</span>
               </Link>
             </div>
           </div>
@@ -80,7 +80,7 @@ export default function Cart() {
   }
 
   return (
-    <div style={{ padding: '40px 0', minHeight: '85vh' }}>
+    <div className="cart-page-wrapper" style={{ padding: 'clamp(20px, 4vw, 36px) 0 60px', minHeight: '85vh' }}>
       <div className="container">
         
         {/* Page Header */}
@@ -88,16 +88,16 @@ export default function Cart() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          marginBottom: '28px',
+          marginBottom: '24px',
           flexWrap: 'wrap',
-          gap: '14px',
+          gap: '12px',
         }}>
           <div>
-            <div className="badge badge-primary" style={{ marginBottom: '8px' }}>
+            <div className="badge badge-primary" style={{ marginBottom: '6px', display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
               <ChefHat size={13} />
               <span>Ghar Jaisa Khana, Har Din</span>
             </div>
-            <h1 style={{ fontSize: '32px', fontWeight: '800', color: 'var(--text-primary)' }}>
+            <h1 style={{ fontSize: 'clamp(22px, 5.5vw, 32px)', fontWeight: '800', color: 'var(--text-primary)', margin: 0 }}>
               Your Shopping Cart
             </h1>
           </div>
@@ -110,12 +110,16 @@ export default function Cart() {
               gap: '6px',
               color: 'var(--primary-800)',
               fontWeight: '700',
-              fontSize: '14.5px',
+              fontSize: '13.5px',
               textDecoration: 'none',
+              padding: '6px 14px',
+              backgroundColor: 'var(--primary-50)',
+              borderRadius: 'var(--radius-sm)',
+              transition: 'background-color 0.15s ease',
             }}
           >
-            <ArrowLeft size={16} />
-            <span>Add More Meals from Menu</span>
+            <ArrowLeft size={15} />
+            <span>Add More Meals</span>
           </Link>
         </div>
 
@@ -146,28 +150,28 @@ export default function Cart() {
           </div>
         ) : items.length === 0 ? (
           /* Empty Cart State */
-          <div className="card" style={{ padding: '64px 32px', textAlign: 'center', maxWidth: '640px', margin: '0 auto' }}>
+          <div className="card" style={{ padding: 'clamp(36px, 8vw, 64px) clamp(16px, 4vw, 32px)', textAlign: 'center', maxWidth: '600px', margin: '0 auto' }}>
             <div style={{
-              width: '76px',
-              height: '76px',
+              width: '72px',
+              height: '72px',
               borderRadius: '24px',
               backgroundColor: 'var(--bg-subtle)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              margin: '0 auto 20px auto',
+              margin: '0 auto 18px auto',
               color: 'var(--text-tertiary)',
             }}>
-              <ShoppingBag size={38} />
+              <ShoppingBag size={34} />
             </div>
-            <h2 style={{ fontSize: '24px', fontWeight: '800', marginBottom: '10px' }}>
+            <h2 style={{ fontSize: 'clamp(20px, 5vw, 24px)', fontWeight: '800', marginBottom: '8px' }}>
               Your cart is empty
             </h2>
-            <p style={{ fontSize: '15px', color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: '28px' }}>
+            <p style={{ fontSize: '14px', color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: '24px' }}>
               Add some delicious ghar-jaisa khana to get started.<br />
               Fresh homestyle meals cooked with wholesome ingredients are waiting for you!
             </p>
-            <Link to="/menu" className="btn btn-primary" style={{ padding: '12px 28px', fontSize: '15px' }}>
+            <Link to="/menu" className="btn btn-primary" style={{ padding: '11px 26px', fontSize: '14.5px', display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
               <ChefHat size={16} />
               <span>Browse Menu</span>
             </Link>
@@ -205,7 +209,7 @@ export default function Cart() {
                 </div>
               )}
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                 {items.map((item) => {
                   const meal = item.meal;
                   const isItemUpdating = actionLoading === `updating-${meal._id}`;
@@ -221,24 +225,18 @@ export default function Cart() {
                         opacity: isItemRemoving ? 0.4 : 1,
                       }}
                     >
-                      {/* Top Row / Desktop Left Side */}
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flex: 1, minWidth: 0 }}>
+                      {/* Main Info: Thumbnail + Details */}
+                      <div className="cart-item-main">
                         {/* Meal Thumbnail */}
                         <img
                           src={getMealImage(meal.image)}
                           alt={meal.name}
-                          style={{
-                            width: '72px',
-                            height: '72px',
-                            borderRadius: 'var(--radius-md)',
-                            objectFit: 'cover',
-                            flexShrink: 0,
-                          }}
+                          className="cart-item-thumb"
                         />
 
                         {/* Meal Details */}
-                        <div style={{ flex: 1, minWidth: 0 }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px', flexWrap: 'wrap' }}>
+                        <div className="cart-item-info">
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px', flexWrap: 'wrap' }}>
                             <span className="badge badge-primary" style={{ fontSize: '10.5px', padding: '1px 8px' }}>
                               {meal.category || 'Daily Tiffin'}
                             </span>
@@ -249,15 +247,7 @@ export default function Cart() {
                             )}
                           </div>
 
-                          <h3 style={{
-                            fontSize: '15.5px',
-                            fontWeight: '800',
-                            color: 'var(--text-primary)',
-                            marginBottom: '4px',
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            whiteSpace: 'nowrap',
-                          }}>
+                          <h3 className="cart-item-title">
                             {meal.name}
                           </h3>
 
@@ -267,52 +257,20 @@ export default function Cart() {
                         </div>
                       </div>
 
-                      {/* Controls & Price Row / Desktop Right Side */}
-                      <div style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        gap: '12px',
-                      }}>
+                      {/* Actions: Stepper + Price & Remove Button */}
+                      <div className="cart-item-actions">
                         {/* Quantity Controls */}
-                        <div style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '6px',
-                          backgroundColor: 'var(--bg-subtle)',
-                          padding: '4px',
-                          borderRadius: 'var(--radius-md)',
-                          border: '1px solid var(--border-subtle)',
-                        }}>
+                        <div className="cart-stepper">
                           <button
                             disabled={item.quantity <= 1 || isItemUpdating || actionLoading !== null}
                             onClick={() => updateQuantity(meal._id, item.quantity - 1)}
-                            style={{
-                              width: '32px',
-                              height: '32px',
-                              borderRadius: 'var(--radius-sm)',
-                              border: 'none',
-                              backgroundColor: '#ffffff',
-                              color: item.quantity <= 1 ? 'var(--text-tertiary)' : 'var(--text-primary)',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              cursor: item.quantity <= 1 ? 'not-allowed' : 'pointer',
-                              boxShadow: 'var(--shadow-sm)',
-                              touchAction: 'manipulation',
-                            }}
+                            className="cart-stepper-btn"
                             aria-label="Decrease quantity"
                           >
                             <Minus size={15} />
                           </button>
 
-                          <span style={{
-                            minWidth: '28px',
-                            textAlign: 'center',
-                            fontSize: '14px',
-                            fontWeight: '800',
-                            color: 'var(--text-primary)',
-                          }}>
+                          <span className="cart-stepper-qty">
                             {isItemUpdating ? (
                               <RefreshCw size={13} className="animate-spin" style={{ margin: '0 auto' }} />
                             ) : (
@@ -323,59 +281,29 @@ export default function Cart() {
                           <button
                             disabled={isItemUpdating || actionLoading !== null}
                             onClick={() => updateQuantity(meal._id, item.quantity + 1)}
-                            style={{
-                              width: '32px',
-                              height: '32px',
-                              borderRadius: 'var(--radius-sm)',
-                              border: 'none',
-                              backgroundColor: '#ffffff',
-                              color: 'var(--text-primary)',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              cursor: 'pointer',
-                              boxShadow: 'var(--shadow-sm)',
-                              touchAction: 'manipulation',
-                            }}
+                            className="cart-stepper-btn"
                             aria-label="Increase quantity"
                           >
                             <Plus size={15} />
                           </button>
                         </div>
 
-                        {/* Line Item Total */}
-                        <div style={{
-                          fontSize: '17px',
-                          fontWeight: '800',
-                          color: 'var(--primary-900)',
-                          textAlign: 'right',
-                        }}>
-                          {formatCurrency(item.itemTotal || meal.price * item.quantity)}
-                        </div>
+                        {/* Price & Trash Action */}
+                        <div className="cart-item-price-actions">
+                          <div className="cart-item-total">
+                            {formatCurrency(item.itemTotal || meal.price * item.quantity)}
+                          </div>
 
-                        {/* Remove Button */}
-                        <button
-                          onClick={() => removeFromCart(meal._id)}
-                          disabled={isItemRemoving || actionLoading !== null}
-                          style={{
-                            backgroundColor: 'transparent',
-                            border: 'none',
-                            color: 'var(--text-tertiary)',
-                            padding: '8px',
-                            borderRadius: 'var(--radius-sm)',
-                            cursor: 'pointer',
-                            transition: 'color 0.15s ease',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                          }}
-                          onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--status-danger)')}
-                          onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-tertiary)')}
-                          title="Remove meal from cart"
-                          aria-label={`Remove ${meal.name}`}
-                        >
-                          <Trash2 size={18} />
-                        </button>
+                          <button
+                            onClick={() => removeFromCart(meal._id)}
+                            disabled={isItemRemoving || actionLoading !== null}
+                            className="cart-remove-btn"
+                            title="Remove meal from cart"
+                            aria-label={`Remove ${meal.name}`}
+                          >
+                            <Trash2 size={17} />
+                          </button>
+                        </div>
                       </div>
                     </div>
                   );
@@ -391,7 +319,7 @@ export default function Cart() {
                 flexWrap: 'wrap',
                 gap: '12px',
               }}>
-                <Link to="/menu" className="btn btn-secondary" style={{ fontSize: '13px', padding: '8px 16px' }}>
+                <Link to="/menu" className="btn btn-secondary" style={{ fontSize: '13px', padding: '8px 16px', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
                   <Plus size={14} />
                   <span>Add Another Tiffin</span>
                 </Link>
@@ -411,6 +339,7 @@ export default function Cart() {
                       alignItems: 'center',
                       gap: '5px',
                       padding: '8px',
+                      touchAction: 'manipulation',
                     }}
                   >
                     <Trash2 size={15} />
@@ -424,6 +353,7 @@ export default function Cart() {
                     backgroundColor: 'rgba(250, 82, 82, 0.08)',
                     padding: '6px 12px',
                     borderRadius: 'var(--radius-md)',
+                    flexWrap: 'wrap',
                   }}>
                     <span style={{ fontSize: '12.5px', fontWeight: '600', color: 'var(--status-danger)' }}>
                       Are you sure?
@@ -457,14 +387,14 @@ export default function Cart() {
             </div>
 
             {/* Right Column: Order Summary Card */}
-            <div className="card" style={{ padding: '24px', position: 'sticky', top: '96px' }}>
+            <div className="card" style={{ padding: 'clamp(18px, 4vw, 24px)', position: 'sticky', top: '96px' }}>
               <h2 style={{ fontSize: '18px', fontWeight: '800', marginBottom: '18px', color: 'var(--text-primary)' }}>
                 Order Summary
               </h2>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '18px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px', color: 'var(--text-secondary)' }}>
-                  <span>Total Items ({totalItems} tiffins)</span>
+                  <span>Total Items ({totalItems} {totalItems === 1 ? 'tiffin' : 'tiffins'})</span>
                   <span style={{ fontWeight: '700', color: 'var(--text-primary)' }}>{totalItems}</span>
                 </div>
 
@@ -505,30 +435,15 @@ export default function Cart() {
                   justifyContent: 'center',
                   opacity: hasUnavailableMeals ? 0.5 : 1,
                   cursor: hasUnavailableMeals ? 'not-allowed' : 'pointer',
-                  marginBottom: '12px',
+                  marginBottom: '14px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
                 }}
               >
                 <span>Proceed to Checkout</span>
                 <ArrowRight size={16} />
               </button>
-
-              {/* Notice for Step 5 */}
-              {checkoutNotice && (
-                <div style={{
-                  backgroundColor: 'var(--primary-50)',
-                  border: '1px solid var(--primary-200)',
-                  color: 'var(--primary-900)',
-                  padding: '12px',
-                  borderRadius: 'var(--radius-md)',
-                  fontSize: '12.5px',
-                  lineHeight: 1.5,
-                  marginBottom: '14px',
-                  textAlign: 'center',
-                }}>
-                  <Sparkles size={14} style={{ display: 'inline', marginRight: '4px', verticalAlign: 'middle' }} />
-                  <strong>Checkout coming next!</strong> Step 5 will activate Customer Delivery Address, GPS verification, and Payment options.
-                </div>
-              )}
 
               <div style={{
                 display: 'flex',
@@ -548,6 +463,42 @@ export default function Cart() {
         )}
 
       </div>
+
+      {/* Floating Sticky Mobile Checkout Bar (<= 768px) */}
+      {items.length > 0 && (
+        <div className="cart-mobile-sticky-bar">
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <span style={{ fontSize: '11px', color: 'var(--text-tertiary)', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+              Total ({totalItems} {totalItems === 1 ? 'tiffin' : 'tiffins'})
+            </span>
+            <span style={{ fontSize: '19px', fontWeight: '800', color: 'var(--primary-900)' }}>
+              {formatCurrency(total)}
+            </span>
+          </div>
+
+          <button
+            disabled={hasUnavailableMeals || items.length === 0}
+            onClick={() => navigate('/checkout')}
+            className="btn btn-primary"
+            style={{
+              padding: '10px 20px',
+              fontSize: '14.5px',
+              fontWeight: '700',
+              borderRadius: 'var(--radius-md)',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              opacity: hasUnavailableMeals ? 0.5 : 1,
+              cursor: hasUnavailableMeals ? 'not-allowed' : 'pointer',
+              boxShadow: '0 4px 12px rgba(194, 65, 12, 0.25)',
+              touchAction: 'manipulation',
+            }}
+          >
+            <span>Checkout</span>
+            <ArrowRight size={16} />
+          </button>
+        </div>
+      )}
     </div>
   );
 }
