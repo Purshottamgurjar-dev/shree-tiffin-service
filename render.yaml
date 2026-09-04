@@ -48,14 +48,11 @@ services:
   # ----------------------------------------------------------------------------
   # 2. Frontend Static Site (Single Page Application)
   # ----------------------------------------------------------------------------
-  - type: web
+  - type: static
     name: shree-tiffin
-    runtime: static
     rootDir: client
     buildCommand: npm install && npm run build
     staticPublishPath: dist
-    plan: free
-    region: singapore
     routes:
       - type: rewrite
         source: /*
