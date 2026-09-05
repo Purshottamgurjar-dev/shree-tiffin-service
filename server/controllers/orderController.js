@@ -92,6 +92,28 @@ export const createOrder = async (req, res, next) => {
       });
     }
 
+    // Coordinate & Delivery Radius Validation (Authoritative 15 KM boundary)
+    const addrLat = Number(address.latitude);
+    const addrLng = Number(address.longitude);
+    if (isNaN(addrLat) || addrLat < -90 || addrLat > 90 || isNaN(addrLng) || addrLng < -180 || addrLng > 180) {
+      return res.status(400).json({
+        success: false,
+        message: 'Selected delivery address does not have valid GPS coordinates on the map.',
+      });
+    }
+
+    if (typeof settings.checkDeliveryEligibility === 'function') {
+      const radiusCheck = settings.checkDeliveryEligibility(addrLat, addrLng);
+      if (!radiusCheck.isEligible) {
+        return res.status(400).json({
+          success: false,
+          message: `Delivery address is outside our ${radiusCheck.maxRadiusKm} km delivery area (${radiusCheck.distanceKm} km from our kitchen in Scheme No 78, Vijay Nagar). Please select an address within 15 km.`,
+          distanceKm: radiusCheck.distanceKm,
+          maxRadiusKm: radiusCheck.maxRadiusKm,
+        });
+      }
+    }
+
     // 4. Re-fetch every meal from MongoDB to ensure availability and calculate server prices
     let subtotal = 0;
     let totalItems = 0;

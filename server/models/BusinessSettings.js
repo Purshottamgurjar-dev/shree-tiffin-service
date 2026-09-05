@@ -1,4 +1,9 @@
 import mongoose from 'mongoose';
+import {
+  calculateHaversineDistanceKm,
+  validateCoordinates,
+  OFFICIAL_KITCHEN_COORDINATES,
+} from '../utils/distance.js';
 
 const businessHourSchema = new mongoose.Schema(
   {
@@ -88,6 +93,16 @@ const businessSettingsSchema = new mongoose.Schema(
         default: '452010',
         trim: true,
       },
+      location: {
+        latitude: {
+          type: Number,
+          default: 22.7648,
+        },
+        longitude: {
+          type: Number,
+          default: 75.8976,
+        },
+      },
     },
     delivery: {
       deliveryFee: {
@@ -154,6 +169,39 @@ businessSettingsSchema.statics.getSettings = async function () {
  */
 businessSettingsSchema.methods.calculateDeliveryFee = function (subtotal = 0) {
   return Number(this.delivery?.deliveryFee || 0);
+};
+
+/**
+ * Instance helper to check delivery radius eligibility using Haversine distance
+ */
+businessSettingsSchema.methods.checkDeliveryEligibility = function (lat, lng) {
+  const validation = validateCoordinates(lat, lng);
+  if (!validation.valid) {
+    return {
+      isEligible: false,
+      distanceKm: null,
+      maxRadiusKm: Number(this.delivery?.deliveryRadius || 15),
+      message: validation.message,
+    };
+  }
+
+  const kitchenLat = Number(this.businessInfo?.location?.latitude || OFFICIAL_KITCHEN_COORDINATES.latitude);
+  const kitchenLng = Number(this.businessInfo?.location?.longitude || OFFICIAL_KITCHEN_COORDINATES.longitude);
+  const maxRadiusKm = Number(this.delivery?.deliveryRadius || OFFICIAL_KITCHEN_COORDINATES.defaultDeliveryRadiusKm);
+
+  const distanceKm = calculateHaversineDistanceKm(kitchenLat, kitchenLng, validation.latitude, validation.longitude);
+  const isEligible = distanceKm <= maxRadiusKm;
+
+  return {
+    isEligible,
+    distanceKm,
+    maxRadiusKm,
+    kitchenCoordinates: { latitude: kitchenLat, longitude: kitchenLng },
+    customerCoordinates: { latitude: validation.latitude, longitude: validation.longitude },
+    message: isEligible
+      ? `Delivery available (${distanceKm} km from our kitchen)`
+      : `Location is outside our ${maxRadiusKm} km delivery radius (${distanceKm} km away)`,
+  };
 };
 
 const BusinessSettings = mongoose.model('BusinessSettings', businessSettingsSchema);

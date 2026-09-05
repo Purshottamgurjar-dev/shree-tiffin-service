@@ -19,6 +19,7 @@ import paymentRoutes from './routes/paymentRoutes.js';
 import analyticsRoutes from './routes/analyticsRoutes.js';
 import notificationRoutes from './routes/notificationRoutes.js';
 import settingsRoutes from './routes/settingsRoutes.js';
+import locationRoutes from './routes/locationRoutes.js';
 import { securityHeaders } from './middleware/securityMiddleware.js';
 import { requestIdMiddleware } from './middleware/requestIdMiddleware.js';
 import { seedOwnerUser } from './utils/seedOwner.js';
@@ -130,6 +131,7 @@ app.use('/api/payments', paymentRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/settings', settingsRoutes);
+app.use('/api/location', locationRoutes);
 
 // 7b. Search Engine Crawl Endpoints
 app.get('/robots.txt', (req, res) => {

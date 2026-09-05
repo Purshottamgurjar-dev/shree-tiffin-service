@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import addressService from '../../services/addressService';
+import locationService, { calculateDistanceKm, OFFICIAL_KITCHEN } from '../../services/locationService';
 import LocationMap from './LocationMap';
 
 const ADDRESS_LABELS = ['Home', 'Office', 'Hostel', 'Other'];
@@ -103,6 +104,19 @@ export default function AddressForm({
     }));
   };
 
+  const handleAddressAutoFill = (addressData) => {
+    if (!addressData) return;
+    setFormData((prev) => ({
+      ...prev,
+      addressLine1: prev.addressLine1.trim() ? prev.addressLine1 : (addressData.addressLine1 || prev.addressLine1),
+      addressLine2: prev.addressLine2.trim() ? prev.addressLine2 : (addressData.addressLine2 || prev.addressLine2),
+      landmark: prev.landmark.trim() ? prev.landmark : (addressData.landmark || prev.landmark),
+      city: addressData.city || prev.city || 'Indore',
+      state: addressData.state || prev.state || 'Madhya Pradesh',
+      postalCode: prev.postalCode.trim() ? prev.postalCode : (addressData.postalCode || prev.postalCode),
+    }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMsg('');
@@ -134,6 +148,18 @@ export default function AddressForm({
     }
     if (formData.latitude === null || formData.longitude === null) {
       setErrorMsg('Please pin your delivery location on the map or use your current location');
+      return;
+    }
+
+    // 15 KM Delivery Radius Check
+    const distance = calculateDistanceKm(
+      OFFICIAL_KITCHEN.latitude,
+      OFFICIAL_KITCHEN.longitude,
+      formData.latitude,
+      formData.longitude
+    );
+    if (!isNaN(distance) && distance > OFFICIAL_KITCHEN.deliveryRadiusKm) {
+      setErrorMsg(`Selected delivery location is ${distance} km away, which exceeds our ${OFFICIAL_KITCHEN.deliveryRadiusKm} km fresh delivery radius from our kitchen in Scheme No 78, Vijay Nagar.`);
       return;
     }
 
@@ -421,6 +447,7 @@ export default function AddressForm({
             latitude={formData.latitude}
             longitude={formData.longitude}
             onLocationChange={handleLocationChange}
+            onAddressAutoFill={handleAddressAutoFill}
           />
 
           {/* Delivery Instructions */}

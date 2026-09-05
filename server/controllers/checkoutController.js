@@ -131,6 +131,19 @@ export const validateCheckout = async (req, res, next) => {
           message: 'Selected delivery address does not have valid GPS coordinates on the map.',
         });
       }
+
+      // Delivery radius eligibility check (Authoritative 15 KM limit)
+      if (typeof settings.checkDeliveryEligibility === 'function') {
+        const radiusCheck = settings.checkDeliveryEligibility(lat, lng);
+        if (!radiusCheck.isEligible) {
+          return res.status(400).json({
+            success: false,
+            message: `Selected delivery address is outside our ${radiusCheck.maxRadiusKm} km delivery area (${radiusCheck.distanceKm} km from our kitchen in Scheme No 78, Vijay Nagar). Please select an address within 15 km.`,
+            distanceKm: radiusCheck.distanceKm,
+            maxRadiusKm: radiusCheck.maxRadiusKm,
+          });
+        }
+      }
     }
 
     // 5. Enforce Minimum Order Value

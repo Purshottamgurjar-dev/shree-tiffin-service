@@ -59,6 +59,35 @@ export default function OrderMapPreview({ latitude, longitude, label = 'Delivery
       const marker = L.marker([lat, lng], { icon: customPin }).addTo(map);
       marker.bindPopup(`<b>${label}</b><br/>${addressText || 'Pinned delivery location'}`).openPopup();
 
+      // Kitchen origin pin
+      const kitchenPin = L.divIcon({
+        className: 'order-kitchen-pin',
+        html: `
+          <div style="
+            background: linear-gradient(135deg, #2b8a3e 0%, #087f5b 100%);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #ffffff;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+          ">
+            <div style="font-size: 13px;">🍲</div>
+          </div>
+        `,
+        iconSize: [30, 30],
+        iconAnchor: [15, 15],
+      });
+
+      const kitchenMarker = L.marker([22.7648, 75.8976], { icon: kitchenPin }).addTo(map);
+      kitchenMarker.bindPopup('<b>Kitchen Origin</b><br/>Scheme No 78, Vijay Nagar, Indore');
+
+      // Fit bounds to show both kitchen and customer destination
+      const bounds = L.latLngBounds([[22.7648, 75.8976], [lat, lng]]);
+      map.fitBounds(bounds, { padding: [25, 25], maxZoom: 15 });
+
       mapInstanceRef.current = map;
 
       // Handle resize
