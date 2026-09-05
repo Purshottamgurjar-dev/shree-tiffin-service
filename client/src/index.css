@@ -1352,3 +1352,224 @@ button {
     padding-bottom: 86px !important;
   }
 }
+
+/* ==========================================================================
+   ADMIN CONSOLE & RESPONSIVE DASHBOARD SYSTEM
+   ========================================================================== */
+
+/* Dedicated Admin Horizontal Subnav Bar */
+.admin-subnav-bar {
+  background-color: #ffffff;
+  border-bottom: 1px solid var(--border-subtle);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+  position: sticky;
+  top: 76px;
+  z-index: 90;
+}
+
+.admin-subnav-container {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow-x: auto;
+  padding: 8px 16px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.admin-subnav-container::-webkit-scrollbar {
+  display: none;
+}
+
+.admin-subnav-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: var(--radius-full);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+  border: 1px solid transparent;
+  touch-action: manipulation;
+  flex-shrink: 0;
+}
+
+.admin-subnav-tab:hover {
+  color: var(--primary-800);
+  background-color: var(--primary-50);
+}
+
+.admin-subnav-tab.active {
+  color: var(--primary-900);
+  background-color: #fff7ed;
+  border-color: #fdba74;
+  font-weight: 700;
+  box-shadow: 0 1px 2px rgba(234, 88, 12, 0.08);
+}
+
+/* Admin Page Container */
+.admin-page-container {
+  padding: 32px 20px;
+  max-width: 1240px;
+}
+
+@media (max-width: 768px) {
+  .admin-page-container {
+    padding: 18px 14px !important;
+  }
+}
+
+/* Admin Header Card */
+.admin-header-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 28px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.admin-header-info {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+
+.admin-header-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #1c1917 0%, #2b221e 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-gold-500);
+  box-shadow: var(--shadow-md);
+  flex-shrink: 0;
+}
+
+.admin-header-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 640px) {
+  .admin-header-card {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .admin-header-info {
+    width: 100%;
+  }
+  .admin-header-actions {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .admin-header-actions > * {
+    justify-content: center;
+  }
+}
+
+/* KPI Sections and Grids */
+.admin-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+/* Live Kitchen 5-Card Grid */
+.kpi-grid-kitchen {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+@media (max-width: 1100px) {
+  .kpi-grid-kitchen {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .kpi-grid-kitchen {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+}
+
+@media (max-width: 380px) {
+  .kpi-grid-kitchen {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Revenue & Customer 4-Card Grid */
+.kpi-grid-revenue {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 32px;
+}
+
+@media (max-width: 1100px) {
+  .kpi-grid-revenue {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .kpi-grid-revenue {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+}
+
+@media (max-width: 380px) {
+  .kpi-grid-revenue {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Operational Shortcuts Grid */
+.admin-shortcuts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 18px;
+  margin-bottom: 36px;
+}
+
+@media (max-width: 640px) {
+  .admin-shortcuts-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+}
+
+/* Responsive Table Wrapper */
+.admin-table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+}
+
+.admin-table-wrapper table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 620px;
+}
+

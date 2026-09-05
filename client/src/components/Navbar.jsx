@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { 
   Utensils, 
   User, 
@@ -23,6 +23,17 @@ import { useCart } from '../context/CartContext';
 import notificationService from '../services/notificationService';
 import settingsService from '../services/settingsService';
 
+const ADMIN_TABS = [
+  { path: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { path: '/admin/orders', label: 'Orders', icon: ClipboardList },
+  { path: '/admin/delivery', label: 'Delivery Map', icon: Bike },
+  { path: '/admin/payments', label: 'Payments & COD', icon: CreditCard },
+  { path: '/admin/customers', label: 'Customers', icon: Users },
+  { path: '/admin/analytics', label: 'Analytics', icon: BarChart3 },
+  { path: '/admin/meals', label: 'Menu Items', icon: Utensils },
+  { path: '/admin/settings', label: 'Settings', icon: Sliders },
+];
+
 export default function Navbar({ serverStatus = 'online' }) {
   const { user, isAuthenticated, isOwner, logout } = useAuth();
   const { totalItems } = useCart();
@@ -30,6 +41,9 @@ export default function Navbar({ serverStatus = 'online' }) {
   const [unreadCount, setUnreadCount] = useState(0);
   const [storeStatus, setStoreStatus] = useState({ isAcceptingOrders: true });
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const isAdminRoute = location.pathname.startsWith('/admin');
 
   React.useEffect(() => {
     let isMounted = true;
@@ -72,8 +86,9 @@ export default function Navbar({ serverStatus = 'online' }) {
 
   return (
     <header style={{
-      backgroundColor: 'rgba(255, 255, 255, 0.94)',
+      backgroundColor: 'rgba(255, 255, 255, 0.96)',
       backdropFilter: 'blur(16px)',
+      WebkitBackdropFilter: 'blur(16px)',
       borderBottom: '1px solid var(--border-subtle)',
       position: 'sticky',
       top: 0,
@@ -84,9 +99,19 @@ export default function Navbar({ serverStatus = 'online' }) {
         alignItems: 'center',
         justifyContent: 'space-between',
         height: '76px',
+        maxWidth: '1240px',
       }}>
         {/* Brand Logo & Name */}
-        <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 'clamp(8px, 2.5vw, 14px)', textDecoration: 'none', minWidth: 0 }}>
+        <Link 
+          to={isAdminRoute && isOwner ? "/admin/dashboard" : "/"} 
+          style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '12px', 
+            textDecoration: 'none', 
+            flexShrink: 0 
+          }}
+        >
           <div className="brand-logo-box" style={{
             width: '44px',
             height: '44px',
@@ -101,9 +126,22 @@ export default function Navbar({ serverStatus = 'online' }) {
           }}>
             <Utensils size={22} />
           </div>
-          <div style={{ minWidth: 0 }}>
-            <div className="brand-title-text">
-              SHREE TIFFIN SERVICE
+          <div style={{ flexShrink: 0 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span className="brand-title-text" style={{ whiteSpace: 'nowrap' }}>
+                SHREE TIFFIN SERVICE
+              </span>
+              {isAdminRoute && (
+                <span className="badge badge-warning" style={{ 
+                  fontSize: '10px', 
+                  padding: '1px 6px',
+                  fontWeight: '700',
+                  borderRadius: '6px',
+                  whiteSpace: 'nowrap'
+                }}>
+                  Kitchen Console
+                </span>
+              )}
             </div>
             <div className="brand-tagline-text" style={{
               fontSize: '12px',
@@ -112,7 +150,7 @@ export default function Navbar({ serverStatus = 'online' }) {
               display: 'flex',
               alignItems: 'center',
               gap: '8px',
-              flexWrap: 'wrap',
+              whiteSpace: 'nowrap',
             }}>
               <span>Ghar Jaisa Khana, Har Din.</span>
               <span style={{
@@ -140,199 +178,161 @@ export default function Navbar({ serverStatus = 'online' }) {
         </Link>
 
         {/* Desktop Navigation Links */}
-        <nav style={{ display: 'flex', alignItems: 'center', gap: '20px' }} className="desktop-nav">
-          <Link to="/" style={{ color: 'var(--text-primary)', fontWeight: '600', fontSize: '14.5px' }}>
-            Home
-          </Link>
-
-          <Link to="/menu" style={{ color: 'var(--text-primary)', fontWeight: '600', fontSize: '14.5px' }}>
-            Our Menu
-          </Link>
-
-          {/* Cart Link with Badge */}
-          <Link
-            to="/cart"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '7px',
-              backgroundColor: totalItems > 0 ? 'var(--primary-50)' : 'transparent',
-              border: totalItems > 0 ? '1px solid var(--primary-200)' : '1px solid transparent',
-              padding: '6px 14px',
-              borderRadius: 'var(--radius-full)',
-              color: 'var(--primary-900)',
-              fontWeight: '700',
-              fontSize: '14px',
-              textDecoration: 'none',
-              transition: 'all 0.15s ease',
-            }}
-            title="Shopping Cart"
-          >
-            <ShoppingBag size={17} color="var(--primary-800)" />
-            <span>Cart</span>
-            {totalItems > 0 && (
-              <span
+        <nav style={{ display: 'flex', alignItems: 'center', gap: '14px' }} className="desktop-nav">
+          {isAdminRoute ? (
+            /* Admin Mode Actions */
+            <>
+              <Link
+                to="/"
                 style={{
-                  backgroundColor: 'var(--primary-800)',
-                  color: '#ffffff',
-                  fontSize: '11px',
-                  fontWeight: '800',
-                  minWidth: '19px',
-                  height: '19px',
-                  borderRadius: '10px',
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'center',
-                  padding: '0 5px',
+                  gap: '6px',
+                  color: 'var(--text-secondary)',
+                  fontSize: '13px',
+                  fontWeight: '600',
+                  padding: '6px 14px',
+                  borderRadius: 'var(--radius-full)',
+                  border: '1px solid var(--border-subtle)',
+                  backgroundColor: '#ffffff',
+                  textDecoration: 'none',
+                  transition: 'all 0.15s ease',
                 }}
+                title="View customer storefront"
               >
-                {totalItems}
-              </span>
-            )}
-          </Link>
+                <ShoppingBag size={14} />
+                <span>View Storefront</span>
+              </Link>
 
-          {/* If Owner: show Owner Dashboard, Orders & Manage Menu */}
-          {isAuthenticated && isOwner && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-              <Link 
-                to="/admin/dashboard" 
-                style={{ 
-                  color: 'var(--primary-800)', 
-                  fontWeight: '700', 
-                  fontSize: '14.5px',
+              <Link
+                to="/admin/settings"
+                style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '6px'
+                  gap: '6px',
+                  padding: '5px 12px',
+                  borderRadius: 'var(--radius-full)',
+                  backgroundColor: storeStatus.isAcceptingOrders ? '#ecfdf5' : '#fff1f2',
+                  border: storeStatus.isAcceptingOrders ? '1px solid #a7f3d0' : '1px solid #fecdd3',
+                  color: storeStatus.isAcceptingOrders ? '#047857' : '#be123c',
+                  fontSize: '11.5px',
+                  fontWeight: '700',
+                  textDecoration: 'none',
                 }}
+                title="Store operational status toggle"
               >
-                <LayoutDashboard size={17} />
-                <span>Dashboard</span>
+                <span style={{
+                  width: '6px',
+                  height: '6px',
+                  borderRadius: '50%',
+                  backgroundColor: storeStatus.isAcceptingOrders ? '#10b981' : '#f43f5e',
+                }} />
+                <span>{storeStatus.isAcceptingOrders ? 'Accepting Orders' : 'Store Paused'}</span>
               </Link>
-              <Link 
-                to="/admin/orders" 
-                style={{ 
-                  color: 'var(--primary-800)', 
-                  fontWeight: '700', 
-                  fontSize: '14.5px',
+            </>
+          ) : (
+            /* Customer Mode Links */
+            <>
+              <Link to="/" style={{ color: 'var(--text-primary)', fontWeight: '600', fontSize: '14.5px' }}>
+                Home
+              </Link>
+
+              <Link to="/menu" style={{ color: 'var(--text-primary)', fontWeight: '600', fontSize: '14.5px' }}>
+                Our Menu
+              </Link>
+
+              {/* Cart Link with Badge */}
+              <Link
+                to="/cart"
+                style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '6px'
+                  gap: '7px',
+                  backgroundColor: totalItems > 0 ? 'var(--primary-50)' : 'transparent',
+                  border: totalItems > 0 ? '1px solid var(--primary-200)' : '1px solid transparent',
+                  padding: '6px 14px',
+                  borderRadius: 'var(--radius-full)',
+                  color: 'var(--primary-900)',
+                  fontWeight: '700',
+                  fontSize: '14px',
+                  textDecoration: 'none',
+                  transition: 'all 0.15s ease',
                 }}
+                title="Shopping Cart"
               >
-                <ClipboardList size={16} />
-                <span>Orders</span>
+                <ShoppingBag size={17} color="var(--primary-800)" />
+                <span>Cart</span>
+                {totalItems > 0 && (
+                  <span
+                    style={{
+                      backgroundColor: 'var(--primary-800)',
+                      color: '#ffffff',
+                      fontSize: '11px',
+                      fontWeight: '800',
+                      minWidth: '19px',
+                      height: '19px',
+                      borderRadius: '10px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      padding: '0 5px',
+                    }}
+                  >
+                    {totalItems}
+                  </span>
+                )}
               </Link>
-              <Link 
-                to="/admin/delivery" 
-                style={{ 
-                  color: '#0284c7', 
-                  fontWeight: '700', 
-                  fontSize: '14.5px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px'
-                }}
-              >
-                <Bike size={16} />
-                <span>Delivery</span>
-              </Link>
-              <Link 
-                to="/admin/payments" 
-                style={{ 
-                  color: 'var(--text-primary)', 
-                  fontWeight: '600', 
-                  fontSize: '14.5px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px'
-                }}
-              >
-                <CreditCard size={16} />
-                <span>Payments</span>
-              </Link>
-              <Link 
-                to="/admin/customers" 
-                style={{ 
-                  color: 'var(--text-primary)', 
-                  fontWeight: '600', 
-                  fontSize: '14.5px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px'
-                }}
-              >
-                <Users size={16} />
-                <span>Customers</span>
-              </Link>
-              <Link 
-                to="/admin/analytics" 
-                style={{ 
-                  color: '#ea580c', 
-                  fontWeight: '700', 
-                  fontSize: '14.5px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px'
-                }}
-              >
-                <BarChart3 size={16} />
-                <span>Analytics</span>
-              </Link>
-              <Link 
-                to="/admin/meals" 
-                style={{ 
-                  color: 'var(--text-primary)', 
-                  fontWeight: '600', 
-                  fontSize: '14.5px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px'
-                }}
-              >
-                <Utensils size={16} />
-                <span>Menu</span>
-              </Link>
-              <Link 
-                to="/admin/settings" 
-                style={{ 
-                  color: 'var(--primary-900)', 
-                  fontWeight: '700', 
-                  fontSize: '14.5px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px'
-                }}
-                title="Business & Delivery Settings"
-              >
-                <Sliders size={16} />
-                <span>Settings</span>
-              </Link>
-            </div>
+
+              {/* If Authenticated Customer: show My Orders */}
+              {isAuthenticated && !isOwner && (
+                <Link
+                  to="/orders"
+                  style={{
+                    color: 'var(--text-primary)',
+                    fontWeight: '600',
+                    fontSize: '14.5px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    textDecoration: 'none',
+                  }}
+                >
+                  <ClipboardList size={16} color="var(--primary-800)" />
+                  <span>My Orders</span>
+                </Link>
+              )}
+
+              {/* If Owner on Customer page: Clean Console Switcher */}
+              {isAuthenticated && isOwner && (
+                <Link 
+                  to="/admin/dashboard" 
+                  style={{ 
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    backgroundColor: '#fff7ed',
+                    color: '#c2410c',
+                    border: '1px solid #fed7aa',
+                    padding: '6px 14px',
+                    borderRadius: 'var(--radius-full)',
+                    fontSize: '13.5px',
+                    fontWeight: '700',
+                    textDecoration: 'none',
+                    boxShadow: '0 1px 2px rgba(234, 88, 12, 0.08)',
+                  }}
+                  title="Switch to Kitchen & Owner Console"
+                >
+                  <ShieldCheck size={16} color="#c2410c" />
+                  <span>Admin Console</span>
+                </Link>
+              )}
+            </>
           )}
 
-          {/* If Authenticated Customer: show My Orders */}
-          {isAuthenticated && !isOwner && (
-            <Link
-              to="/orders"
-              style={{
-                color: 'var(--text-primary)',
-                fontWeight: '600',
-                fontSize: '14.5px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                textDecoration: 'none',
-              }}
-            >
-              <ClipboardList size={16} color="var(--primary-800)" />
-              <span>My Orders</span>
-            </Link>
-          )}
-
-          {/* Authenticated State */}
+          {/* Common Right Controls: Notifications, Profile, Logout */}
           {isAuthenticated ? (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              {/* Notification Bell with live unread badge */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              {/* Notification Bell */}
               <Link
                 to="/notifications"
                 style={{
@@ -376,22 +376,23 @@ export default function Navbar({ serverStatus = 'online' }) {
                 )}
               </Link>
 
+              {/* Profile Chip */}
               <Link
                 to="/profile"
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '8px',
+                  gap: '7px',
                   backgroundColor: 'var(--bg-subtle)',
-                  padding: '7px 16px',
+                  padding: '6px 14px',
                   borderRadius: 'var(--radius-full)',
                   color: 'var(--text-primary)',
                   fontWeight: '600',
-                  fontSize: '14px',
+                  fontSize: '13px',
                   textDecoration: 'none',
                 }}
               >
-                <User size={16} color="var(--primary-800)" />
+                <User size={15} color="var(--primary-800)" />
                 <span>{user?.name?.split(' ')[0] || 'Profile'}</span>
                 {isOwner && (
                   <span className="badge badge-warning" style={{ fontSize: '10px', padding: '1px 6px' }}>
@@ -400,20 +401,42 @@ export default function Navbar({ serverStatus = 'online' }) {
                 )}
               </Link>
 
+              {/* Logout Button */}
               <button
                 onClick={handleLogout}
                 className="btn btn-secondary"
                 style={{
-                  padding: '7px 16px',
-                  fontSize: '13.5px',
+                  padding: '6px 14px',
+                  fontSize: '13px',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '6px',
                 }}
               >
-                <LogOut size={15} />
+                <LogOut size={14} />
                 <span>Logout</span>
               </button>
+
+              {/* API Status Pill */}
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '5px',
+                padding: '4px 9px',
+                borderRadius: 'var(--radius-full)',
+                backgroundColor: serverStatus === 'online' ? 'var(--veg-50)' : 'rgba(250, 82, 82, 0.1)',
+                fontSize: '11px',
+                fontWeight: '600',
+                color: serverStatus === 'online' ? 'var(--veg-700)' : 'var(--status-danger)',
+              }}>
+                <span style={{
+                  width: '6px',
+                  height: '6px',
+                  borderRadius: '50%',
+                  backgroundColor: serverStatus === 'online' ? 'var(--status-success)' : 'var(--status-danger)',
+                }} />
+                <span>{serverStatus === 'online' ? 'Online' : 'Offline'}</span>
+              </div>
             </div>
           ) : (
             /* Logged Out State */
@@ -450,49 +473,6 @@ export default function Navbar({ serverStatus = 'online' }) {
               </Link>
             </div>
           )}
-
-          {/* Store Paused Indicator if online ordering is paused */}
-          {!storeStatus.isAcceptingOrders && (
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                padding: '4px 10px',
-                borderRadius: 'var(--radius-full)',
-                backgroundColor: '#fef3c7',
-                fontSize: '11.5px',
-                fontWeight: '700',
-                color: '#b45309',
-                border: '1px solid #fde68a',
-              }}
-              title="Store ordering is currently paused by kitchen manager"
-            >
-              <span>⏸️ Orders Paused</span>
-            </div>
-          )}
-
-          {/* Backend Status Pill */}
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px',
-            padding: '4px 10px',
-            borderRadius: 'var(--radius-full)',
-            backgroundColor: serverStatus === 'online' ? 'var(--veg-50)' : 'rgba(250, 82, 82, 0.1)',
-            fontSize: '11.5px',
-            fontWeight: '600',
-            color: serverStatus === 'online' ? 'var(--veg-700)' : 'var(--status-danger)',
-            marginLeft: '8px',
-          }}>
-            <span style={{
-              width: '7px',
-              height: '7px',
-              borderRadius: '50%',
-              backgroundColor: serverStatus === 'online' ? 'var(--status-success)' : 'var(--status-danger)',
-            }} />
-            <span>{serverStatus === 'online' ? 'API Online' : 'API Offline'}</span>
-          </div>
         </nav>
 
         {/* Mobile Hamburger Button */}
@@ -516,6 +496,29 @@ export default function Navbar({ serverStatus = 'online' }) {
         </button>
       </div>
 
+      {/* Dedicated Persistent Admin Subnav Tabs on all /admin/* routes */}
+      {isAdminRoute && isAuthenticated && isOwner && (
+        <nav className="admin-subnav-bar" aria-label="Kitchen Operations Navigation">
+          <div className="container admin-subnav-container">
+            {ADMIN_TABS.map((tab) => {
+              const isActive = location.pathname === tab.path || 
+                (tab.path !== '/admin/dashboard' && location.pathname.startsWith(tab.path));
+              const Icon = tab.icon;
+              return (
+                <Link
+                  key={tab.path}
+                  to={tab.path}
+                  className={`admin-subnav-tab ${isActive ? 'active' : ''}`}
+                >
+                  <Icon size={15} />
+                  <span>{tab.label}</span>
+                </Link>
+              );
+            })}
+          </div>
+        </nav>
+      )}
+
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
         <div style={{
@@ -524,119 +527,119 @@ export default function Navbar({ serverStatus = 'online' }) {
           padding: '16px 20px',
           display: 'flex',
           flexDirection: 'column',
-          gap: '12px',
+          gap: '10px',
+          boxShadow: '0 8px 24px rgba(0,0,0,0.08)',
         }}>
-          <Link
-            to="/"
-            onClick={() => setMobileMenuOpen(false)}
-            style={{ fontWeight: '600', padding: '8px 0', color: 'var(--text-primary)' }}
-          >
-            Home
-          </Link>
+          {isAdminRoute && isAuthenticated && isOwner ? (
+            <>
+              <div style={{ fontSize: '11px', fontWeight: '800', color: 'var(--primary-800)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '2px' }}>
+                Kitchen Operations
+              </div>
+              {ADMIN_TABS.map((tab) => {
+                const Icon = tab.icon;
+                const isActive = location.pathname === tab.path;
+                return (
+                  <Link
+                    key={tab.path}
+                    to={tab.path}
+                    onClick={() => setMobileMenuOpen(false)}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '10px',
+                      padding: '9px 12px',
+                      borderRadius: '8px',
+                      backgroundColor: isActive ? '#fff7ed' : 'transparent',
+                      color: isActive ? 'var(--primary-900)' : 'var(--text-primary)',
+                      fontWeight: isActive ? '700' : '600',
+                      fontSize: '14px',
+                      textDecoration: 'none',
+                    }}
+                  >
+                    <Icon size={18} color={isActive ? 'var(--primary-700)' : 'var(--text-tertiary)'} />
+                    <span>{tab.label}</span>
+                  </Link>
+                );
+              })}
+              <div style={{ height: '1px', backgroundColor: 'var(--border-subtle)', margin: '6px 0' }} />
+              <Link
+                to="/"
+                onClick={() => setMobileMenuOpen(false)}
+                style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '8px 12px', fontWeight: '600', color: 'var(--text-secondary)', fontSize: '14px' }}
+              >
+                <ShoppingBag size={18} />
+                <span>View Customer Storefront</span>
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link
+                to="/"
+                onClick={() => setMobileMenuOpen(false)}
+                style={{ fontWeight: '600', padding: '8px 0', color: 'var(--text-primary)' }}
+              >
+                Home
+              </Link>
 
-          <Link
-            to="/menu"
-            onClick={() => setMobileMenuOpen(false)}
-            style={{ fontWeight: '600', padding: '8px 0', color: 'var(--text-primary)' }}
-          >
-            Our Menu
-          </Link>
+              <Link
+                to="/menu"
+                onClick={() => setMobileMenuOpen(false)}
+                style={{ fontWeight: '600', padding: '8px 0', color: 'var(--text-primary)' }}
+              >
+                Our Menu
+              </Link>
 
-          <Link
-            to="/cart"
-            onClick={() => setMobileMenuOpen(false)}
-            style={{
-              fontWeight: '700',
-              padding: '8px 0',
-              color: 'var(--primary-800)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-            }}
-          >
-            <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <ShoppingBag size={18} />
-              <span>Shopping Cart</span>
-            </span>
-            {totalItems > 0 && (
-              <span
+              <Link
+                to="/cart"
+                onClick={() => setMobileMenuOpen(false)}
                 style={{
-                  backgroundColor: 'var(--primary-800)',
-                  color: '#ffffff',
-                  fontSize: '11px',
-                  fontWeight: '800',
-                  borderRadius: '10px',
-                  padding: '2px 8px',
+                  fontWeight: '700',
+                  padding: '8px 0',
+                  color: 'var(--primary-800)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
                 }}
               >
-                {totalItems}
-              </span>
-            )}
-          </Link>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <ShoppingBag size={18} />
+                  <span>Shopping Cart</span>
+                </span>
+                {totalItems > 0 && (
+                  <span
+                    style={{
+                      backgroundColor: 'var(--primary-800)',
+                      color: '#ffffff',
+                      fontSize: '11px',
+                      fontWeight: '800',
+                      borderRadius: '10px',
+                      padding: '2px 8px',
+                    }}
+                  >
+                    {totalItems}
+                  </span>
+                )}
+              </Link>
 
-          {isAuthenticated ? (
-            <>
-              {isOwner && (
-                <>
-                  <Link
-                    to="/admin/dashboard"
-                    onClick={() => setMobileMenuOpen(false)}
-                    style={{ fontWeight: '700', padding: '8px 0', color: 'var(--primary-800)' }}
-                  >
-                    Owner Dashboard
-                  </Link>
-                  <Link
-                    to="/admin/orders"
-                    onClick={() => setMobileMenuOpen(false)}
-                    style={{ fontWeight: '700', padding: '8px 0', color: 'var(--primary-800)' }}
-                  >
-                    Manage Orders
-                  </Link>
-                  <Link
-                    to="/admin/delivery"
-                    onClick={() => setMobileMenuOpen(false)}
-                    style={{ fontWeight: '700', padding: '8px 0', color: '#0284c7' }}
-                  >
-                    Live Delivery Map
-                  </Link>
-                  <Link
-                    to="/admin/payments"
-                    onClick={() => setMobileMenuOpen(false)}
-                    style={{ fontWeight: '700', padding: '8px 0', color: 'var(--primary-800)' }}
-                  >
-                    Payments & COD
-                  </Link>
-                  <Link
-                    to="/admin/customers"
-                    onClick={() => setMobileMenuOpen(false)}
-                    style={{ fontWeight: '700', padding: '8px 0', color: 'var(--primary-800)' }}
-                  >
-                    Customer Directory
-                  </Link>
-                  <Link
-                    to="/admin/analytics"
-                    onClick={() => setMobileMenuOpen(false)}
-                    style={{ fontWeight: '700', padding: '8px 0', color: '#ea580c' }}
-                  >
-                    Analytics & Reports
-                  </Link>
-                  <Link
-                    to="/admin/meals"
-                    onClick={() => setMobileMenuOpen(false)}
-                    style={{ fontWeight: '700', padding: '8px 0', color: 'var(--primary-800)' }}
-                  >
-                    Manage Menu Items
-                  </Link>
-                  <Link
-                    to="/admin/settings"
-                    onClick={() => setMobileMenuOpen(false)}
-                    style={{ fontWeight: '700', padding: '8px 0', color: 'var(--primary-900)' }}
-                  >
-                    ⚙️ Business Settings
-                  </Link>
-                </>
+              {isAuthenticated && isOwner && (
+                <Link
+                  to="/admin/dashboard"
+                  onClick={() => setMobileMenuOpen(false)}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    fontWeight: '700',
+                    padding: '8px 0',
+                    color: '#c2410c',
+                  }}
+                >
+                  <ShieldCheck size={18} />
+                  <span>Admin & Kitchen Console</span>
+                </Link>
               )}
-              {!isOwner && (
+
+              {isAuthenticated && !isOwner && (
                 <Link
                   to="/orders"
                   onClick={() => setMobileMenuOpen(false)}
@@ -645,6 +648,12 @@ export default function Navbar({ serverStatus = 'online' }) {
                   My Tiffin Orders
                 </Link>
               )}
+            </>
+          )}
+
+          {isAuthenticated ? (
+            <>
+              <div style={{ height: '1px', backgroundColor: 'var(--border-subtle)', margin: '4px 0' }} />
               <Link
                 to="/notifications"
                 onClick={() => setMobileMenuOpen(false)}
@@ -687,9 +696,16 @@ export default function Navbar({ serverStatus = 'online' }) {
                   fontWeight: '600',
                   color: 'var(--status-danger)',
                   padding: '8px 0',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
                 }}
               >
-                Logout
+                <LogOut size={16} />
+                <span>Logout</span>
               </button>
             </>
           ) : (
