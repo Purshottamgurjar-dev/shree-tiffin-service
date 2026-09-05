@@ -6,12 +6,12 @@ Allow: /
 Allow: /menu
 Allow: /menu/*
 Allow: /meal/*
-Allow: /login
-Allow: /register
 
-# Disallow private customer and owner administration routes
+# Disallow private customer, authentication, and owner administration routes
 Disallow: /admin
 Disallow: /admin/*
+Disallow: /login
+Disallow: /register
 Disallow: /cart
 Disallow: /checkout
 Disallow: /orders
@@ -20,6 +20,7 @@ Disallow: /profile
 Disallow: /notifications
 Disallow: /unauthorized
 Disallow: /api/*
+
 
 # XML Sitemap
 Sitemap: https://shree-tiffin.onrender.com/sitemap.xml

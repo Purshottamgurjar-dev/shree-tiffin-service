@@ -151,6 +151,7 @@ export default function Login() {
       <SEO 
         title="Customer Login" 
         description="Sign in to your Shree Tiffin Service account to manage your daily meals, track active orders, and customize your delivery preferences." 
+        noindex={true}
       />
       <div className="card" style={{ width: '100%', maxWidth: '440px', padding: '36px' }}>
         {/* Header Branding */}

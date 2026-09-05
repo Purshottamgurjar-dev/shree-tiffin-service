@@ -63,3 +63,6 @@ services:
         sync: false # Set to backend API URL (e.g. https://shree-tiffin-api.onrender.com/api)
       - key: VITE_RAZORPAY_KEY_ID
         sync: false # Public Razorpay key ID only (rzp_test_... or rzp_live_...)
+      - key: VITE_CANONICAL_URL
+        sync: false # Custom domain canonical URL (e.g. https://shreetiffinservice.in), fallback to Render URL
+

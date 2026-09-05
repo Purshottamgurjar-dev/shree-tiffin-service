@@ -133,8 +133,9 @@ app.use('/api/settings', settingsRoutes);
 
 // 7b. Search Engine Crawl Endpoints
 app.get('/robots.txt', (req, res) => {
+  const baseUrl = process.env.CLIENT_URL ? process.env.CLIENT_URL.split(',')[0].trim().replace(/\/$/, '') : 'https://shree-tiffin.onrender.com';
   res.type('text/plain');
-  res.send(`# Robots.txt for Shree Tiffin Service\nUser-agent: *\nAllow: /\nDisallow: /api/\nDisallow: /admin\nSitemap: https://shree-tiffin.onrender.com/sitemap.xml\n`);
+  res.send(`# Robots.txt for Shree Tiffin Service\n# "Ghar Jaisa Khana, Har Din."\nUser-agent: *\nAllow: /\nAllow: /menu\nAllow: /menu/*\nAllow: /meal/*\nDisallow: /admin\nDisallow: /admin/*\nDisallow: /login\nDisallow: /register\nDisallow: /cart\nDisallow: /checkout\nDisallow: /orders\nDisallow: /orders/*\nDisallow: /profile\nDisallow: /notifications\nDisallow: /unauthorized\nDisallow: /api/*\nSitemap: ${baseUrl}/sitemap.xml\n`);
 });
 
 app.get(['/sitemap.xml', '/api/sitemap.xml'], async (req, res) => {
@@ -148,8 +149,6 @@ app.get(['/sitemap.xml', '/api/sitemap.xml'], async (req, res) => {
     for (const m of meals) {
       xml += `  <url><loc>${baseUrl}/menu/${m.slug || m._id}</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>\n`;
     }
-    xml += `  <url><loc>${baseUrl}/login</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>\n`;
-    xml += `  <url><loc>${baseUrl}/register</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>\n`;
     xml += `</urlset>`;
     res.type('application/xml');
     res.send(xml);

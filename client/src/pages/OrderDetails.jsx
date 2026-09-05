@@ -28,6 +28,7 @@ import PaymentBadge from '../components/payment/PaymentBadge';
 import useOrderPolling from '../hooks/useOrderPolling';
 import { formatCurrency, formatDate } from '../utils';
 import SEO from '../components/SEO';
+import api from '../services/api';
 
 export default function OrderDetails() {
   const { id } = useParams();
@@ -36,7 +37,9 @@ export default function OrderDetails() {
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [kitchenPhone, setKitchenPhone] = useState('8120414836');
   const [isCancelling, setIsCancelling] = useState(false);
+
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [cancelReason, setCancelReason] = useState('');
   const [cancelError, setCancelError] = useState('');
@@ -69,6 +72,11 @@ export default function OrderDetails() {
 
   useEffect(() => {
     fetchOrder();
+    api.get('/settings').then((res) => {
+      if (res.data?.settings?.businessInfo?.phone) {
+        setKitchenPhone(res.data.settings.businessInfo.phone);
+      }
+    }).catch(() => {});
   }, [id]);
 
   // Phase 12: Real-time periodic order refresh while active
@@ -717,7 +725,7 @@ export default function OrderDetails() {
                 Have questions about your meal or delivery time? Our kitchen manager is available every day.
               </p>
               <div style={{ fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>
-                📞 Phone: <a href="tel:+919876543210" style={{ color: 'var(--primary-600)' }}>+91 98765 43210</a>
+                📞 Phone: <a href={`tel:+91${kitchenPhone.replace(/[\s-]/g, '')}`} style={{ color: 'var(--primary-600)' }}>+91 {kitchenPhone}</a>
               </div>
               <div style={{ fontSize: '12px', color: 'var(--text-tertiary)', marginTop: '4px' }}>
                 Service Hours: 11:00 AM – 10:30 PM (All 7 Days)

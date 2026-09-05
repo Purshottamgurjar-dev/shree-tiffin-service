@@ -218,10 +218,19 @@ export default function Home() {
   const [addingMealId, setAddingMealId] = useState(null);
   const [feedbackMealId, setFeedbackMealId] = useState(null);
   const [guestToast, setGuestToast] = useState(false);
+  const [supportPhone, setSupportPhone] = useState('8120414836');
 
-  // Fetch Featured Meals from MongoDB
+  // Fetch Featured Meals and Business Contact from MongoDB
   useEffect(() => {
     let isMounted = true;
+
+    // Fetch settings for dynamic contact links
+    api.get('/settings').then((res) => {
+      if (isMounted && res.data?.settings?.businessInfo?.phone) {
+        setSupportPhone(res.data.settings.businessInfo.phone.replace(/[\s-]/g, ''));
+      }
+    }).catch(() => {});
+
     const fetchMeals = async () => {
       try {
         const res = await api.get('/meals', { params: { featured: true } });
@@ -1326,7 +1335,7 @@ export default function Home() {
               </Link>
 
               <a
-                href="https://wa.me/919876543210?text=Hello%20Shree%20Tiffin%20Service%2C%20I%20want%20to%20know%20more%20about%20your%20daily%20meals"
+                href={`https://wa.me/91${supportPhone}?text=Hello%20Shree%20Tiffin%20Service%2C%20I%20want%20to%20know%20more%20about%20your%20daily%20meals`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn"

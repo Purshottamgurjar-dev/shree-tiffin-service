@@ -201,7 +201,11 @@ const User = {
     const execute = async () => {
       if (mongoose.connection.readyState === 1) {
         let q = MongooseUser.findById(stringId);
-        if (excludePassword) q = q.select('-password');
+        if (excludePassword) {
+          q = q.select('-password');
+        } else {
+          q = q.select('+password');
+        }
         return await q;
       }
       const user = inMemoryUsers.get(stringId);

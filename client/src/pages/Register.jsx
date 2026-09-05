@@ -105,6 +105,7 @@ export default function Register() {
       <SEO 
         title="Create Account" 
         description="Register for a customer account with Shree Tiffin Service to order delicious homestyle vegetarian food delivered to your door." 
+        noindex={true}
       />
       <div className="card" style={{ width: '100%', maxWidth: '480px', padding: '36px' }}>
         {/* Header */}
