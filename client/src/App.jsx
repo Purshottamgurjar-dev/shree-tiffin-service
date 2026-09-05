@@ -84,12 +84,7 @@ export default function App() {
           </main>
 
           {/* Footer */}
-          <footer style={{
-            backgroundColor: '#ffffff',
-            borderTop: '1px solid var(--border-subtle)',
-            padding: '24px 0 clamp(72px, 10vw, 32px) 0',
-            marginTop: 'auto',
-          }}>
+          <footer className="app-footer">
             <div className="container" style={{
               display: 'flex',
               alignItems: 'center',

@@ -256,6 +256,7 @@ export default function Home() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
+        flexWrap: 'wrap',
         gap: '8px',
         boxShadow: '0 2px 8px rgba(154, 52, 18, 0.25)',
         letterSpacing: '0.2px'

@@ -94,7 +94,7 @@ export default function Register() {
   };
 
   return (
-    <div style={{
+    <div className="page-bottom-nav-pad" style={{
       minHeight: '80vh',
       display: 'flex',
       alignItems: 'center',

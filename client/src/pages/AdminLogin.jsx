@@ -46,7 +46,7 @@ export default function AdminLogin() {
   };
 
   return (
-    <div style={{
+    <div className="page-bottom-nav-pad" style={{
       minHeight: '80vh',
       display: 'flex',
       alignItems: 'center',

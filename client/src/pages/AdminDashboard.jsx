@@ -79,7 +79,7 @@ export default function AdminDashboard() {
   }, []);
 
   return (
-    <div className="container" style={{ padding: '40px 20px', maxWidth: '1200px' }}>
+    <div className="container page-bottom-nav-pad" style={{ padding: '40px 20px', maxWidth: '1200px' }}>
       {/* Dashboard Top Header */}
       <div style={{
         display: 'flex',

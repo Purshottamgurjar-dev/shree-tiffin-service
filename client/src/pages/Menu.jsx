@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { 
   Search, 
   Sparkles, 
@@ -9,7 +9,7 @@ import {
   XCircle, 
   ArrowRight, 
   ShoppingBag,
-  RefreshCw,
+  RefreshCw, 
   ChefHat,
   X,
   SlidersHorizontal,
@@ -52,11 +52,20 @@ const CATEGORY_TABS = [
 export default function Menu() {
   const { isAuthenticated } = useAuth();
   const { items, totalItems, addToCart, updateQuantity, removeFromCart } = useCart();
+  const [searchParams] = useSearchParams();
+  const initialCategory = searchParams.get('category') || 'All';
   
   const [meals, setMeals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [selectedCategory, setSelectedCategory] = useState(initialCategory);
+
+  useEffect(() => {
+    const cat = searchParams.get('category');
+    if (cat) {
+      setSelectedCategory(cat);
+    }
+  }, [searchParams]);
   const [activeSuggestion, setActiveSuggestion] = useState('');
   const [sortBy, setSortBy] = useState('rating');
   const [categoryCounts, setCategoryCounts] = useState({});
