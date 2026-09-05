@@ -41,9 +41,10 @@ services:
       - key: OWNER_PASSWORD
         sync: false # Set strong owner password (min 8 chars) in Render dashboard
       - key: OWNER_NAME
-        value: Shree Kitchen Owner
+        value: Sanyam Rajput
       - key: OWNER_PHONE
-        value: "9876543210"
+        value: "8120414836"
+
 
   # ----------------------------------------------------------------------------
   # 2. Frontend Static Site (Single Page Application)

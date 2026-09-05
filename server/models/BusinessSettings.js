@@ -59,12 +59,12 @@ const businessSettingsSchema = new mongoose.Schema(
       },
       phone: {
         type: String,
-        default: '9876543210',
+        default: '8120414836',
         trim: true,
       },
       email: {
         type: String,
-        default: 'support@shreetiffin.com',
+        default: 'shreetiffinservice09@gmail.com',
         trim: true,
         lowercase: true,
       },
