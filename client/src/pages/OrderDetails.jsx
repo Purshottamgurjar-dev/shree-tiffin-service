@@ -26,7 +26,7 @@ import OrderTimeline from '../components/orders/OrderTimeline';
 import OrderMapPreview from '../components/orders/OrderMapPreview';
 import PaymentBadge from '../components/payment/PaymentBadge';
 import useOrderPolling from '../hooks/useOrderPolling';
-import { formatCurrency, formatDate } from '../utils';
+import { formatCurrency, formatDate, getMealImage } from '../utils';
 import SEO from '../components/SEO';
 import api from '../services/api';
 
