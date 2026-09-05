@@ -18,7 +18,7 @@ dotenv.config({ path: './server/.env' });
 
 const TARGET_DB_NAME = 'shree_tiffin_service';
 const E2E_EMAIL_DOMAIN = '@shreetiffin-verification.com';
-const E2E_NAME_MARKER = 'STS E2E Test Customer';
+const E2E_NAME_MARKER = 'STS.*E2E.*Customer';
 
 const runCleanup = async () => {
   const isDryRun = !process.argv.includes('--confirm');
@@ -54,21 +54,17 @@ const runCleanup = async () => {
     // Rule: email must end with @shreetiffin-verification.com AND name must contain E2E test marker
     const testCustomers = await db.collection('users').find({
       role: 'customer',
-      email: { $regex: `@shreetiffin-verification\\.com$`, $options: 'i' },
-      name: { $regex: E2E_NAME_MARKER, $options: 'i' },
+      $or: [
+        { email: { $regex: `@shreetiffin-verification\\.com$`, $options: 'i' } },
+        { name: { $regex: E2E_NAME_MARKER, $options: 'i' } },
+      ],
     }).toArray();
 
     console.log(`\n1. Identified E2E Test Customers: ${testCustomers.length}`);
     testCustomers.forEach((c) => {
-      const maskedEmail = c.email.replace(/(.{3})(.*)(@.*)/, '$1***$3');
+      const maskedEmail = (c.email || '').replace(/(.{3})(.*)(@.*)/, '$1***$3');
       console.log(`   - User ID: ${c._id} | Email: ${maskedEmail} | Name: ${c.name} | Created: ${c.createdAt}`);
     });
-
-    if (testCustomers.length === 0) {
-      console.log('\n✅ No matching temporary E2E test customer records found. Database is already clean.');
-      await mongoose.disconnect();
-      return;
-    }
 
     const testUserIds = testCustomers.map((c) => c._id);
     const testUserIdStrings = testUserIds.map((id) => id.toString());
@@ -78,6 +74,7 @@ const runCleanup = async () => {
       $or: [
         { user: { $in: testUserIds } },
         { user: { $in: testUserIdStrings } },
+        { line1: { $regex: E2E_NAME_MARKER, $options: 'i' } },
       ],
     }).toArray();
     console.log(`\n2. Identified E2E Delivery Addresses: ${testAddresses.length}`);
@@ -104,6 +101,8 @@ const runCleanup = async () => {
       $or: [
         { user: { $in: testUserIds } },
         { user: { $in: testUserIdStrings } },
+        { 'customer.name': { $regex: E2E_NAME_MARKER, $options: 'i' } },
+        { 'customer.email': { $regex: `@shreetiffin-verification\\.com$`, $options: 'i' } },
       ],
     }).toArray();
     console.log(`\n4. Identified E2E Orders: ${testOrders.length}`);
@@ -112,6 +111,7 @@ const runCleanup = async () => {
     });
     const testOrderIds = testOrders.map((o) => o._id);
     const testOrderIdStrings = testOrderIds.map((id) => id.toString());
+    const testOrderNumbers = testOrders.map((o) => o.orderNumber).filter(Boolean);
 
     // Step 5: Identify payments belonging strictly to test orders
     const testPayments = await db.collection('payments').find({
@@ -128,15 +128,41 @@ const runCleanup = async () => {
     });
     const testPaymentIds = testPayments.map((p) => p._id);
 
-    // Step 6: Identify notifications belonging strictly to test customers
+    // Step 6: Identify notifications belonging strictly to test customers or referencing test orders/markers
+    const notifConditions = [
+      { message: { $regex: E2E_NAME_MARKER, $options: 'i' } },
+      { title: { $regex: E2E_NAME_MARKER, $options: 'i' } },
+      { 'metadata.customerName': { $regex: E2E_NAME_MARKER, $options: 'i' } },
+    ];
+    if (testUserIds.length > 0) {
+      notifConditions.push({ user: { $in: testUserIds } });
+      notifConditions.push({ user: { $in: testUserIdStrings } });
+    }
+    if (testOrderIds.length > 0) {
+      notifConditions.push({ order: { $in: testOrderIds } });
+      notifConditions.push({ 'metadata.orderId': { $in: testOrderIds } });
+      notifConditions.push({ 'metadata.orderId': { $in: testOrderIdStrings } });
+    }
+    if (testOrderNumbers.length > 0) {
+      notifConditions.push({ 'metadata.orderNumber': { $in: testOrderNumbers } });
+    }
+
     const testNotifications = await db.collection('notifications').find({
-      $or: [
-        { user: { $in: testUserIds } },
-        { user: { $in: testUserIdStrings } },
-      ],
+      $or: notifConditions,
     }).toArray();
     console.log(`\n6. Identified E2E Notifications: ${testNotifications.length}`);
+    testNotifications.forEach((n) => {
+      console.log(`   - Notification ID: ${n._id} | Title: ${n.title} | Type: ${n.type}`);
+    });
     const testNotificationIds = testNotifications.map((n) => n._id);
+
+    const totalCandidates =
+      testNotificationIds.length +
+      testPaymentIds.length +
+      testOrderIds.length +
+      testAddressIds.length +
+      testCartIds.length +
+      testUserIds.length;
 
     // Summary of candidate records
     console.log('\n====================================================================');
@@ -147,7 +173,14 @@ const runCleanup = async () => {
     console.log(`   Addresses to remove:     ${testAddressIds.length}`);
     console.log(`   Carts to remove:         ${testCartIds.length}`);
     console.log(`   Users to remove:         ${testUserIds.length}`);
+    console.log(`   TOTAL CANDIDATES:        ${totalCandidates}`);
     console.log('====================================================================\n');
+
+    if (totalCandidates === 0) {
+      console.log('✅ No matching temporary E2E test customer records found. Database is already clean.');
+      await mongoose.disconnect();
+      return;
+    }
 
     if (isDryRun) {
       console.log('🔍 DRY RUN COMPLETE: 0 database modifications were made.');
