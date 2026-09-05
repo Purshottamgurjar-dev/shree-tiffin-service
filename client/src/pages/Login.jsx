@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Utensils, Mail, Lock, LogIn, AlertCircle, CheckCircle2, ArrowRight, Eye, EyeOff, KeyRound, X } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
+import SEO from '../components/SEO';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -147,6 +148,10 @@ export default function Login() {
       justifyContent: 'center',
       padding: '40px 20px',
     }}>
+      <SEO 
+        title="Customer Login" 
+        description="Sign in to your Shree Tiffin Service account to manage your daily meals, track active orders, and customize your delivery preferences." 
+      />
       <div className="card" style={{ width: '100%', maxWidth: '440px', padding: '36px' }}>
         {/* Header Branding */}
         <div style={{ textAlign: 'center', marginBottom: '28px' }}>

@@ -1,0 +1,25 @@
+# Robots.txt for Shree Tiffin Service
+# "Ghar Jaisa Khana, Har Din."
+
+User-agent: *
+Allow: /
+Allow: /menu
+Allow: /menu/*
+Allow: /meal/*
+Allow: /login
+Allow: /register
+
+# Disallow private customer and owner administration routes
+Disallow: /admin
+Disallow: /admin/*
+Disallow: /cart
+Disallow: /checkout
+Disallow: /orders
+Disallow: /orders/*
+Disallow: /profile
+Disallow: /notifications
+Disallow: /unauthorized
+Disallow: /api/*
+
+# XML Sitemap
+Sitemap: https://shree-tiffin.onrender.com/sitemap.xml

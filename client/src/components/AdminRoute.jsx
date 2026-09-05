@@ -2,6 +2,7 @@ import React from 'react';
 import { Navigate, useLocation, Outlet } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { RefreshCw } from 'lucide-react';
+import SEO from './SEO';
 
 export default function AdminRoute({ children }) {
   const { isAuthenticated, isOwner, loading } = useAuth();
@@ -53,6 +54,7 @@ export default function AdminRoute({ children }) {
         </div>
       }
     >
+      <SEO title="Kitchen Owner Operations" noindex={true} />
       {children ? children : <Outlet />}
     </React.Suspense>
   );

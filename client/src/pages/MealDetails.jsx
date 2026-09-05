@@ -19,6 +19,7 @@ import mealService from '../services/mealService';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import { formatCurrency, getMealImage } from '../utils';
+import SEO from '../components/SEO';
 
 export default function MealDetails() {
   const { id } = useParams();
@@ -63,6 +64,7 @@ export default function MealDetails() {
   if (errorMsg || !meal) {
     return (
       <div className="container" style={{ padding: '60px 20px', textAlign: 'center', minHeight: '60vh' }}>
+        <SEO title="Meal Not Found" noindex={true} />
         <div className="card" style={{ maxWidth: '480px', margin: '0 auto', padding: '40px' }}>
           <AlertCircle size={44} color="var(--status-danger)" style={{ margin: '0 auto 14px auto' }} />
           <h2 style={{ fontSize: '22px', fontWeight: '800', marginBottom: '8px' }}>Meal Not Found</h2>
@@ -78,8 +80,36 @@ export default function MealDetails() {
     );
   }
 
+  const mealSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: meal.name,
+    description: meal.description || 'Authentic homestyle Indian meal cooked fresh with pure Desi Cow Ghee.',
+    image: getMealImage(meal.image),
+    category: meal.category,
+    offers: {
+      '@type': 'Offer',
+      price: meal.price,
+      priceCurrency: 'INR',
+      availability: meal.isAvailable !== false
+        ? 'https://schema.org/InStock'
+        : 'https://schema.org/OutOfStock',
+      seller: {
+        '@type': 'FoodEstablishment',
+        name: 'Shree Tiffin Service'
+      }
+    }
+  };
+
   return (
     <div className="container page-bottom-nav-pad" style={{ padding: '40px 20px', minHeight: '85vh' }}>
+      <SEO
+        title={`${meal.name} - ₹${meal.price}`}
+        description={`${meal.description || meal.name}. Handcrafted fresh daily in pure Desi Cow Ghee. Available for hot doorstep delivery.`}
+        image={getMealImage(meal.image)}
+        type="product"
+        schema={mealSchema}
+      />
       {/* Back Link */}
       <Link
         to="/menu"

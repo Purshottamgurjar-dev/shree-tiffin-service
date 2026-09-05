@@ -36,6 +36,7 @@ import addressService from '../services/addressService';
 import AddressForm from '../components/address/AddressForm';
 import OrderStatusBadge from '../components/orders/OrderStatusBadge';
 import { formatCurrency, formatDate } from '../utils';
+import SEO from '../components/SEO';
 
 export default function Profile() {
   const { user, updateProfile, logout, isOwner } = useAuth();
@@ -160,6 +161,7 @@ export default function Profile() {
 
   return (
     <div className="page-bottom-nav-pad" style={{ padding: 'clamp(20px, 4vw, 40px) 0 80px', minHeight: '85vh' }}>
+      <SEO title="My Profile" noindex={true} />
       <div className="container" style={{ maxWidth: '1060px' }}>
         
         {/* ================================================================= */}

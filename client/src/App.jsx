@@ -21,6 +21,7 @@ import Checkout from './pages/Checkout';
 import MyOrders from './pages/MyOrders';
 import OrderDetails from './pages/OrderDetails';
 import Notifications from './pages/Notifications';
+import NotFound from './pages/NotFound';
 
 // Code-split Admin Pages (Lazy Loaded on demand)
 const AdminDashboard = React.lazy(() => import('./pages/AdminDashboard'));
@@ -49,6 +50,7 @@ export default function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/menu" element={<Menu />} />
                 <Route path="/menu/:id" element={<MealDetails />} />
+                <Route path="/meal/:id" element={<MealDetails />} />
                 <Route path="/cart" element={<Cart />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
@@ -78,8 +80,8 @@ export default function App() {
                 <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
               </Route>
 
-              {/* Catch-all fallback */}
-              <Route path="*" element={<Navigate to="/" replace />} />
+              {/* User-friendly 404 Catch-all */}
+              <Route path="*" element={<NotFound />} />
             </Routes>
           </main>
 

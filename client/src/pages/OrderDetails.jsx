@@ -27,6 +27,7 @@ import OrderMapPreview from '../components/orders/OrderMapPreview';
 import PaymentBadge from '../components/payment/PaymentBadge';
 import useOrderPolling from '../hooks/useOrderPolling';
 import { formatCurrency, formatDate } from '../utils';
+import SEO from '../components/SEO';
 
 export default function OrderDetails() {
   const { id } = useParams();
@@ -277,6 +278,7 @@ export default function OrderDetails() {
 
   return (
     <div className="page-bottom-nav-pad" style={{ padding: '36px 0 80px', minHeight: '85vh', backgroundColor: 'var(--bg-subtle)' }}>
+      <SEO title={`Order ${order.orderNumber || ''}`} noindex={true} />
       <div className="container" style={{ maxWidth: '1080px' }}>
         {/* Navigation Breadcrumb */}
         <div style={{ marginBottom: '20px' }}>

@@ -120,3 +120,49 @@ node server/scripts/onboard-owner.js --email "[CLIENT OWNER EMAIL]" --password "
 * **Service Status Check:** Visit `https://shree-tiffin-api.onrender.com/api/health`. If `status` is `"online"` and `database` is `"connected"`, the backend is operating normally.
 * **Server Restart:** If configuration changes are made in Render, trigger **Manual Deploy $\to$ Deploy latest commit** from the Render Dashboard.
 * **Customer Support Inquiries:** Contact support through the configured business email and phone number in Business Settings.
+
+---
+
+## 🌐 12. Custom Domain & Google Search Console Setup
+
+When you are ready to connect a custom branded domain (e.g. `www.shreetiffinservice.com`):
+
+### 1. Purchase / Connect Domain
+Purchase your domain from any accredited domain registrar (e.g., GoDaddy, Namecheap, Hostinger, Google Domains).
+
+### 2. Add Domain in Render
+In your [Render Dashboard](https://dashboard.render.com):
+- Go to your Static Site service (`shree-tiffin`).
+- Click **Settings** $\rightarrow$ **Custom Domains**.
+- Click **Add Custom Domain** and enter your domain (e.g., `www.shreetiffinservice.com`).
+
+### 3. Configure DNS Records
+In your domain registrar's DNS management panel:
+- Add a **CNAME** record:
+  - **Host/Name**: `www`
+  - **Target/Points To**: `shree-tiffin.onrender.com`
+- (Optional) For apex domain (`shreetiffinservice.com`), configure an ALIAS or ANAME record pointing to Render, or set up a domain forwarding rule from root to `www`.
+
+### 4. Wait for DNS & Automated SSL
+Render automatically provisions a free Let's Encrypt SSL/HTTPS certificate as soon as DNS propagates (typically 10–30 minutes).
+
+### 5. Update Canonical Environment Variable
+In Render Static Site environment settings, update:
+`VITE_CANONICAL_URL=https://www.shreetiffinservice.com`
+In Render Backend Web Service settings, update:
+`CLIENT_URL=https://shree-tiffin.onrender.com,https://www.shreetiffinservice.com`
+
+### 6. Verify Website
+Open `https://www.shreetiffinservice.com` in your browser. Confirm that the website loads with a valid padlock icon (HTTPS) and that customer meals and checkout function properly.
+
+### 7. Submit Sitemap to Google Search Console
+1. Open [Google Search Console](https://search.google.com/search-console).
+2. Add property for your custom domain using the DNS TXT verification method (see [docs/SEO-GOOGLE-SEARCH.md](file:///c:/Users/abc/Desktop/Shree%20tiffin%20service/docs/SEO-GOOGLE-SEARCH.md)).
+3. In the sidebar under **Sitemaps**, enter `sitemap.xml` and click **Submit**.
+
+### 8. Request Indexing for Key Pages
+Use the **URL Inspection** tool at the top of Google Search Console to inspect `https://www.shreetiffinservice.com/` and click **Request Indexing**. Repeat for `/menu`.
+
+### 9. Monitor Search Performance & Errors
+Review the **Pages** and **Performance** tabs weekly in Google Search Console to ensure Google crawlers index all active meals and report zero coverage errors.
+

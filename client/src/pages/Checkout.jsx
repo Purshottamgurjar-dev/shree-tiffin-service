@@ -26,6 +26,7 @@ import paymentService from '../services/paymentService';
 import settingsService from '../services/settingsService';
 import AddressSelector from '../components/address/AddressSelector';
 import { formatCurrency, getMealImage } from '../utils';
+import SEO from '../components/SEO';
 
 export default function Checkout() {
   const { user } = useAuth();
@@ -245,6 +246,7 @@ export default function Checkout() {
   if (!cartLoading && items.length === 0) {
     return (
       <div style={{ padding: '60px 0', minHeight: '80vh' }}>
+        <SEO title="Checkout" noindex={true} />
         <div className="container" style={{ maxWidth: '600px', textAlign: 'center' }}>
           <div className="card" style={{ padding: '48px 32px' }}>
             <div style={{
@@ -278,6 +280,7 @@ export default function Checkout() {
 
   return (
     <div className="page-bottom-nav-pad" style={{ padding: '40px 0', minHeight: '85vh' }}>
+      <SEO title="Checkout" noindex={true} />
       <div className="container">
         
         {/* Checkout Header */}

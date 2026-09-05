@@ -28,6 +28,7 @@ import api from '../services/api';
 import mealService from '../services/mealService';
 import { getDashboardKPIs } from '../services/orderService';
 import { formatCurrency, formatDate } from '../utils';
+import SEO from '../components/SEO';
 
 export default function AdminDashboard() {
   const { user, logout } = useAuth();
@@ -81,6 +82,7 @@ export default function AdminDashboard() {
 
   return (
     <div className="container page-bottom-nav-pad admin-page-container">
+      <SEO title="Kitchen Owner Dashboard" noindex={true} />
       {/* Dashboard Top Header */}
       <div className="admin-header-card">
         <div className="admin-header-info">

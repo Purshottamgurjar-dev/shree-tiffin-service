@@ -14,6 +14,7 @@ import {
   EyeOff
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import SEO from '../components/SEO';
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -101,6 +102,10 @@ export default function Register() {
       justifyContent: 'center',
       padding: '40px 20px',
     }}>
+      <SEO 
+        title="Create Account" 
+        description="Register for a customer account with Shree Tiffin Service to order delicious homestyle vegetarian food delivered to your door." 
+      />
       <div className="card" style={{ width: '100%', maxWidth: '480px', padding: '36px' }}>
         {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: '24px' }}>

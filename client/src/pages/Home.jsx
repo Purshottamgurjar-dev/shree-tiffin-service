@@ -31,6 +31,33 @@ import { useCart } from '../context/CartContext';
 import api from '../services/api';
 import heroThali from '../assets/hero-thali.jpg';
 import { getMealImage, formatCurrency } from '../utils';
+import SEO from '../components/SEO';
+
+const HOME_SCHEMA = {
+  '@context': 'https://schema.org',
+  '@type': 'FoodEstablishment',
+  name: 'Shree Tiffin Service',
+  description: 'Authentic, freshly cooked, homestyle Indian meals delivered hot to your doorstep every day. 100% Pure Vegetarian, prepared with Desi Cow Ghee. Ghar Jaisa Khana, Har Din.',
+  url: 'https://shree-tiffin.onrender.com',
+  image: 'https://shree-tiffin.onrender.com/assets/hero-thali.jpg',
+  servesCuisine: 'Indian, Pure Vegetarian, Homestyle',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: '104 Annapurna Road',
+    addressLocality: 'Indore',
+    addressRegion: 'Madhya Pradesh',
+    postalCode: '452009',
+    addressCountry: 'IN'
+  },
+  openingHoursSpecification: [
+    {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+      opens: '07:00',
+      closes: '22:00'
+    }
+  ]
+};
 
 // FAQ Content
 const FAQ_ITEMS = [
@@ -244,6 +271,11 @@ export default function Home() {
 
   return (
     <div className="page-bottom-nav-pad" style={{ backgroundColor: 'var(--bg-primary)', paddingBottom: '60px' }}>
+      <SEO
+        title="Ghar Jaisa Khana, Har Din | Authentic Homestyle Food Delivery"
+        description="Freshly cooked homestyle Indian meals delivered hot to your doorstep daily. 100% Pure Vegetarian, prepared with pure Desi Cow Ghee. Ghar Jaisa Khana, Har Din."
+        schema={HOME_SCHEMA}
+      />
       
       {/* 1. Festive Announcement Top Ribbon */}
       <div style={{

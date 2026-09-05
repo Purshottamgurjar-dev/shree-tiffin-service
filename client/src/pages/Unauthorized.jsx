@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ShieldAlert, ArrowLeft, Home } from 'lucide-react';
+import SEO from '../components/SEO';
 
 export default function Unauthorized() {
   return (
@@ -11,6 +12,7 @@ export default function Unauthorized() {
       justifyContent: 'center',
       padding: '40px 20px',
     }}>
+      <SEO title="Access Restricted (403)" noindex={true} />
       <div className="card" style={{ maxWidth: '480px', textAlign: 'center', padding: '40px' }}>
         <div style={{
           width: '64px',

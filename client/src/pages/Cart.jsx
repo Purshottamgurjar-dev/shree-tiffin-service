@@ -17,6 +17,7 @@ import {
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { formatCurrency, getMealImage } from '../utils';
+import SEO from '../components/SEO';
 
 export default function Cart() {
   const { 
@@ -81,6 +82,7 @@ export default function Cart() {
 
   return (
     <div className="cart-page-wrapper page-bottom-nav-pad" style={{ padding: 'clamp(20px, 4vw, 36px) 0 60px', minHeight: '85vh' }}>
+      <SEO title="Your Cart" noindex={true} />
       <div className="container">
         
         {/* Page Header */}

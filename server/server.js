@@ -131,6 +131,33 @@ app.use('/api/analytics', analyticsRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/settings', settingsRoutes);
 
+// 7b. Search Engine Crawl Endpoints
+app.get('/robots.txt', (req, res) => {
+  res.type('text/plain');
+  res.send(`# Robots.txt for Shree Tiffin Service\nUser-agent: *\nAllow: /\nDisallow: /api/\nDisallow: /admin\nSitemap: https://shree-tiffin.onrender.com/sitemap.xml\n`);
+});
+
+app.get(['/sitemap.xml', '/api/sitemap.xml'], async (req, res) => {
+  try {
+    const Meal = mongoose.model('Meal');
+    const meals = await Meal.find({ isAvailable: true }).select('_id slug');
+    const baseUrl = process.env.CLIENT_URL ? process.env.CLIENT_URL.split(',')[0].trim().replace(/\/$/, '') : 'https://shree-tiffin.onrender.com';
+    let xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
+    xml += `  <url><loc>${baseUrl}/</loc><changefreq>daily</changefreq><priority>1.0</priority></url>\n`;
+    xml += `  <url><loc>${baseUrl}/menu</loc><changefreq>daily</changefreq><priority>0.9</priority></url>\n`;
+    for (const m of meals) {
+      xml += `  <url><loc>${baseUrl}/menu/${m.slug || m._id}</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>\n`;
+    }
+    xml += `  <url><loc>${baseUrl}/login</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>\n`;
+    xml += `  <url><loc>${baseUrl}/register</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>\n`;
+    xml += `</urlset>`;
+    res.type('application/xml');
+    res.send(xml);
+  } catch (e) {
+    res.status(500).send('Error generating sitemap');
+  }
+});
+
 // 8. Serve Client Static Assets in Production if built (Fullstack deployment mode)
 const clientDistPath = path.join(__dirname, '../client/dist');
 if (fs.existsSync(clientDistPath)) {

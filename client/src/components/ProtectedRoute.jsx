@@ -2,6 +2,7 @@ import React from 'react';
 import { Navigate, useLocation, Outlet } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { RefreshCw } from 'lucide-react';
+import SEO from './SEO';
 
 export default function ProtectedRoute({ children }) {
   const { isAuthenticated, loading } = useAuth();
@@ -29,5 +30,10 @@ export default function ProtectedRoute({ children }) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  return children ? children : <Outlet />;
+  return (
+    <>
+      <SEO noindex={true} />
+      {children ? children : <Outlet />}
+    </>
+  );
 }

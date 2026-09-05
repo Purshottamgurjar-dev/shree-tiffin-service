@@ -1,0 +1,16 @@
+{
+  "name": "Shree Tiffin Service",
+  "short_name": "Shree Tiffin",
+  "description": "Authentic, freshly cooked, homestyle Indian meals delivered hot to your doorstep every day. Ghar Jaisa Khana, Har Din.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#faf7f2",
+  "theme_color": "#e8590c",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍲</text></svg>",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

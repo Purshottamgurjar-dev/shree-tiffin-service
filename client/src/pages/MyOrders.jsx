@@ -18,6 +18,7 @@ import OrderStatusBadge from '../components/orders/OrderStatusBadge';
 import PaymentBadge from '../components/payment/PaymentBadge';
 import useOrderPolling from '../hooks/useOrderPolling';
 import { formatCurrency, formatDate } from '../utils';
+import SEO from '../components/SEO';
 
 export default function MyOrders() {
   const [orders, setOrders] = useState([]);
@@ -106,6 +107,7 @@ export default function MyOrders() {
 
   return (
     <div className="page-bottom-nav-pad" style={{ padding: '40px 0 80px', minHeight: '80vh', backgroundColor: 'var(--bg-subtle)' }}>
+      <SEO title="My Orders" noindex={true} />
       <div className="container" style={{ maxWidth: '960px' }}>
         {/* Page Header */}
         <div style={{

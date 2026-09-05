@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ShieldCheck, Mail, Lock, LogIn, AlertCircle, CheckCircle2, ArrowLeft, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import SEO from '../components/SEO';
 
 export default function AdminLogin() {
   const [email, setEmail] = useState('');
@@ -53,6 +54,7 @@ export default function AdminLogin() {
       justifyContent: 'center',
       padding: '40px 20px',
     }}>
+      <SEO title="Kitchen Owner Portal" noindex={true} />
       <div className="card" style={{
         width: '100%',
         maxWidth: '440px',

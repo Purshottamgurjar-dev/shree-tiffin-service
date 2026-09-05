@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import notificationService from '../services/notificationService';
 import { formatDate } from '../utils';
+import SEO from '../components/SEO';
 
 export default function Notifications() {
   const [notifications, setNotifications] = useState([]);
@@ -125,6 +126,7 @@ export default function Notifications() {
 
   return (
     <div className="page-bottom-nav-pad" style={{ backgroundColor: 'var(--bg-cream)', minHeight: 'calc(100vh - 76px)', padding: '36px 0 60px' }}>
+      <SEO title="Notifications" noindex={true} />
       <div className="container" style={{ maxWidth: '820px' }}>
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px' }}>

@@ -24,6 +24,7 @@ import mealService, { MEAL_CATEGORIES } from '../services/mealService';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import { formatCurrency, getMealImage } from '../utils';
+import SEO from '../components/SEO';
 
 // Popular quick search suggestion chips
 const POPULAR_SUGGESTIONS = [
@@ -177,6 +178,10 @@ export default function Menu() {
 
   return (
     <div className="page-bottom-nav-pad" style={{ padding: 'clamp(20px, 4vw, 40px) 0 80px', minHeight: '85vh' }}>
+      <SEO
+        title="Homestyle Food Menu & Daily Tiffins"
+        description="Explore our daily rotating homestyle Indian menu. Dal Baati Churma, Poha, Khichdi, and Daily Lunch Boxes cooked fresh with Desi Ghee. Ghar Jaisa Khana, Har Din."
+      />
       <div className="container">
         
         {/* Guest Authentication Prompt Banner */}
