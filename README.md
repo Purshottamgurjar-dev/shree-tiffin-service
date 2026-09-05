@@ -5,6 +5,12 @@ A complete, production-grade full-stack MERN food delivery platform providing ho
 1. **Customer / User Portal**: Browse homestyle meals, manage custom meal plans, live location-aware checkout with GPS pin-pointing, dual payment workflows (COD + Razorpay), categorized order tracking, and leak-free real-time order polling.
 2. **Owner / Admin Portal**: Production-safe business operations dashboard with 9 real backend KPIs, advanced order filtering & state machine transitions, dedicated delivery dispatch with interactive Leaflet map, customer direct Call & WhatsApp messaging, COD collection audit trails, and comprehensive customer lifetime relationship management.
 
+### 🌐 Live Production Deployments
+- **Live Customer Website**: [https://shree-tiffin.onrender.com](https://shree-tiffin.onrender.com)
+- **Live Owner/Admin Portal**: [https://shree-tiffin.onrender.com/admin/login](https://shree-tiffin.onrender.com/admin/login)
+- **Live Backend API**: [https://shree-tiffin-api.onrender.com](https://shree-tiffin-api.onrender.com)
+- **Client Handover Guide**: See [CLIENT-HANDOVER.md](CLIENT-HANDOVER.md) for full kitchen operational instructions and owner runbooks.
+
 ---
 
 ## 📁 Architecture Overview
