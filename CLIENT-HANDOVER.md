@@ -80,7 +80,7 @@
 3. **Delivery Radius & Fee:** Adjust delivery radius (default: 15 km) and base delivery fee (default: ₹0 free delivery).
 4. **Business Hours:** Configure kitchen opening and closing times per weekday (default: 07:00–22:00, 7 days).
 5. **Kitchen Contact Information:**
-   * Kitchen Address: 104 Annapurna Road, Indore, Madhya Pradesh 452009
+   * Kitchen Address: Scheme No 78, Vijay Nagar, Indore, Madhya Pradesh 452010
    * Support Phone: `8120414836`
    * Support Email: `shreetiffinservice09@gmail.com`
 

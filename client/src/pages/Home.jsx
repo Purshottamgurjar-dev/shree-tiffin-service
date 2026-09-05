@@ -43,10 +43,10 @@ const HOME_SCHEMA = {
   servesCuisine: 'Indian, Pure Vegetarian, Homestyle',
   address: {
     '@type': 'PostalAddress',
-    streetAddress: '104 Annapurna Road',
+    streetAddress: 'Scheme No 78, Vijay Nagar',
     addressLocality: 'Indore',
     addressRegion: 'Madhya Pradesh',
-    postalCode: '452009',
+    postalCode: '452010',
     addressCountry: 'IN'
   },
   openingHoursSpecification: [

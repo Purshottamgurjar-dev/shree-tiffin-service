@@ -70,7 +70,7 @@ const businessSettingsSchema = new mongoose.Schema(
       },
       address: {
         type: String,
-        default: '104 Annapurna Road',
+        default: 'Scheme No 78, Vijay Nagar',
         trim: true,
       },
       city: {
@@ -85,7 +85,7 @@ const businessSettingsSchema = new mongoose.Schema(
       },
       postalCode: {
         type: String,
-        default: '452009',
+        default: '452010',
         trim: true,
       },
     },
