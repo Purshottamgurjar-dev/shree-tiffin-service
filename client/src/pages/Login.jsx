@@ -352,20 +352,6 @@ export default function Login() {
             Register Now
           </Link>
         </div>
-
-        {/* Quick link for Owner */}
-        <div style={{ marginTop: '16px', textAlign: 'center' }}>
-          <Link
-            to="/admin/login"
-            style={{
-              fontSize: '12px',
-              color: 'var(--text-tertiary)',
-              textDecoration: 'underline',
-            }}
-          >
-            Kitchen Owner / Admin Login →
-          </Link>
-        </div>
       </div>
 
       {/* Forgot Password Modal */}

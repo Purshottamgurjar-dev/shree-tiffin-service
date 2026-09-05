@@ -455,22 +455,6 @@ export default function Navbar({ serverStatus = 'online' }) {
               >
                 Register
               </Link>
-              <Link
-                to="/admin/login"
-                style={{
-                  fontSize: '12px',
-                  color: 'var(--text-tertiary)',
-                  textDecoration: 'none',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '4px',
-                  marginLeft: '6px',
-                }}
-                title="Kitchen Owner Login"
-              >
-                <ShieldCheck size={14} />
-                <span>Owner</span>
-              </Link>
             </div>
           )}
         </nav>
@@ -715,7 +699,7 @@ export default function Navbar({ serverStatus = 'online' }) {
                 onClick={() => setMobileMenuOpen(false)}
                 style={{ fontWeight: '600', padding: '8px 0', color: 'var(--primary-800)' }}
               >
-                Customer Login
+                Login
               </Link>
               <Link
                 to="/register"
@@ -723,13 +707,6 @@ export default function Navbar({ serverStatus = 'online' }) {
                 style={{ fontWeight: '600', padding: '8px 0', color: 'var(--text-primary)' }}
               >
                 Register
-              </Link>
-              <Link
-                to="/admin/login"
-                onClick={() => setMobileMenuOpen(false)}
-                style={{ fontWeight: '600', padding: '8px 0', color: 'var(--text-secondary)' }}
-              >
-                Owner / Kitchen Login
               </Link>
             </>
           )}

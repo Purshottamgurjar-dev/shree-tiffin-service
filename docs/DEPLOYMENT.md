@@ -106,8 +106,8 @@ The repository includes a ready-to-deploy **Render Blueprint** ([render.yaml](fi
   | `RAZORPAY_KEY_ID` | `rzp_test_...` or `rzp_live_...` | Razorpay Key ID |
   | `RAZORPAY_KEY_SECRET` | `secret` | Razorpay Secret |
   | `RAZORPAY_WEBHOOK_SECRET`| `webhook_secret` | Webhook verification |
-  | `OWNER_EMAIL` | `owner@shreetiffin.com` | Seed owner email |
-  | `OWNER_PASSWORD` | `SecurePassword@123` | Seed owner password |
+  | `OWNER_EMAIL` | *(configured in Render dashboard)* | Owner credentials are provisioned securely during deployment |
+  | `OWNER_PASSWORD` | *(configured in Render dashboard)* | Owner credentials are provisioned securely during deployment |
 
 ### C. Frontend Static Site on Render
 * **Type**: Static Site

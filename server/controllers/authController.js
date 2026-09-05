@@ -53,7 +53,15 @@ export const register = async (req, res, next) => {
       });
     }
 
-    // Security Rule: Public registration MUST NOT allow role 'owner'
+    // Security Rule: Public registration MUST NOT allow role 'owner' or 'admin'
+    if (req.body.role && (req.body.role.toLowerCase() === 'owner' || req.body.role.toLowerCase() === 'admin')) {
+      return res.status(403).json({
+        success: false,
+        message: 'Forbidden: Public registration for owner/admin accounts is strictly disabled.',
+      });
+    }
+
+    // All public registrations strictly forced to customer role
     const role = 'customer';
 
     // Create user

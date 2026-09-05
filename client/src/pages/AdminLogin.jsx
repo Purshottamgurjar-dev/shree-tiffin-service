@@ -141,7 +141,7 @@ export default function AdminLogin() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="owner@shreetiffin.com"
+                placeholder="Enter your registered email"
                 style={{
                   width: '100%',
                   padding: '12px 14px 12px 42px',
@@ -226,7 +226,7 @@ export default function AdminLogin() {
           </button>
         </form>
 
-        {/* Dev hint badge with 1-click autofill */}
+        {/* Security Notice */}
         <div style={{
           marginTop: '20px',
           padding: '12px 14px',
@@ -234,49 +234,21 @@ export default function AdminLogin() {
           borderRadius: 'var(--radius-sm)',
           fontSize: '12px',
           color: 'var(--text-secondary)',
-          lineHeight: 1.4,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          flexWrap: 'wrap',
-          gap: '8px',
+          lineHeight: 1.5,
+          textAlign: 'center',
         }}>
-          <div>
-            💡 <strong>Dev Credentials:</strong><br />
-            <code>owner@shreetiffin.com</code> / <code>Owner@12345</code>
-          </div>
-          <button
-            type="button"
-            onClick={() => {
-              setEmail('owner@shreetiffin.com');
-              setPassword('Owner@12345');
-              setLocalError('');
-            }}
-            style={{
-              padding: '5px 10px',
-              fontSize: '11px',
-              fontWeight: '600',
-              borderRadius: '6px',
-              backgroundColor: '#1c1917',
-              color: '#ffffff',
-              border: 'none',
-              cursor: 'pointer',
-            }}
-            title="Auto-fill verified owner credentials"
-          >
-            Click to Auto-fill
-          </button>
+          🔒 <strong>Secure Access:</strong> This portal is restricted exclusively to authorized kitchen operators and store owners of Shree Tiffin Service.
         </div>
 
         {/* Back Link */}
         <div style={{
-          marginTop: '24px',
+          marginTop: '20px',
           textAlign: 'center',
           borderTop: '1px solid var(--border-subtle)',
-          paddingTop: '20px',
+          paddingTop: '18px',
         }}>
           <Link
-            to="/login"
+            to="/"
             style={{
               fontSize: '13px',
               color: 'var(--text-secondary)',
@@ -286,7 +258,7 @@ export default function AdminLogin() {
             }}
           >
             <ArrowLeft size={14} />
-            <span>Switch to Customer Login</span>
+            <span>Return to Storefront</span>
           </Link>
         </div>
       </div>

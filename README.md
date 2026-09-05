@@ -159,8 +159,8 @@ The master test runner automatically:
 | `JWT_SECRET` | Secret key for signing JWT tokens | `your_secure_random_jwt_secret_key` |
 | `JWT_EXPIRES_IN`| Token expiration timeframe | `7d` |
 | `CLIENT_URL` | Allowed frontend origin for CORS | `http://localhost:5173` |
-| `OWNER_EMAIL` | Default Owner/Admin account email | `owner@shreetiffin.com` |
-| `OWNER_PASSWORD` | Default Owner/Admin account password | `Owner@12345` |
+| `OWNER_EMAIL` | Owner/Admin account email | *Owner credentials are provisioned securely during deployment.* |
+| `OWNER_PASSWORD` | Owner/Admin account password | *Owner credentials are provisioned securely during deployment.* |
 | `RAZORPAY_KEY_ID` | Razorpay Key ID | `rzp_test_...` |
 | `RAZORPAY_KEY_SECRET` | Razorpay Key Secret (*never sent to client*) | `your_razorpay_secret` |
 | `RAZORPAY_WEBHOOK_SECRET` | Razorpay Webhook Secret | `your_webhook_secret` |

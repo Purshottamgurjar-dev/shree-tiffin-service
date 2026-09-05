@@ -7,6 +7,12 @@ dotenv.config();
 
 export const seedOwnerUser = async () => {
   try {
+    // Production Safety Guard: Do NOT automatically create a known-password owner in production
+    if (process.env.NODE_ENV === 'production' && (!process.env.OWNER_EMAIL || !process.env.OWNER_PASSWORD)) {
+      console.log('[Seed Safety] Production environment: Skipping default owner auto-creation. Owner must be provisioned via explicit environment variables or onboarding CLI.');
+      return null;
+    }
+
     const ownerEmail = (process.env.OWNER_EMAIL || 'owner@shreetiffin.com').toLowerCase().trim();
     const ownerPassword = process.env.OWNER_PASSWORD || 'Owner@12345';
     const ownerName = process.env.OWNER_NAME || 'Shree Kitchen Owner';

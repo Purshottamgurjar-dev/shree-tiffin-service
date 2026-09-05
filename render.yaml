@@ -37,9 +37,9 @@ services:
       - key: RAZORPAY_WEBHOOK_SECRET
         sync: false # Retrieve from Razorpay Dashboard Webhooks
       - key: OWNER_EMAIL
-        value: owner@shreetiffin.com
+        sync: false # Set verified business owner email in Render dashboard
       - key: OWNER_PASSWORD
-        sync: false # Set strong owner password for initial seed
+        sync: false # Set strong owner password (min 8 chars) in Render dashboard
       - key: OWNER_NAME
         value: Shree Kitchen Owner
       - key: OWNER_PHONE

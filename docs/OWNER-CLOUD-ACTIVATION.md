@@ -62,8 +62,8 @@ Populate your private environment variables in the Render Dashboard under **Envi
 | `RAZORPAY_KEY_ID` | `rzp_test_...` (or `rzp_live_...`) | Your Key ID from Razorpay Dashboard |
 | `RAZORPAY_KEY_SECRET` | Secret key from Razorpay Dashboard | Private secret for server-side HMAC SHA-256 signature verification |
 | `RAZORPAY_WEBHOOK_SECRET`| Webhook secret from Razorpay Dashboard | Secret for verifying webhook authenticity |
-| `OWNER_EMAIL` | `owner@shreetiffin.com` | Initial kitchen owner login email |
-| `OWNER_PASSWORD` | Strong password of your choice | Initial kitchen owner login password |
+| `OWNER_EMAIL` | Client owner business email | Owner credentials are provisioned securely during deployment |
+| `OWNER_PASSWORD` | Strong secure password (min 8 chars) | Owner credentials are provisioned securely during deployment |
 
 > [!CAUTION]
 > **Never share or paste production secrets into public chat or GitHub.** Enter them directly into the secure Render Dashboard.
